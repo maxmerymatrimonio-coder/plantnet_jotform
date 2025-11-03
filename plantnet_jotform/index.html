@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Identificazione pianta - PlantNET</title>
+</head>
+<body>
+  <h1>Identificazione pianta con PlantNET</h1>
+  <form id="plant-form" enctype="multipart/form-data">
+    <p><label>Foto della pianta:</label><br />
+    <input type="file" id="fileUpload" accept="image/*" required /></p>
+
+    <p><label>Affidabilità:</label><br />
+    <input type="text" id="input_12" readonly /></p>
+
+    <p><label>Nome scientifico:</label><br />
+    <input type="text" id="input_9" readonly /></p>
+
+    <p><label>Nome comune:</label><br />
+    <input type="text" id="input_7" readonly /></p>
+
+    <p><label>Allergenicità:</label><br />
+    <input type="text" id="input_13" readonly /></p>
+
+    <p><button type="button" id="btn-identifica">Identifica</button></p>
+  </form>
+
+  <script>
+    document.getElementById("btn-identifica").addEventListener("click", async () => {
+      const fileInput = document.getElementById("fileUpload");
+      const file = fileInput.files[0];
+      if (!file) { alert("Carica una foto prima!"); return; }
+
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          const base64 = reader.result.split(",")[1];
+          const res = await fetch("/.netlify/functions/plantnet-identify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageBase64: base64 })
+          });
+          if (!res.ok) {
+            alert("Errore dal server Netlify.");
+            return;
+          }
+          const data = await res.json();
+          document.getElementById("input_9").value = data.scientificName || "";
+          document.getElementById("input_7").value = data.commonName || "";
+          document.getElementById("input_12").value = data.reliability || "";
+          document.getElementById("input_13").value = data.allergenicity || "N/D";
+        } catch (e) {
+          console.error(e);
+          alert("Errore durante l'identificazione.");
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
