@@ -7,7 +7,6 @@ exports.handler = async (event) => {
     const imageBase64 = body.imageBase64;
     const apiKey = process.env.PLANTNET_API_KEY;
 
-    // 🔒 Controllo chiave API
     if (!apiKey) {
       console.error("PLANTNET_API_KEY non configurata");
       return {
@@ -16,7 +15,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // 📸 Controllo immagine
     if (!imageBase64) {
       return {
         statusCode: 400,
@@ -24,7 +22,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🧩 Crea il form-data multipart corretto
     const form = new FormData();
     const buffer = Buffer.from(imageBase64, "base64");
     form.append("organs", "leaf");
@@ -33,10 +30,8 @@ exports.handler = async (event) => {
       contentType: "image/jpeg",
     });
 
-    // 🌿 URL PlantNet con lingua italiana
     const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
 
-    // 🚀 Chiamata a PlantNet usando il fetch GLOBALE di Node 18 / Netlify
     const response = await fetch(apiUrl, {
       method: "POST",
       body: form,
@@ -80,3 +75,11 @@ exports.handler = async (event) => {
   } catch (error) {
     console.error("Errore nella funzione Netlify:", error);
     return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "Errore server",
+        detail: String(error),
+      }),
+    };
+  }
+};
