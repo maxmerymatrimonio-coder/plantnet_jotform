@@ -1,105 +1,79 @@
-<!-- 🔹 Pulsante INVIA – gestito da Jotform -->
-<li class="form-line" data-type="control_button" id="id_4">
-  <div id="cid_4" class="form-input-wide" data-layout="full">
-    <div data-align="auto" class="form-buttons-wrapper form-buttons-auto jsTest-button-wrapperField">
-      <button
-        id="input_4"
-        type="submit"
-        class="form-submit-button submit-button jf-form-buttons jsTest-submitField legacy-submit"
-        data-component="button"
-        data-content=""
-      >
-        Invia
-      </button>
-    </div>
-  </div>
-</li>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>Modulo di identificazione piante</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
 
-<!-- Fine del form -->
-</ul>
+<!-- 🔹 Embed del tuo modulo Jotform -->
+<div id="jotform-container" style="max-width: 800px; margin: 0 auto;">
+  <script type="text/javascript"
+    src="https://form.jotform.com/jsform/253044075525049">
+  </script>
 </div>
 
-<script>
-  JotForm.showJotFormPowered = "0";
-</script>
-<script>
-  JotForm.poweredByText = "Creato con Jotform";
-</script>
-<input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="253044075525049" />
-<script type="text/javascript">
-  var all_spc = document.querySelectorAll("form[id='253044075525049'] .si" + "mple" + "_spc");
-  for (var i = 0; i < all_spc.length; i++) {
-    all_spc[i].value = "253044075525049-253044075525049";
-  }
-</script>
-</form>
+<!-- 🔹 Pulsante per identificare la specie -->
+<div style="max-width: 800px; margin: 30px auto; text-align: center;">
+  <button id="identify-btn"
+    style="background-color:#2563eb;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:16px;cursor:pointer;">
+    🌿 Identifica Specie
+  </button>
+</div>
 
-<!-- 🔹 Script di collegamento con PlantNet -->
+<!-- 🔹 Script per identificazione automatica -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const identifyButton = document.getElementById("identify-btn");
-  const fileInput = document.getElementById("input_8");
 
-  if (!identifyButton || !fileInput) {
-    console.warn("⚠️ Impossibile trovare identify-btn o input_8");
-    return;
-  }
-
-  identifyButton.addEventListener("click", async function (e) {
-    e.preventDefault();
-
-    const files = fileInput.files;
-    if (!files || files.length === 0) {
-      alert("Carica almeno una foto per identificare la pianta 🌿");
+  identifyButton.addEventListener("click", async function () {
+    const fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput || !fileInput.files.length) {
+      alert("Carica una foto prima di identificare la pianta 🌿");
       return;
     }
 
-    const file = files[0];
+    const file = fileInput.files[0];
     const reader = new FileReader();
-
     reader.onload = async function () {
-      const base64Data = reader.result.split(",")[1];
-      try {
-        identifyButton.textContent = "🔍 Identificazione in corso...";
-        identifyButton.disabled = true;
+      const base64 = reader.result.split(",")[1];
+      identifyButton.disabled = true;
+      identifyButton.textContent = "🔍 Identificazione in corso...";
 
+      try {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64: base64Data }),
+          body: JSON.stringify({ imageBase64: base64 })
         });
 
         const data = await response.json();
 
-        if (!response.ok) throw new Error(data.error || "Errore sconosciuto");
+        // Compila i campi del modulo
+        const nomeComune = document.querySelector("#input_7");
+        const nomeScientifico = document.querySelector("#input_9");
+        const affidabilita = document.querySelector("#input_12");
+        const allergenicita = document.querySelector("#input_13");
 
-        // ✅ Compila i campi Jotform
-        document.getElementById("input_7").value = data.commonName || "";
-        document.getElementById("input_9").value = data.scientificName || "";
-        document.getElementById("input_12").value = data.reliability || "";
-        document.getElementById("input_13").value = data.allergenicity || "";
+        if (nomeComune) nomeComune.value = data.commonName || "";
+        if (nomeScientifico) nomeScientifico.value = data.scientificName || "";
+        if (affidabilita) affidabilita.value = data.reliability || "";
+        if (allergenicita) allergenicita.value = data.allergenicity || "";
 
         identifyButton.textContent = "✅ Identificazione completata";
       } catch (err) {
         console.error(err);
-        alert("Errore durante l'identificazione della pianta. Riprova.");
-        identifyButton.textContent = "Identifica Specie";
+        alert("Errore durante l'identificazione. Riprova.");
+        identifyButton.textContent = "🌿 Identifica Specie";
       } finally {
         identifyButton.disabled = false;
       }
     };
-
     reader.readAsDataURL(file);
   });
 });
 </script>
 
-<link
-  id="color-scheme-style"
-  href="https://cdn.jotfor.ms/stylebuilder/static/color-scheme.css?v=3.3.66493"
-  type="text/css"
-  rel="stylesheet"
-/>
-<script type="text/javascript">JotForm.ownerView = true;</script>
-<script type="text/javascript">JotForm.forwardToEu = true;</script>
-<script type="text/javascript">JotForm.isNewSACL = true;</script>
+</body>
+</html>
