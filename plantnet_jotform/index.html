@@ -1,228 +1,105 @@
-<!DOCTYPE html>
-<html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modulo di identificazione piante</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #fafafa;
-        margin: 0;
-        padding: 30px;
-      }
-
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background: #fff;
-        padding: 25px 30px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      }
-
-      h2 {
-        text-align: center;
-        color: #2e7d32;
-        margin-bottom: 10px;
-      }
-
-      p.description {
-        text-align: center;
-        color: #444;
-        font-size: 15px;
-        margin-bottom: 25px;
-      }
-
-      label {
-        font-weight: 600;
-        margin-top: 12px;
-        display: block;
-      }
-
-      input[type="text"],
-      input[type="file"] {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-top: 6px;
-        box-sizing: border-box;
-      }
-
-      button {
-        border: none;
-        cursor: pointer;
-        border-radius: 6px;
-        padding: 10px 16px;
-        font-weight: 600;
-      }
-
-      #identify-btn {
-        background-color: #43a047;
-        color: white;
-      }
-
-      #identify-btn:disabled {
-        background-color: #bdbdbd;
-        cursor: not-allowed;
-      }
-
-      #input_4 {
-        background-color: #1976d2;
-        color: white;
-        margin-top: 15px;
-      }
-
-      .form-buttons-wrapper {
-        text-align: center;
-        margin-top: 20px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-      <h2>🌿 Modulo di identificazione piante</h2>
-      <p class="description">
-        Carica una foto della pianta, clicca
-        <strong>“Identifica specie”</strong> per compilare i campi, poi premi
-        <strong>“Invia”</strong> per spedire il modulo tramite Jotform.
-      </p>
-
-      <!-- ✅ FORM che invia a Jotform -->
-      <form
-        class="jotform-form"
-        action="https://eu-submit.jotform.com/submit/253044075525049"
-        method="post"
-        enctype="multipart/form-data"
-        name="form_253044075525049"
-        id="form_253044075525049"
-        accept-charset="utf-8"
-        autocomplete="on"
+<!-- 🔹 Pulsante INVIA – gestito da Jotform -->
+<li class="form-line" data-type="control_button" id="id_4">
+  <div id="cid_4" class="form-input-wide" data-layout="full">
+    <div data-align="auto" class="form-buttons-wrapper form-buttons-auto jsTest-button-wrapperField">
+      <button
+        id="input_4"
+        type="submit"
+        class="form-submit-button submit-button jf-form-buttons jsTest-submitField legacy-submit"
+        data-component="button"
+        data-content=""
       >
-        <input type="hidden" name="formID" value="253044075525049" />
-
-        <!-- 📸 Foto della pianta + pulsante Identifica -->
-        <label for="input_8">Foto della pianta</label>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <input
-            type="file"
-            id="input_8"
-            name="q8_fileUpload[]"
-            accept="image/*"
-            required
-          />
-          <button type="button" id="identify-btn">Identifica specie</button>
-        </div>
-
-        <!-- 🌱 Campi compilati automaticamente -->
-        <label for="input_12">Affidabilità</label>
-        <input type="text" id="input_12" name="q12_affidabilita" />
-
-        <label for="input_7">Nome Comune</label>
-        <input type="text" id="input_7" name="q7_Nome_comune" />
-
-        <label for="input_9">Nome Scientifico</label>
-        <input type="text" id="input_9" name="q9_Nome_Scientifico" />
-
-        <label for="input_13">Allergenicità</label>
-        <input type="text" id="input_13" name="q13_allergenicita" />
-
-        <!-- 🔘 Bottone INVIA -->
-        <div class="form-buttons-wrapper">
-          <button id="input_4" type="submit" class="form-submit-button">
-            Invia
-          </button>
-        </div>
-      </form>
-
-      <footer style="text-align: center; margin-top: 20px; font-size: 13px;">
-        Modulo inviato tramite Jotform — identificazione automatica fornita da
-        <a
-          href="https://plantnet.org/"
-          target="_blank"
-          style="color: #2e7d32; text-decoration: none; font-weight: bold;"
-          >PlantNET 🌱</a
-        >
-      </footer>
+        Invia
+      </button>
     </div>
+  </div>
+</li>
 
-    <!-- ✅ SCRIPT: invia foto a PlantNET e compila i campi -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const identifyButton = document.getElementById("identify-btn");
-        const fileInput = document.getElementById("input_8");
+<!-- Fine del form -->
+</ul>
+</div>
 
-        if (!identifyButton || !fileInput) {
-          console.warn("⚠️ Bottone identifica o input_8 non trovato");
-          return;
-        }
+<script>
+  JotForm.showJotFormPowered = "0";
+</script>
+<script>
+  JotForm.poweredByText = "Creato con Jotform";
+</script>
+<input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="253044075525049" />
+<script type="text/javascript">
+  var all_spc = document.querySelectorAll("form[id='253044075525049'] .si" + "mple" + "_spc");
+  for (var i = 0; i < all_spc.length; i++) {
+    all_spc[i].value = "253044075525049-253044075525049";
+  }
+</script>
+</form>
 
-        identifyButton.addEventListener("click", async function (e) {
-          e.preventDefault();
+<!-- 🔹 Script di collegamento con PlantNet -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const identifyButton = document.getElementById("identify-btn");
+  const fileInput = document.getElementById("input_8");
 
-          if (!fileInput.files || fileInput.files.length === 0) {
-            alert("Carica prima una foto della pianta.");
-            return;
-          }
+  if (!identifyButton || !fileInput) {
+    console.warn("⚠️ Impossibile trovare identify-btn o input_8");
+    return;
+  }
 
-          const file = fileInput.files[0];
-          identifyButton.disabled = true;
-          const originalText = identifyButton.textContent;
-          identifyButton.textContent = "Identificazione in corso...";
+  identifyButton.addEventListener("click", async function (e) {
+    e.preventDefault();
 
-          try {
-            // Leggi immagine come base64
-            const base64Image = await new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => {
-                const result = reader.result || "";
-                resolve(result.toString().split(",")[1]);
-              };
-              reader.onerror = () => reject(reader.error);
-              reader.readAsDataURL(file);
-            });
+    const files = fileInput.files;
+    if (!files || files.length === 0) {
+      alert("Carica almeno una foto per identificare la pianta 🌿");
+      return;
+    }
 
-            // Chiamata alla funzione Netlify
-            const response = await fetch(
-              "/.netlify/functions/plantnet-identify",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imageBase64: base64Image }),
-              }
-            );
+    const file = files[0];
+    const reader = new FileReader();
 
-            const data = await response.json();
+    reader.onload = async function () {
+      const base64Data = reader.result.split(",")[1];
+      try {
+        identifyButton.textContent = "🔍 Identificazione in corso...";
+        identifyButton.disabled = true;
 
-            if (!response.ok) {
-              console.error("Errore da funzione Netlify:", data);
-              alert("Errore durante l'identificazione della pianta.");
-            } else {
-              // ✅ Compila i campi Jotform
-              const affid = document.getElementById("input_12");
-              const nomeComune = document.getElementById("input_7");
-              const nomeScientifico = document.getElementById("input_9");
-              const allerg = document.getElementById("input_13");
-
-              if (affid) affid.value = data.reliability || "";
-              if (nomeComune) nomeComune.value = data.commonName || "";
-              if (nomeScientifico)
-                nomeScientifico.value = data.scientificName || "";
-              if (allerg) allerg.value = data.allergenicity || "";
-
-              console.log("✅ Pianta identificata:", data.commonName);
-            }
-          } catch (err) {
-            console.error("Errore imprevisto:", err);
-            alert("Errore imprevisto durante l'identificazione.");
-          } finally {
-            identifyButton.disabled = false;
-            identifyButton.textContent = originalText;
-          }
+        const response = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64: base64Data }),
         });
-      });
-    </script>
-  </body>
-</html>
+
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.error || "Errore sconosciuto");
+
+        // ✅ Compila i campi Jotform
+        document.getElementById("input_7").value = data.commonName || "";
+        document.getElementById("input_9").value = data.scientificName || "";
+        document.getElementById("input_12").value = data.reliability || "";
+        document.getElementById("input_13").value = data.allergenicity || "";
+
+        identifyButton.textContent = "✅ Identificazione completata";
+      } catch (err) {
+        console.error(err);
+        alert("Errore durante l'identificazione della pianta. Riprova.");
+        identifyButton.textContent = "Identifica Specie";
+      } finally {
+        identifyButton.disabled = false;
+      }
+    };
+
+    reader.readAsDataURL(file);
+  });
+});
+</script>
+
+<link
+  id="color-scheme-style"
+  href="https://cdn.jotfor.ms/stylebuilder/static/color-scheme.css?v=3.3.66493"
+  type="text/css"
+  rel="stylesheet"
+/>
+<script type="text/javascript">JotForm.ownerView = true;</script>
+<script type="text/javascript">JotForm.forwardToEu = true;</script>
+<script type="text/javascript">JotForm.isNewSACL = true;</script>
