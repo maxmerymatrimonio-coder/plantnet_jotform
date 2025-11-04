@@ -1,9 +1,10 @@
 // Netlify Function: proxy sicuro verso PlantNET
 // Versione con priorità nomi comuni italiani (lang=it)
+// e invio dell'immagine come base64 "puro" (senza data:image/...).
 
 exports.handler = async (event) => {
   try {
-    // Solo POST
+    // Permettiamo solo POST
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 405,
@@ -12,15 +13,15 @@ exports.handler = async (event) => {
       };
     }
 
-    // Legge body JSON
+    // Proviamo a leggere il body JSON
     let body;
     try {
       body = JSON.parse(event.body || "{}");
-    } catch {
+    } catch (e) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Body non valido" }),
+        body: JSON.stringify({ error: "Body non valido (JSON)" }),
       };
     }
 
@@ -29,7 +30,9 @@ exports.handler = async (event) => {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Nessuna immagine ricevuta" }),
+        body: JSON.stringify({
+          error: "Nessuna immagine ricevuta (imageBase64 mancante)",
+        }),
       };
     }
 
@@ -39,19 +42,21 @@ exports.handler = async (event) => {
       return {
         statusCode: 500,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ error: "Chiave API mancante" }),
+        body: JSON.stringify({ error: "Chiave API PlantNET mancante sul server" }),
       };
     }
 
-    // ✅ Richiesta in lingua italiana
+    // ✅ API PlantNET con lingua italiana
     const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
 
+    // In Node 18+ su Netlify fetch è globale
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        images: [`data:image/jpeg;base64,${imageBase64}`],
-        organs: ["leaf"], // puoi cambiare in "flower" o altro
+        // 👇 qui mandiamo il base64 "puro", senza prefisso data:image/...
+        images: [imageBase64],
+        organs: ["leaf"], // puoi cambiare in "flower", "fruit", ecc.
       }),
     });
 
@@ -63,6 +68,7 @@ exports.handler = async (event) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           error: "Errore da PlantNET",
+          status: response.status,
           detail: text,
         }),
       };
@@ -75,7 +81,7 @@ exports.handler = async (event) => {
     const scientificName =
       result?.species?.scientificNameWithoutAuthor || "Sconosciuta";
 
-    // ✅ Nomi comuni in lingua italiana (se disponibili)
+    // Nome comune (priorità italiano, grazie a lang=it)
     let commonName = "Nome comune non disponibile";
     if (result?.species?.commonNames?.length > 0) {
       commonName = result.species.commonNames[0];
@@ -85,7 +91,7 @@ exports.handler = async (event) => {
     const reliability =
       typeof result?.score === "number" ? result.score.toFixed(2) : "N/D";
 
-    // Allergenicità: placeholder per futura API o database
+    // Allergenicità (per ora placeholder)
     const allergenicity = "N/D";
 
     return {
