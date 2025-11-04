@@ -1,54 +1,63 @@
-// Netlify Function per identificare una pianta tramite l'API di PlantNet
-// ✅ Versione aggiornata con lingua italiana (lang=it)
+// Netlify Function: identifica pianta con PlantNET
+// ✅ Versione con lingua italiana (lang=it)
 
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-export async function handler(event) {
+exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
     const imageBase64 = body.imageBase64;
+    const apiKey = process.env.PLANTNET_API_KEY;
 
-    if (!imageBase64) {
+    if (!apiKey) {
+      console.error("PLANTNET_API_KEY non configurata");
       return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Nessuna immagine ricevuta." }),
+        statusCode: 500,
+        body: JSON.stringify({ error: "PLANTNET_API_KEY non configurata" }),
       };
     }
 
-    const API_KEY = process.env.PLANTNET_API_KEY;
+    if (!imageBase64) {
+      console.error("imageBase64 mancante nel body");
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Nessuna immagine ricevuta" }),
+      };
+    }
 
-    // ✅ lingua impostata su italiano
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${API_KEY}&lang=it`;
+    // ✅ Aggiungo lang=it per avere i nomi comuni in italiano quando disponibili
+    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         images: [`data:image/jpeg;base64,${imageBase64}`],
-        organs: ["leaf"],
+        organs: ["leaf"], // puoi cambiare in "flower" ecc. se vuoi
       }),
     });
 
-    const data = await response.json();
-
-    if (!data.results || data.results.length === 0) {
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("Errore PlantNET:", response.status, text);
       return {
-        statusCode: 200,
-        body: JSON.stringify({
-          scientificName: "Non identificata",
-          commonName: "Nessun risultato",
-          reliability: "0",
-          allergenicity: "N/D",
-        }),
+        statusCode: response.status,
+        body: JSON.stringify({ error: "Errore da PlantNET", detail: text }),
       };
     }
 
-    const bestResult = data.results[0];
+    const data = await response.json();
+    const result = data.results && data.results[0];
+
     const scientificName =
-      bestResult.species?.scientificNameWithoutAuthor || "Sconosciuta";
+      result?.species?.scientificNameWithoutAuthor || "Sconosciuta";
+
+    const commonNames = result?.species?.commonNames || [];
     const commonName =
-      bestResult.species?.commonNames?.[0] || "Nome comune non disponibile";
-    const reliability = bestResult.score?.toFixed(2) || "N/D";
+      commonNames[0] || "Nome comune non disponibile";
+
+    const reliability =
+      typeof result?.score === "number" ? result.score.toFixed(2) : "N/D";
 
     return {
       statusCode: 200,
@@ -60,10 +69,10 @@ export async function handler(event) {
       }),
     };
   } catch (error) {
-    console.error("Errore durante l'identificazione:", error);
+    console.error("Errore nella funzione Netlify:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore interno del server" }),
+      body: JSON.stringify({ error: "Errore server", detail: String(error) }),
     };
   }
-}
+};
