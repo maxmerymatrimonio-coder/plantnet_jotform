@@ -1,7 +1,5 @@
-// Netlify Function: identifica pianta con PlantNET
-// ✅ Versione con lingua italiana (lang=it)
-
-const fetch = require("node-fetch");
+// Funzione Netlify: chiama PlantNET e restituisce
+// nome scientifico, nome comune (in italiano) e affidabilità.
 
 exports.handler = async (event) => {
   try {
@@ -25,16 +23,24 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Aggiungo lang=it per avere i nomi comuni in italiano quando disponibili
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
+    // Decodifica base64 in binario
+    const buffer = Buffer.from(imageBase64, "base64");
 
-    const response = await fetch(apiUrl, {
+    // Crea form-data multipart come richiesto da PlantNET
+    const formData = new FormData();
+    formData.append("organs", "leaf"); // puoi cambiare in "flower", "fruit", ecc.
+    formData.append(
+      "images",
+      new Blob([buffer], { type: "image/jpeg" }),
+      "photo.jpg"
+    );
+
+    // ✅ lingua italiana
+    const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
+
+    const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        images: [`data:image/jpeg;base64,${imageBase64}`],
-        organs: ["leaf"], // puoi cambiare in "flower" ecc. se vuoi
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -72,7 +78,10 @@ exports.handler = async (event) => {
     console.error("Errore nella funzione Netlify:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore server", detail: String(error) }),
+      body: JSON.stringify({
+        error: "Errore server",
+        detail: String(error),
+      }),
     };
   }
 };
