@@ -1,79 +1,58 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="utf-8" />
-  <title>Modulo di identificazione piante</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
+<li class="form-line form-line-column form-col-1" data-type="control_fileupload" id="id_8">
+  <label class="form-label form-label-top" id="label_8" for="input_8" aria-hidden="false">
+    File Upload
+  </label>
 
-<!-- 🔹 Embed del tuo modulo Jotform -->
-<div id="jotform-container" style="max-width: 800px; margin: 0 auto;">
-  <script type="text/javascript"
-    src="https://form.jotform.com/jsform/253044075525049">
-  </script>
-</div>
+  <div id="cid_8" class="form-input-wide" data-layout="full">
+    <!-- Contenitore flessibile: upload a sinistra, pulsante a destra -->
+    <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; justify-content: space-between;">
 
-<!-- 🔹 Pulsante per identificare la specie -->
-<div style="max-width: 800px; margin: 30px auto; text-align: center;">
-  <button id="identify-btn"
-    style="background-color:#2563eb;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:16px;cursor:pointer;">
-    🌿 Identifica Specie
-  </button>
-</div>
+      <!-- 📸 BLOCCO UPLOAD ORIGINALE JOTFORM -->
+      <div class="jfQuestion-fields" data-wrapper-react="true" style="flex: 1 1 60%;">
+        <div class="jfField isFilled">
+          <div class="jfUpload-wrapper">
+            <div class="jfUpload-container">
+              <div class="jfUpload-button-container">
+                <div class="jfUpload-button" aria-hidden="true" tabindex="0" style="display:none" data-version="v2">
+                  Sfoglia File
+                  <div class="jfUpload-heading forDesktop">Trascina e Rilascia i file qui</div>
+                  <div class="jfUpload-heading forMobile">Scegli un file</div>
+                </div>
+              </div>
+            </div>
+            <div class="jfUpload-files-container">
+              <div class="validate[multipleUpload]">
+                <input
+                  type="file"
+                  id="input_8"
+                  name="q8_fileUpload[]"
+                  multiple=""
+                  class="form-upload-multiple"
+                  data-imagevalidate="yes"
+                  data-file-accept="pdf, doc, docx, xls, xlsx, csv, txt, rtf, html, zip, mp3, wma, mpg, flv, avi, jpg, jpeg, png, gif"
+                  data-limit-file-size="Yes"
+                  data-file-maxsize="10854"
+                  data-file-minsize="0"
+                  data-file-limit="2"
+                  data-component="fileupload"
+                  aria-label="Sfoglia File"
+                />
+              </div>
+            </div>
+          </div>
+          <div data-wrapper-react="true"></div>
+        </div>
+        <span style="display:none" class="cancelText">Cancel</span>
+        <span style="display:none" class="ofText">of</span>
+      </div>
 
-<!-- 🔹 Script per identificazione automatica -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const identifyButton = document.getElementById("identify-btn");
+      <!-- 🌿 PULSANTE IDENTIFICA SPECIE A DESTRA -->
+      <div style="flex: 0 0 auto; text-align: right; min-width: 180px;">
+        <button type="button" id="identify-btn" class="form-submit-button">
+          Identifica Specie
+        </button>
+      </div>
 
-  identifyButton.addEventListener("click", async function () {
-    const fileInput = document.querySelector('input[type="file"]');
-    if (!fileInput || !fileInput.files.length) {
-      alert("Carica una foto prima di identificare la pianta 🌿");
-      return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = async function () {
-      const base64 = reader.result.split(",")[1];
-      identifyButton.disabled = true;
-      identifyButton.textContent = "🔍 Identificazione in corso...";
-
-      try {
-        const response = await fetch("/.netlify/functions/plantnet-identify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64: base64 })
-        });
-
-        const data = await response.json();
-
-        // Compila i campi del modulo
-        const nomeComune = document.querySelector("#input_7");
-        const nomeScientifico = document.querySelector("#input_9");
-        const affidabilita = document.querySelector("#input_12");
-        const allergenicita = document.querySelector("#input_13");
-
-        if (nomeComune) nomeComune.value = data.commonName || "";
-        if (nomeScientifico) nomeScientifico.value = data.scientificName || "";
-        if (affidabilita) affidabilita.value = data.reliability || "";
-        if (allergenicita) allergenicita.value = data.allergenicity || "";
-
-        identifyButton.textContent = "✅ Identificazione completata";
-      } catch (err) {
-        console.error(err);
-        alert("Errore durante l'identificazione. Riprova.");
-        identifyButton.textContent = "🌿 Identifica Specie";
-      } finally {
-        identifyButton.disabled = false;
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-});
-</script>
-
-</body>
-</html>
+    </div> <!-- fine flex container -->
+  </div>
+</li>
