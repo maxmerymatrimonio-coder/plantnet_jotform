@@ -56,7 +56,64 @@
         "iframe[id='JotFormIFrame-253044075525049']",
         "https://form.jotform.com/"
       );
-    </script>
+    </script> <!-- ✅ SCRIPT AUTOMATICO: invia foto a PlantNET -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const iframe = document.getElementById("JotFormIFrame-253044075525049");
+
+  // Ascolta i messaggi provenienti da Jotform
+  window.addEventListener("message", async (event) => {
+    if (!event.data || !event.data.type) return;
+
+    // Quando un file viene caricato nel modulo Jotform
+    if (event.data.type === "jotform-upload-complete") {
+      try {
+        const fileUrl = event.data.url;
+        if (!fileUrl) return;
+
+        // Scarica l'immagine come blob e convertila in base64
+        const imgResponse = await fetch(fileUrl);
+        const blob = await imgResponse.blob();
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result.split(",")[1]);
+          reader.readAsDataURL(blob);
+        });
+
+        // Manda l'immagine alla funzione Netlify
+        const res = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64: base64 }),
+        });
+
+        if (!res.ok) throw new Error("Errore risposta Netlify");
+        const data = await res.json();
+
+        // Inserisce i dati dentro i campi del modulo
+        iframe.contentWindow.postMessage(
+          {
+            action: "populateFields",
+            fields: {
+              input_9: data.scientificName || "",
+              input_7: data.commonName || "",
+              input_12: data.reliability || "",
+              input_13: data.allergenicity || "N/D",
+            },
+          },
+          "*"
+        );
+
+        alert("✅ Pianta identificata: " + data.commonName);
+      } catch (err) {
+        console.error("Errore PlantNET:", err);
+        alert("Errore durante l'identificazione della pianta");
+      }
+    }
+  });
+});
+</script>
+<!-- ✅ FINE SCRIPT AUTOMATICO -->
     <!-- ✅ FINE INTEGRAZIONE -->
 
     <footer>
