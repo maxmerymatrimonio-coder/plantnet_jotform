@@ -1,22 +1,20 @@
-// ✅ Netlify Function: identifica pianta con PlantNET (versione corretta per lingua italiana)
-const FormData = require("form-data");
+// ✅ Funzione Netlify: identifica pianta con PlantNet (versione stabile)
+import fetch from "node-fetch";
+import FormData from "form-data";
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
     const imageBase64 = body.imageBase64;
     const apiKey = process.env.PLANTNET_API_KEY;
 
-    // 🔒 Controllo chiave API
     if (!apiKey) {
-      console.error("PLANTNET_API_KEY non configurata");
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Chiave API mancante" }),
+        body: JSON.stringify({ error: "Chiave API mancante (PLANTNET_API_KEY)" }),
       };
     }
 
-    // 📸 Controllo immagine
     if (!imageBase64) {
       return {
         statusCode: 400,
@@ -24,48 +22,43 @@ exports.handler = async (event) => {
       };
     }
 
-    // 🧩 Crea form multipart
-    const formData = new FormData();
-    const buffer = Buffer.from(imageBase64, "base64");
-    formData.append("images", buffer, { filename: "pianta.jpg" });
-    formData.append("organs", "leaf"); // puoi cambiare in "flower", "fruit", ecc.
+    // Crea il corpo multipart/form-data
+    const form = new FormData();
+    form.append("organs", "leaf");
+    form.append("images", Buffer.from(imageBase64, "base64"), "pianta.jpg");
 
-    // 🌿 URL con lingua italiana
+    // URL PlantNet con lingua italiana
     const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
 
-    // 🚀 Chiamata PlantNET (senza node-fetch)
+    // Invio a PlantNet
     const response = await fetch(apiUrl, {
       method: "POST",
-      body: formData,
+      body: form,
+      headers: form.getHeaders(),
     });
 
-    // ⚠️ Gestione errori risposta
     if (!response.ok) {
       const text = await response.text();
-      console.error("Errore PlantNET:", text);
+      console.error("Errore PlantNet:", text);
       return {
         statusCode: response.status,
         body: JSON.stringify({
-          error: "Errore da PlantNET",
+          error: "Errore PlantNet",
           detail: text,
         }),
       };
     }
 
-    // 📦 Analizza risposta JSON
     const data = await response.json();
-    const result = data.results && data.results[0];
+    const result = data.results?.[0];
 
     const scientificName =
       result?.species?.scientificNameWithoutAuthor || "Sconosciuta";
-
     const commonNames = result?.species?.commonNames || [];
     const commonName = commonNames[0] || "Nome comune non disponibile";
-
     const reliability =
       typeof result?.score === "number" ? result.score.toFixed(2) : "N/D";
 
-    // ✅ Ritorno dati
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -76,12 +69,12 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error("Errore nella funzione Netlify:", error);
+    console.error("Errore server:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({
         error: "Errore server",
-        detail: String(error),
+        detail: error.message,
       }),
     };
   }
