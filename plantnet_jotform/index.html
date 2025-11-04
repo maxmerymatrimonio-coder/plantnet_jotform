@@ -56,31 +56,34 @@
         "iframe[id='JotFormIFrame-253044075525049']",
         "https://form.jotform.com/"
       );
-    </script> <!-- ✅ SCRIPT AUTOMATICO: invia foto a PlantNET -->
+<!-- ✅ SCRIPT AUTOMATICO AGGIORNATO -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const iframe = document.getElementById("JotFormIFrame-253044075525049");
 
-  // Ascolta i messaggi provenienti da Jotform
+  // Ascolta i messaggi che arrivano da Jotform
   window.addEventListener("message", async (event) => {
-    if (!event.data || !event.data.type) return;
+    if (!event.data) return;
 
-    // Quando un file viene caricato nel modulo Jotform
-    if (event.data.type === "jotform-upload-complete") {
+    // Controlla se è un caricamento file
+    if (typeof event.data === "string" && event.data.includes("uploadedFiles")) {
+      console.log("📸 File caricato:", event.data);
       try {
-        const fileUrl = event.data.url;
+        // Ottieni URL immagine dal messaggio
+        const match = event.data.match(/https?:\/\/[^\s"]+/);
+        const fileUrl = match ? match[0] : null;
         if (!fileUrl) return;
 
-        // Scarica l'immagine come blob e convertila in base64
-        const imgResponse = await fetch(fileUrl);
-        const blob = await imgResponse.blob();
+        // Scarica e converte in base64
+        const resImg = await fetch(fileUrl);
+        const blob = await resImg.blob();
         const base64 = await new Promise((resolve) => {
           const reader = new FileReader();
           reader.onloadend = () => resolve(reader.result.split(",")[1]);
           reader.readAsDataURL(blob);
         });
 
-        // Manda l'immagine alla funzione Netlify
+        // Chiama la funzione Netlify
         const res = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -89,24 +92,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!res.ok) throw new Error("Errore risposta Netlify");
         const data = await res.json();
+        console.log("🌿 Risultato PlantNET:", data);
 
-        // Inserisce i dati dentro i campi del modulo
+        // Invia i risultati a Jotform
         iframe.contentWindow.postMessage(
           {
-            action: "populateFields",
-            fields: {
-              input_9: data.scientificName || "",
-              input_7: data.commonName || "",
-              input_12: data.reliability || "",
-              input_13: data.allergenicity || "N/D",
+            type: "populate-fields",
+            data: {
+              "input_7": data.commonName || "",
+              "input_9": data.scientificName || "",
+              "input_12": data.reliability || "",
+              "input_13": data.allergenicity || "N/D",
             },
           },
           "*"
         );
 
         alert("✅ Pianta identificata: " + data.commonName);
-      } catch (err) {
-        console.error("Errore PlantNET:", err);
+      } catch (error) {
+        console.error("Errore:", error);
         alert("Errore durante l'identificazione della pianta");
       }
     }
@@ -114,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <!-- ✅ FINE SCRIPT AUTOMATICO -->
+      
     <!-- ✅ FINE INTEGRAZIONE -->
 
     <footer>
