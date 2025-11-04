@@ -1,58 +1,215 @@
-<li class="form-line form-line-column form-col-1" data-type="control_fileupload" id="id_8">
-  <label class="form-label form-label-top" id="label_8" for="input_8" aria-hidden="false">
-    File Upload
-  </label>
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>Area Metropolitana di Milano - Identificazione Piante</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #2461b7;
+        margin: 0;
+        padding: 16px;
+      }
 
-  <div id="cid_8" class="form-input-wide" data-layout="full">
-    <!-- Contenitore flessibile: upload a sinistra, pulsante a destra -->
-    <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; justify-content: space-between;">
+      .page-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #d6e7ff;
+        border-radius: 8px;
+        padding: 16px;
+        box-sizing: border-box;
+      }
 
-      <!-- 📸 BLOCCO UPLOAD ORIGINALE JOTFORM -->
-      <div class="jfQuestion-fields" data-wrapper-react="true" style="flex: 1 1 60%;">
-        <div class="jfField isFilled">
-          <div class="jfUpload-wrapper">
-            <div class="jfUpload-container">
-              <div class="jfUpload-button-container">
-                <div class="jfUpload-button" aria-hidden="true" tabindex="0" style="display:none" data-version="v2">
-                  Sfoglia File
-                  <div class="jfUpload-heading forDesktop">Trascina e Rilascia i file qui</div>
-                  <div class="jfUpload-heading forMobile">Scegli un file</div>
-                </div>
-              </div>
-            </div>
-            <div class="jfUpload-files-container">
-              <div class="validate[multipleUpload]">
-                <input
-                  type="file"
-                  id="input_8"
-                  name="q8_fileUpload[]"
-                  multiple=""
-                  class="form-upload-multiple"
-                  data-imagevalidate="yes"
-                  data-file-accept="pdf, doc, docx, xls, xlsx, csv, txt, rtf, html, zip, mp3, wma, mpg, flv, avi, jpg, jpeg, png, gif"
-                  data-limit-file-size="Yes"
-                  data-file-maxsize="10854"
-                  data-file-minsize="0"
-                  data-file-limit="2"
-                  data-component="fileupload"
-                  aria-label="Sfoglia File"
-                />
-              </div>
-            </div>
-          </div>
-          <div data-wrapper-react="true"></div>
-        </div>
-        <span style="display:none" class="cancelText">Cancel</span>
-        <span style="display:none" class="ofText">of</span>
+      h1 {
+        margin-top: 0;
+        color: #12458c;
+        font-size: 22px;
+        text-align: center;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #12458c;
+        margin-bottom: 12px;
+      }
+
+      .note {
+        font-size: 14px;
+        color: #12458c;
+        margin-bottom: 16px;
+      }
+
+      .note strong {
+        font-weight: 600;
+      }
+
+      /* Jotform iframe full width */
+      #jotform-container iframe {
+        width: 1px;
+        min-width: 100%;
+      }
+
+      /* Pulsante Identifica stile simile a Jotform */
+      .identify-btn-wrapper {
+        text-align: right;
+        margin-top: 8px;
+      }
+
+      #identify-btn {
+        background-color: #2461b7;
+        color: #ffffff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      #identify-btn:disabled {
+        opacity: 0.7;
+        cursor: default;
+      }
+
+      @media (max-width: 600px) {
+        .identify-btn-wrapper {
+          text-align: left;
+          margin-top: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <h1>Area Metropolitana di Milano</h1>
+      <div class="subtitle">Modulo di identificazione piante (Jotform + PlantNET)</div>
+
+      <div class="note">
+        🌱 <strong>Istruzioni:</strong><br />
+        1. Carica una foto chiara e ravvicinata della pianta (foglie, fiori, frutti, max 2 foto).<br />
+        2. Clicca su <strong>Identifica Specie</strong> per compilare automaticamente i campi.<br />
+        3. Controlla i dati e premi <strong>Invia</strong> per inviare il modulo (sempre tramite Jotform).
       </div>
 
-      <!-- 🌿 PULSANTE IDENTIFICA SPECIE A DESTRA -->
-      <div style="flex: 0 0 auto; text-align: right; min-width: 180px;">
-        <button type="button" id="identify-btn" class="form-submit-button">
-          Identifica Specie
-        </button>
+      <!-- 📋 JOTFORM INCORPORATO (usa il tuo form esistente) -->
+      <div id="jotform-container">
+        <script
+          type="text/javascript"
+          src="https://form.jotform.com/jsform/253044075525049"
+        ></script>
       </div>
+    </div>
 
-    </div> <!-- fine flex container -->
-  </div>
-</li>
+    <script>
+      // Aspetta che Jotform abbia creato il form e poi aggiunge:
+      // - il pulsante "Identifica Specie" vicino all'upload
+      // - il collegamento alla funzione Netlify
+      document.addEventListener("DOMContentLoaded", function () {
+        function setupIdentifyIntegration() {
+          const fileInput = document.getElementById("input_8");
+          const uploadLi = document.getElementById("id_8");
+
+          // Se il form non è ancora pronto, riprova tra poco
+          if (!fileInput || !uploadLi) {
+            setTimeout(setupIdentifyIntegration, 700);
+            return;
+          }
+
+          // Evita di creare due volte il pulsante
+          if (document.getElementById("identify-btn")) {
+            return;
+          }
+
+          // Trova il contenitore interno dell'upload (la parte con il box drag & drop)
+          let uploadInner = uploadLi.querySelector(".jfQuestion-fields");
+          if (!uploadInner) {
+            uploadInner = uploadLi; // fallback
+          }
+
+          // Crea un contenitore flessibile: upload + pulsante affiancati
+          const flexWrapper = document.createElement("div");
+          flexWrapper.style.display = "flex";
+          flexWrapper.style.gap = "16px";
+          flexWrapper.style.alignItems = "flex-start";
+          flexWrapper.style.flexWrap = "wrap";
+          flexWrapper.style.justifyContent = "space-between";
+
+          // Inserisci il wrapper prima del contenuto esistente e sposta dentro l'upload
+          uploadInner.parentNode.insertBefore(flexWrapper, uploadInner);
+          flexWrapper.appendChild(uploadInner);
+
+          // Crea contenitore per il pulsante a destra
+          const btnWrapper = document.createElement("div");
+          btnWrapper.className = "identify-btn-wrapper";
+
+          const btn = document.createElement("button");
+          btn.id = "identify-btn";
+          btn.type = "button";
+          btn.textContent = "Identifica Specie";
+
+          btnWrapper.appendChild(btn);
+          flexWrapper.appendChild(btnWrapper);
+
+          // 🔗 Logica del pulsante: manda immagine a Netlify + compila i campi Jotform
+          btn.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            const files = fileInput.files;
+            if (!files || files.length === 0) {
+              alert("Carica almeno una foto per identificare la pianta 🌿");
+              return;
+            }
+
+            const file = files[0];
+            const reader = new FileReader();
+
+            reader.onload = async function () {
+              const base64Data = reader.result.split(",")[1];
+
+              try {
+                btn.textContent = "🔍 Identificazione in corso...";
+                btn.disabled = true;
+
+                const response = await fetch("/.netlify/functions/plantnet-identify", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ imageBase64: base64Data }),
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                  console.error("Errore da funzione PlantNET:", data);
+                  throw new Error(data.error || "Errore sconosciuto");
+                }
+
+                // ✅ Compila i campi Jotform (usando gli ID che hai indicato)
+                const inputAffidabilita = document.getElementById("input_12");
+                const inputNomeComune = document.getElementById("input_7");
+                const inputNomeScientifico = document.getElementById("input_9");
+                const inputAllergenicita = document.getElementById("input_13");
+
+                if (inputAffidabilita) inputAffidabilita.value = data.reliability || "";
+                if (inputNomeComune) inputNomeComune.value = data.commonName || "";
+                if (inputNomeScientifico) inputNomeScientifico.value = data.scientificName || "";
+                if (inputAllergenicita) inputAllergenicita.value = data.allergenicity || "";
+
+                btn.textContent = "✅ Identificazione completata";
+              } catch (err) {
+                console.error(err);
+                alert("Errore durante l'identificazione della pianta. Riprova.");
+                btn.textContent = "Identifica Specie";
+              } finally {
+                btn.disabled = false;
+              }
+            };
+
+            reader.readAsDataURL(file);
+          });
+        }
+
+        // Avvia la funzione di integrazione
+        setupIdentifyIntegration();
+      });
+    </script>
+  </body>
+</html>
