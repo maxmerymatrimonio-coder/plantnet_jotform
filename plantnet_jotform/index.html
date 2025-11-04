@@ -1,61 +1,83 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <title>Identificazione pianta - PlantNET</title>
-</head>
-<body>
-  <h1>Identificazione pianta con PlantNET</h1>
-  <form id="plant-form" enctype="multipart/form-data">
-    <p><label>Foto della pianta:</label><br />
-    <input type="file" id="fileUpload" accept="image/*" required /></p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Identificazione piante - GuardaMI</title>
+    <style>
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        background: #f4f7f6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+      }
+      footer {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #777;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2 style="text-align:center;">🌿 Modulo di identificazione piante</h2>
 
-    <p><label>Affidabilità:</label><br />
-    <input type="text" id="input_12" readonly /></p>
+      <!-- 👉 INCOLLA QUI IL TUO FORM JOTFORM (codice HTML completo, non iframe) -->
+      <!-- (Sostituisci questa riga con tutto il codice del modulo Jotform che mi hai già incollato ieri) -->
 
-    <p><label>Nome scientifico:</label><br />
-    <input type="text" id="input_9" readonly /></p>
+    </div>
 
-    <p><label>Nome comune:</label><br />
-    <input type="text" id="input_7" readonly /></p>
+    <footer>
+      Powered by <a href="https://identify.plantnet.org" target="_blank">PlantNet</a> 🌱
+    </footer>
 
-    <p><label>Allergenicità:</label><br />
-    <input type="text" id="input_13" readonly /></p>
+    <!-- SCRIPT AUTOMATICO PER IDENTIFICAZIONE -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("input_8");
+        const nomeSci = document.getElementById("input_9");
+        const nomeCom = document.getElementById("input_7");
+        const affid = document.getElementById("input_12");
+        const aller = document.getElementById("input_13");
 
-    <p><button type="button" id="btn-identifica">Identifica</button></p>
-  </form>
-
-  <script>
-    document.getElementById("btn-identifica").addEventListener("click", async () => {
-      const fileInput = document.getElementById("fileUpload");
-      const file = fileInput.files[0];
-      if (!file) { alert("Carica una foto prima!"); return; }
-
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        try {
-          const base64 = reader.result.split(",")[1];
-          const res = await fetch("/.netlify/functions/plantnet-identify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ imageBase64: base64 })
-          });
-          if (!res.ok) {
-            alert("Errore dal server Netlify.");
-            return;
-          }
-          const data = await res.json();
-          document.getElementById("input_9").value = data.scientificName || "";
-          document.getElementById("input_7").value = data.commonName || "";
-          document.getElementById("input_12").value = data.reliability || "";
-          document.getElementById("input_13").value = data.allergenicity || "N/D";
-        } catch (e) {
-          console.error(e);
-          alert("Errore durante l'identificazione.");
+        if (!fileInput) {
+          console.warn("Campo file input_8 non trovato.");
+          return;
         }
-      };
-      reader.readAsDataURL(file);
-    });
-  </script>
-</body>
-</html>
+
+        fileInput.addEventListener("change", function () {
+          const file = fileInput.files[0];
+          if (!file) return;
+
+          nomeSci.value = "Identificazione in corso...";
+          nomeCom.value = "";
+          affid.value = "";
+          aller.value = "";
+
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            const base64 = reader.result.split(",")[1];
+            try {
+              const res = await fetch("/.netlify/functions/plantnet-identify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ imageBase64: base64 })
+              });
+              const data = await res.json();
+              nomeSci.value = data.scientificName || "";
+              nomeCom.value = data.commonName || "";
+              affid.value = data.reliability || "";
+              aller.value = data.allergenicity || "N/D";
+            } catch (e) {
+              nomeSci.value = "Errore durante l'identificazione";
+              console.error(e);
+
