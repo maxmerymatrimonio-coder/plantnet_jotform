@@ -1,9 +1,11 @@
+
 {
   "name": "plantnet-jotform",
   "version": "1.0.0",
   "description": "Integrazione Jotform + PlantNET",
   "main": "index.html",
   "dependencies": {
+    "form-data": "^4.0.0",
     "node-fetch": "^3.3.2"
   }
 }
