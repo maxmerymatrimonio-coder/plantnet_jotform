@@ -1,222 +1,228 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modulo identificazione piante con PlantNET</title>
-
-  <!-- CSS stile Jotform -->
-  <link type="text/css" rel="stylesheet"
-        href="https://cdn.jotfor.ms/stylebuilder/static/form-common.css" />
-
-  <style>
-    body {
-      font-family: system-ui, Arial, sans-serif;
-      background: #f4f7f6;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #ffffff;
-      padding: 25px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      border-radius: 12px;
-    }
-    h2 {
-      text-align: center;
-      margin-top: 0;
-    }
-    .description {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 600;
-    }
-    input[type="text"],
-    input[type="file"] {
-      width: 100%;
-      max-width: 400px;
-      padding: 6px 8px;
-      margin-top: 6px;
-      box-sizing: border-box;
-    }
-    .buttons {
-      margin-top: 25px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    button {
-      padding: 10px 18px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    #identifyBtn {
-      background: #2f855a;
-      color: #ffffff;
-    }
-    #identifyBtn:disabled {
-      background: #9bb2a9;
-      cursor: default;
-    }
-    #submitBtn {
-      background: #3182ce;
-      color: #ffffff;
-    }
-    footer {
-      text-align: center;
-      font-size: 0.85rem;
-      color: #666;
-      margin-top: 25px;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h2>🌿 Modulo di identificazione piante</h2>
-    <p class="description">
-      Carica una foto della pianta, clicca <strong>“Identifica specie”</strong> per compilare i campi,
-      poi premi <strong>“Invia”</strong> per spedire il modulo tramite Jotform.
-    </p>
-
-    <!-- ✅ FORM CHE INVIA A JOTFORM -->
-    <form
-      class="jotform-form"
-      action="https://eu-submit.jotform.com/submit/253044075525049"
-      method="post"
-      enctype="multipart/form-data"
-      name="form_253044075525049"
-      id="form_253044075525049"
-      accept-charset="utf-8"
-      autocomplete="on"
-    >
-      <input type="hidden" name="formID" value="253044075525049" />
-
-      <!-- Foto -->
-      <label for="input_8">Foto della pianta</label>
-      <input
-        type="file"
-        id="input_8"
-        name="q8_fileUpload[]"
-        accept="image/*"
-        required
-      />
-
-      <!-- Affidabilità -->
-      <label for="input_12">Affidabilità</label>
-      <input
-        type="text"
-        id="input_12"
-        name="q12_affidabilita"
-        class="form-textbox"
-      />
-
-      <!-- Nome Comune -->
-      <label for="input_7">Nome Comune</label>
-      <input
-        type="text"
-        id="input_7"
-        name="q7_Nome_comune"
-        class="form-textbox"
-      />
-
-      <!-- Nome Scientifico -->
-      <label for="input_9">Nome Scientifico</label>
-      <input
-        type="text"
-        id="input_9"
-        name="q9_Nome_Scientifico"
-        class="form-textbox"
-      />
-
-      <!-- Allergenicità -->
-      <label for="input_13">Allergenicità</label>
-      <input
-        type="text"
-        id="input_13"
-        name="q13_allergenicita"
-        class="form-textbox"
-      />
-
-      <div class="buttons">
-        <button type="button" id="identifyBtn">Identifica specie</button>
-        <button type="submit" id="submitBtn">Invia (Jotform)</button>
-      </div>
-    </form>
-
-    <footer>
-      Modulo inviato tramite Jotform – identificazione automatica fornita da
-      <a href="https://identify.plantnet.org" target="_blank">PlantNET</a> 🌱
-    </footer>
-  </div>
-
-  <!-- ✅ SCRIPT: invia foto a PlantNET e compila i campi -->
-  <script>
-    const fileInput  = document.getElementById("input_8");
-    const nomeSci    = document.getElementById("input_9");
-    const nomeCom    = document.getElementById("input_7");
-    const affid      = document.getElementById("input_12");
-    const aller      = document.getElementById("input_13");
-    const identifyBtn = document.getElementById("identifyBtn");
-
-    identifyBtn.addEventListener("click", async () => {
-      const file = fileInput.files[0];
-      if (!file) {
-        alert("Per favore seleziona prima una foto della pianta.");
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modulo di identificazione piante</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+        margin: 0;
+        padding: 30px;
       }
 
-      identifyBtn.disabled = true;
-      const oldText = identifyBtn.textContent;
-      identifyBtn.textContent = "Identificazione in corso...";
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
 
-      try {
-        // 1️⃣ Converte l'immagine in base64
-        const base64 = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result.split(",")[1]);
-          reader.readAsDataURL(file);
-        });
+      h2 {
+        text-align: center;
+        color: #2e7d32;
+        margin-bottom: 10px;
+      }
 
-        // 2️⃣ Chiama la funzione Netlify che parla con PlantNET
-        const res = await fetch("/.netlify/functions/plantnet-identify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64: base64 }),
-        });
+      p.description {
+        text-align: center;
+        color: #444;
+        font-size: 15px;
+        margin-bottom: 25px;
+      }
 
-        if (!res.ok) {
-          const txt = await res.text();
-          console.error("Errore funzione Netlify:", res.status, txt);
-          alert("Errore durante l'identificazione della pianta.");
+      label {
+        font-weight: 600;
+        margin-top: 12px;
+        display: block;
+      }
+
+      input[type="text"],
+      input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-top: 6px;
+        box-sizing: border-box;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-weight: 600;
+      }
+
+      #identify-btn {
+        background-color: #43a047;
+        color: white;
+      }
+
+      #identify-btn:disabled {
+        background-color: #bdbdbd;
+        cursor: not-allowed;
+      }
+
+      #input_4 {
+        background-color: #1976d2;
+        color: white;
+        margin-top: 15px;
+      }
+
+      .form-buttons-wrapper {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>🌿 Modulo di identificazione piante</h2>
+      <p class="description">
+        Carica una foto della pianta, clicca
+        <strong>“Identifica specie”</strong> per compilare i campi, poi premi
+        <strong>“Invia”</strong> per spedire il modulo tramite Jotform.
+      </p>
+
+      <!-- ✅ FORM che invia a Jotform -->
+      <form
+        class="jotform-form"
+        action="https://eu-submit.jotform.com/submit/253044075525049"
+        method="post"
+        enctype="multipart/form-data"
+        name="form_253044075525049"
+        id="form_253044075525049"
+        accept-charset="utf-8"
+        autocomplete="on"
+      >
+        <input type="hidden" name="formID" value="253044075525049" />
+
+        <!-- 📸 Foto della pianta + pulsante Identifica -->
+        <label for="input_8">Foto della pianta</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input
+            type="file"
+            id="input_8"
+            name="q8_fileUpload[]"
+            accept="image/*"
+            required
+          />
+          <button type="button" id="identify-btn">Identifica specie</button>
+        </div>
+
+        <!-- 🌱 Campi compilati automaticamente -->
+        <label for="input_12">Affidabilità</label>
+        <input type="text" id="input_12" name="q12_affidabilita" />
+
+        <label for="input_7">Nome Comune</label>
+        <input type="text" id="input_7" name="q7_Nome_comune" />
+
+        <label for="input_9">Nome Scientifico</label>
+        <input type="text" id="input_9" name="q9_Nome_Scientifico" />
+
+        <label for="input_13">Allergenicità</label>
+        <input type="text" id="input_13" name="q13_allergenicita" />
+
+        <!-- 🔘 Bottone INVIA -->
+        <div class="form-buttons-wrapper">
+          <button id="input_4" type="submit" class="form-submit-button">
+            Invia
+          </button>
+        </div>
+      </form>
+
+      <footer style="text-align: center; margin-top: 20px; font-size: 13px;">
+        Modulo inviato tramite Jotform — identificazione automatica fornita da
+        <a
+          href="https://plantnet.org/"
+          target="_blank"
+          style="color: #2e7d32; text-decoration: none; font-weight: bold;"
+          >PlantNET 🌱</a
+        >
+      </footer>
+    </div>
+
+    <!-- ✅ SCRIPT: invia foto a PlantNET e compila i campi -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const identifyButton = document.getElementById("identify-btn");
+        const fileInput = document.getElementById("input_8");
+
+        if (!identifyButton || !fileInput) {
+          console.warn("⚠️ Bottone identifica o input_8 non trovato");
           return;
         }
 
-        const data = await res.json();
+        identifyButton.addEventListener("click", async function (e) {
+          e.preventDefault();
 
-        // 3️⃣ Compila i campi nel form
-        if (nomeSci) nomeSci.value = data.scientificName || "";
-        if (nomeCom) nomeCom.value = data.commonName || "";
-        if (affid)   affid.value   = data.reliability || "";
-        if (aller)   aller.value   = data.allergenicity || "N/D";
+          if (!fileInput.files || fileInput.files.length === 0) {
+            alert("Carica prima una foto della pianta.");
+            return;
+          }
 
-        alert("Pianta identificata: " + (data.commonName || "nome non disponibile"));
-      } catch (e) {
-        console.error(e);
-        alert("Errore imprevisto durante l'identificazione.");
-      } finally {
-        identifyBtn.disabled = false;
-        identifyBtn.textContent = oldText;
-      }
-    });
-  </script>
-</body>
+          const file = fileInput.files[0];
+          identifyButton.disabled = true;
+          const originalText = identifyButton.textContent;
+          identifyButton.textContent = "Identificazione in corso...";
+
+          try {
+            // Leggi immagine come base64
+            const base64Image = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const result = reader.result || "";
+                resolve(result.toString().split(",")[1]);
+              };
+              reader.onerror = () => reject(reader.error);
+              reader.readAsDataURL(file);
+            });
+
+            // Chiamata alla funzione Netlify
+            const response = await fetch(
+              "/.netlify/functions/plantnet-identify",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ imageBase64: base64Image }),
+              }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              console.error("Errore da funzione Netlify:", data);
+              alert("Errore durante l'identificazione della pianta.");
+            } else {
+              // ✅ Compila i campi Jotform
+              const affid = document.getElementById("input_12");
+              const nomeComune = document.getElementById("input_7");
+              const nomeScientifico = document.getElementById("input_9");
+              const allerg = document.getElementById("input_13");
+
+              if (affid) affid.value = data.reliability || "";
+              if (nomeComune) nomeComune.value = data.commonName || "";
+              if (nomeScientifico)
+                nomeScientifico.value = data.scientificName || "";
+              if (allerg) allerg.value = data.allergenicity || "";
+
+              console.log("✅ Pianta identificata:", data.commonName);
+            }
+          } catch (err) {
+            console.error("Errore imprevisto:", err);
+            alert("Errore imprevisto durante l'identificazione.");
+          } finally {
+            identifyButton.disabled = false;
+            identifyButton.textContent = originalText;
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
