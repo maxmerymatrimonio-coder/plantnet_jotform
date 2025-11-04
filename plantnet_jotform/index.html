@@ -1,3 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>Area Metropolitana di Milano - Modulo di identificazione Piante</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ✅ Content Security Policy: permette JotForm + Google Maps -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self' https://eu.jotform.com https://cdn.jotfor.ms https://submit.jotform.com https://eu-submit.jotform.com https://www.jotform.com;
+          script-src 'self' 'unsafe-inline' 'unsafe-eval'
+                     https://cdn.jotfor.ms
+                     https://eu.jotform.com
+                     https://js.jotform.com
+                     https://maps.googleapis.com
+                     https://maps.gstatic.com;
+          style-src  'self' 'unsafe-inline'
+                     https://cdn.jotfor.ms
+                     https://fonts.googleapis.com;
+          img-src    'self' data: blob:
+                     https://cdn.jotfor.ms
+                     https://eu.jotform.com
+                     https://www.jotform.com
+                     https://maps.googleapis.com
+                     https://maps.gstatic.com;
+          font-src   'self' data:
+                     https://fonts.gstatic.com
+                     https://cdn.jotfor.ms;
+          connect-src 'self'
+                      https://eu.jotform.com
+                      https://cdn.jotfor.ms
+                      https://submit.jotform.com
+                      https://eu-submit.jotform.com
+                      https://upload.jotform.com
+                      https://maps.googleapis.com
+                      https://maps.gstatic.com;
+          frame-src  https://eu.jotform.com
+                     https://www.jotform.com
+                     https://submit.jotform.com
+                     https://eu-submit.jotform.com;
+          form-action 'self'
+                      https://eu-submit.jotform.com
+                      https://submit.jotform.com
+                      https://www.jotform.com;
+        ">
+
+  <!-- Stile di base pagina -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #2461b7;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+  </style>
+</head>
+<body>
+
 <script>window.enableEventObserver=true</script>
 <script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/static/prototype.forms.js" type="text/javascript"></script>
 <script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/static/jotform.forms.js" type="text/javascript"></script>
@@ -44,7 +103,7 @@
     if (window.JotForm && JotForm.accessible) $('input_7').setAttribute('tabindex',0);
     if (window.JotForm && JotForm.accessible) $('input_9').setAttribute('tabindex',0);
     if (window.JotForm && JotForm.accessible) $('input_13').setAttribute('tabindex',0);
-    JotForm.alterTexts({"ageVerificationError":"Devi essere più grande di {minAge} anni di età per inviare questo modulo.","alphabetic":"Questo campo può contenere solo lettere","alphanumeric":"Questo campo può contenere solo lettere e numeri.","cancelAppointment":"Cancella Appuntamento","cancelSelection":"Cancella Selezione","ccDonationMinLimitError":"L'importo minimo è {minAmount} {currency}","ccInvalidCVC":"Il numero CVC non è valido","ccInvalidExpireDate":"La data di scadenza non è valida","ccInvalidExpireMonth":"Expiration month is invalid.","ccInvalidExpireYear":"Expiration year is invalid.","ccInvalidNumber":"Il Numero della Carta di Credito non è valido.","ccMissingDetails":"Please fill up the credit card details.","ccMissingDonation":"Inserisci valori numerici per l'ammontare della donazione.","ccMissingProduct":"Per favore scegli almeno un prodotto.","characterLimitError":"Troppi caratteri. Il limite è","characterMinLimitError":"Troppi pochi caratteri. Il minimo è","chooseAFile_infoMessage":"Scegli un file","confirmClearForm":"Sei sicuro di voler cancellare il contenuto del form?","confirmEmail":"L'e-mail non corrisponde","confirmSelection":"Confirm Selection","currency":"Questo campo può contenere solo valori di valuta.","cyrillic":"Questo campo può contenere solo caratteri cirillici","dateInvalid":"Questa data non è valida. Il formato per la data è {format}","dateInvalidSeparate":"Questa data non è valida. Inserisci un {element} valido.","dateLimited":"Questa data non è disponibile.","disallowDecimals":"Inserisci un numero intero.","doneButton":"Fatto","doneMessage":"Molto bene! Tutti gli errori sono stati corretti.","dragAndDropFilesHere_infoMessage":"Trascina e Rilascia i file qui","email":"Inserire un indirizzo e-mail valido","error":"Errore","fieldError":"il  campo presenta un errore.","fillMask":"Il valore del campo deve riempire la maschera.","formerSelectedTime":"Orario Precedente","freeEmailError":"Gli indirizzi email gratuiti non sono ammessi","generalError":"Ci sono errori nel modulo. Si prega di correggerli prima di continuare.","generalPageError":"Ci sono errori su questa pagina. Si prega di correggerli prima di continuare.","geoNotAvailableDesc":"Location provider not available. Please enter the address manually.","geoNotAvailableTitle":"Position Unavailable","geoPermissionDesc":"Check your browser's privacy settings.","geoPermissionTitle":"Permission Denied","geoTimeoutDesc":"Please check your internet connection and try again.","geoTimeoutTitle":"Timeout","gradingScoreError":"Il punteggio totale dovrebbe essere minore o uguale a","incompleteFields":"Ci sono campi obbligatori incompleti. Per favore completali.","inputCarretErrorA":"Il valore inserito non deve essere inferiore al valore minimo:","inputCarretErrorB":"Il valore inserito non deve essere maggiore al valore massimo:","invalidTime":"Inserisci un orario valido","justSoldOut":"Appena Esaurito","lessThan":"Il tuo punteggio dovrebbe essere inferiore a o uguale a","maxCharactersError":"The number of characters should not be more than the maximum value:","maxDigitsError":"Il massimo numero di cifre consentito è","maxFileSize_infoMessage":"Max. dimensione del file","maxSelectionsError":"Il numero massimo di selezioni permesse è","minCharactersError":"Il numero di caratteri non deve essere inferiore al valore minimo:","minSelectionsError":"Il numero minimo di selezioni richieste è","multipleError":"Ci sono {count} errori in questa pagina. Si prega di correggerli prima di procedere.","multipleFileUploads_emptyError":"{file} è vuoto, seleziona di nuovo i file omettendolo.","multipleFileUploads_fileLimitError":"Sono ammessi solo {fileLimit} file.","multipleFileUploads_minSizeError":"{file} è troppo piccolo, la dimensione minima è {minSizeLimit}","multipleFileUploads_onLeave":"Sto caricando i file, se lasci ora l'upload verrà annullato.","multipleFileUploads_sizeError":"{file} è troppo grande, la dimensione massima del file è {sizeLimit}.","multipleFileUploads_typeError":"{file} ha un'estensione non valida. Sono ammesse solo queste estensioni: {extensions}.","multipleFileUploads_uploadFailed":"Caricamento file fallito, rimuovi e carica nuovamente il file.","nextButtonText":"Avanti","noSlotsAvailable":"Nessuna fascia oraria disponibile","notEnoughStock":"Scorte insufficienti per la selezione corrente","notEnoughStock_remainedItems":"Stock insufficiente per la selezione corrente ({count} articoli rimasti)","noUploadExtensions":"File has no extension file type (e.g. .txt, .png, .jpeg)","numeric":"Questo campo può contenere solo valori numerici","oneError":"C'è {count} errore in questa pagina. Si prega di correggerlo prima di procedere.","pastDatesDisallowed":"La data non può essere già trascorsa.","pleaseWait":"Attendere prego...","prevButtonText":"Precedente","progressMiddleText":"di","required":"Questo campo è obbligatorio.","requiredLegend":"Tutti i campi contrassegnati con * sono richiesti e devono essere compilati.","requireEveryCell":"Tutte le celle sono obbligatorie.","requireEveryRow":"Tutte le righe sono obbligatorie.","requireOne":"È richiesto almeno un campo.","restrictedDomain":"This domain is not allowed","reviewBackText":"Torna sul Modulo","reviewSubmitText":"Ricontrolla e Invia","seeAllText":"Guarda Tutto","seeErrorsButton":"Guarda gli Errori","selectedTime":"Orario Selezionato","selectionSoldOut":"Selezione Esaurita","slotUnavailable":"Il giorno {date} alle ore {time} è già stato prenotato e non è disponibile. Seleziona per favore un'altra fascia oraria.","soldOut":"Esaurito","startButtonText":"INIZIA","submissionLimit":"È consentito una sola voce. &lt;br&gt; Gli invii multipli sono disabilitati per questo modulo.","submitButtonText":"Invia","subProductItemsLeft":"({count} elementi rimasti)","uploadExtensions":"È possibile caricare solo i seguenti file:","uploadFilesize":"Il file non può pesare più di:","uploadFilesizemin":"La dimensione del file non può essere inferiore a:","url":"Questo campo può contenere solo un URL valido","validateEmail":"Devi convalidare questa e-mail","wordLimitError":"Troppe parole. Il limite è","wordMinLimitError":"Troppe poche parole. Il minimo è"});
+    JotForm.alterTexts({"ageVerificationError":"Devi essere più grande di {minAge} anni di età per inviare questo modulo.","alphabetic":"Questo campo può contenere solo lettere","alphanumeric":"Questo campo può contenere solo lettere e numeri.","cancelAppointment":"Cancella Appuntamento","cancelSelection":"Cancella Selezione","ccDonationMinLimitError":"L'importo minimo è {minAmount} {currency}","ccInvalidCVC":"Il numero CVC non è valido","ccInvalidExpireDate":"La data di scadenza non è valida","ccInvalidExpireMonth":"Expiration month is invalid.","ccInvalidExpireYear":"Expiration year is invalid.","ccInvalidNumber":"Il Numero della Carta di Credito non è valido.","ccMissingDetails":"Please fill up the credit card details.","ccMissingDonation":"Inserisci valori numerici per l'ammontare della donazione.","ccMissingProduct":"Per favore scegli almeno un prodotto.","characterLimitError":"Troppi caratteri. Il limite è","characterMinLimitError":"Troppi pochi caratteri. Il minimo è","chooseAFile_infoMessage":"Scegli un file","confirmClearForm":"Sei sicuro di voler cancellare il contenuto del form?","confirmEmail":"L'e-mail non corrisponde","confirmSelection":"Confirm Selection","currency":"Questo campo può contenere solo valori di valuta.","cyrillic":"Questo campo può contenere solo caratteri cirillici","dateInvalid":"Questa data non è valida. Il formato per la data è {format}","dateInvalidSeparate":"Questa data non è valida. Inserisci un {element} valido.","dateLimited":"Questa data non è disponibile.","disallowDecimals":"Inserisci un numero intero.","doneButton":"Fatto","doneMessage":"Molto bene! Tutti gli errori sono stati corretti.","dragAndDropFilesHere_infoMessage":"Trascina e Rilascia i file qui","email":"Inserire un indirizzo e-mail valido","error":"Errore","fieldError":"il  campo presenta un errore.","fillMask":"Il valore del campo deve riempire la maschera.","formerSelectedTime":"Orario Precedente","freeEmailError":"Gli indirizzi email gratuiti non sono ammessi","generalError":"Ci sono errori nel modulo. Si prega di correggerli prima di continuare.","generalPageError":"Ci sono errori su questa pagina. Si prega di correggerli prima di continuare.","geoNotAvailableDesc":"Location provider not available. Please enter the address manually.","geoNotAvailableTitle":"Position Unavailable","geoPermissionDesc":"Check your browser's privacy settings.","geoPermissionTitle":"Permission Denied","geoTimeoutDesc":"Please check your internet connection and try again.","geoTimeoutTitle":"Timeout","gradingScoreError":"Il punteggio totale dovrebbe essere minore o uguale a","incompleteFields":"Ci sono campi obbligatori incompleti. Per favore completali.","inputCarretErrorA":"Il valore inserito non deve essere inferiore al valore minimo:","inputCarretErrorB":"Il valore inserito non deve essere maggiore al valore massimo:","invalidTime":"Inserisci un orario valido","justSoldOut":"Appena Esaurito","lessThan":"Il tuo punteggio dovrebbe essere inferiore a o uguale a","maxCharactersError":"The number of characters should not be more than the maximum value:","maxDigitsError":"Il massimo numero di cifre consentito è","maxFileSize_infoMessage":"Max. dimensione del file","maxSelectionsError":"Il numero massimo di selezioni permesse è","minCharactersError":"Il numero di caratteri non deve essere inferiore al valore minimo:","minSelectionsError":"Il numero minimo di selezioni richieste è","multipleError":"Ci sono {count} errori in questa pagina. Si prega di correggerli prima di procedere.","multipleFileUploads_emptyError":"{file} è vuoto, seleziona di nuovo i file omettendolo.","multipleFileUploads_fileLimitError":"Sono ammessi solo {fileLimit} file.","multipleFileUploads_minSizeError":"{file} è troppo piccolo, la dimensione minima è {minSizeLimit}","multipleFileUploads_onLeave":"Sto caricando i file, se lasci ora l'upload verrà annullato.","multipleFileUploads_sizeError":"{file} è troppo grande, la dimensione massima del file è {sizeLimit}.","multipleFileUploads_typeError":"{file} ha un'estensione non valida. Sono ammesse solo queste estensioni: {extensions}.","multipleFileUploads_uploadFailed":"Caricamento file fallito, rimuovi e carica nuovamente il file.","nextButtonText":"Avanti","noSlotsAvailable":"Nessuna fascia oraria disponibile","notEnoughStock":"Scorte insufficienti per la selezione corrente","notEnoughStock_remainedItems":"Stock insufficiente per la selezione corrente ({count} articoli rimasti)","noUploadExtensions":"File has no extension file type (e.g. .txt, .png, .jpeg)","numeric":"Questo campo può contenere solo valori numerici","oneError":"C'è {count} errore in questa pagina. Si prega di correggerlo prima di procedere.","pastDatesDisallowed":"La data non può essere già trascorsa.","pleaseWait":"Attendere prego...","prevButtonText":"Precedente","progressMiddleText":"di","required":"Questo campo è obbligatorio.","requiredLegend":"Tutti i campi contrassegnati con * sono richiesti e devono essere compilati.","requireEveryCell":"Tutte le celle sono obbligatorie.","requireEveryRow":"Tutte le righe sono obbligatorie.","requireOne":"È richiesto almeno un campo.","restrictedDomain":"This domain is not allowed","reviewBackText":"Torna sul Modulo","reviewSubmitText":"Ricontrolla e Invia","seeAllText":"Guarda Tutto","seeErrorsButton":"Guarda gli Errori","selectedTime":"Orario Selezionato","selectionSoldOut":"Selezione Esaurita","slotUnavailable":"Il giorno {date} alle ore {time} è già stato prenotato e non è disponibile. Seleziona per favore un'altra fascia oraria.","soldOut":"Esaurito","startButtonText":"INIZIA","submissionLimit":"È consentito una sola voce. &lt;br&gt; Gli invii multipli sono disabilitati per questo modulo.","submitButtonText":"Invia","subProductItemsLeft":"({count} elementi rimasti)","uploadExtensions":"È possibile caricare solo i seguenti file:","uploadFilesize":"Il file non può pesare più di:","uploadFilesizemin":"La dimensione del file non può essere inferiore a:","url":"Questo campo può contenere solo un URL valido","validateEmail":"Devi convalidare questa e-mail","wordLimitError":"Troppe parole. Il limite è","wordMinLimitError":"Troppe poche parole. Il minimo è","characterLimitError":"Troppe parole. Il limite è","characterMinLimitError":"Troppe poche parole. Il minimo è"});
     setTimeout(function() {
         JotForm.initMultipleUploads();
     }, 2);
@@ -541,3 +600,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
+
+</body>
+</html>
+
