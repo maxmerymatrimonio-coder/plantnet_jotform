@@ -1,172 +1,78 @@
-<!DOCTYPE html>
-<html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Identificazione piante - GuardaMI</title>
-    <style>
-      body {
-        font-family: system-ui, Arial, sans-serif;
-        background: #f4f7f6;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 900px;
-        margin: 40px auto;
-        background: white;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-      }
-      footer {
-        text-align: center;
-        font-size: 0.8rem;
-        color: #777;
-        margin-top: 40px;
-      }
-    </style>
-  </head>
+// Netlify Function: identifica pianta con PlantNET
+// ✅ Versione con lingua italiana (lang=it)
 
-  <body>
-    <div class="container">
-      <h2 style="text-align:center;">🌿 Modulo di identificazione piante</h2>
+const fetch = require("node-fetch");
 
-      <!-- 🔽🔽🔽 QUI DENTRO DEVI INCOLLARE IL CODICE SORGENTE DI JOTFORM 🔽🔽🔽 -->
+exports.handler = async (event) => {
+  try {
+    const body = JSON.parse(event.body || "{}");
+    const imageBase64 = body.imageBase64;
+    const apiKey = process.env.PLANTNET_API_KEY;
 
-      <!-- INIZIO CODICE JOTFORM -->
-      <script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
-<script>window.enableEventObserver=true</script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/static/prototype.forms.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/static/jotform.forms.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/js/vendor/imageinfo.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/file-uploader/fileuploader.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/js/vendor/smoothscroll.min.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/ce53e17ca7f/js/errorNavigation.js" type="text/javascript"></script>
+    if (!apiKey) {
+      console.error("PLANTNET_API_KEY non configurata");
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "PLANTNET_API_KEY non configurata" }),
+      };
+    }
 
-<form class="jotform-form" action="https://eu-submit.jotform.com/submit/253044075525049" method="post" enctype="multipart/form-data" name="form_253044075525049" id="253044075525049" accept-charset="utf-8" autocomplete="on">
-  <input type="hidden" name="formID" value="253044075525049" />
-  
-  <div role="main" class="form-all">
-    <ul class="form-section page-section" role="presentation">
+    if (!imageBase64) {
+      console.error("imageBase64 mancante nel body");
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Nessuna immagine ricevuta" }),
+      };
+    }
 
-      <li id="cid_1" class="form-input-wide" data-type="control_head">
-        <h1 class="form-header" data-component="header">Modulo di identificazione delle piante con PlantNet</h1>
-        <div class="form-subHeader">Carica una foto della pianta e ricevi l'identificazione automatica.</div>
-      </li>
+    // ✅ Aggiungo lang=it per avere i nomi comuni in italiano quando disponibili
+    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
 
-      <li class="form-line" data-type="control_fileupload" id="id_8">
-        <label class="form-label" id="label_8" for="input_8">Foto della pianta</label>
-        <div id="cid_8" class="form-input-wide">
-          <input type="file" id="input_8" name="q8_fileUpload[]" class="form-upload-multiple" accept="image/*" />
-        </div>
-      </li>
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        images: [`data:image/jpeg;base64,${imageBase64}`],
+        organs: ["leaf"], // puoi cambiare in "flower" ecc. se vuoi
+      }),
+    });
 
-      <li class="form-line" data-type="control_textbox" id="id_12">
-        <label class="form-label" id="label_12" for="input_12">Affidabilità</label>
-        <input type="text" id="input_12" name="q12_affidabilita" class="form-textbox" />
-      </li>
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("Errore PlantNET:", response.status, text);
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: "Errore da PlantNET", detail: text }),
+      };
+    }
 
-      <li class="form-line" data-type="control_textbox" id="id_7">
-        <label class="form-label" id="label_7" for="input_7">Nome Comune</label>
-        <input type="text" id="input_7" name="q7_Nome_comune" class="form-textbox" />
-      </li>
+    const data = await response.json();
+    const result = data.results && data.results[0];
 
-      <li class="form-line" data-type="control_textbox" id="id_9">
-        <label class="form-label" id="label_9" for="input_9">Nome Scientifico</label>
-        <input type="text" id="input_9" name="q9_Nome_Scientifico" class="form-textbox" />
-      </li>
+    const scientificName =
+      result?.species?.scientificNameWithoutAuthor || "Sconosciuta";
 
-      <li class="form-line" data-type="control_textbox" id="id_13">
-        <label class="form-label" id="label_13" for="input_13">Allergenicità</label>
-        <input type="text" id="input_13" name="q13_allergenicita" class="form-textbox" />
-      </li>
+    const commonNames = result?.species?.commonNames || [];
+    const commonName =
+      commonNames[0] || "Nome comune non disponibile";
 
-      <li class="form-line" data-type="control_button" id="id_4">
-        <button id="input_4" type="submit" class="form-submit-button">Invia</button>
-      </li>
+    const reliability =
+      typeof result?.score === "number" ? result.score.toFixed(2) : "N/D";
 
-    </ul>
-  </div>
-</form>
-      <!-- FINE CODICE JOTFORM -->
-
-      <!-- 🔼🔼🔼 FINE ZONA JOTFORM 🔼🔼🔼 -->
-    </div>
-
-    <footer>
-      Powered by <a href="https://identify.plantnet.org" target="_blank">PlantNet</a> 🌱
-    </footer>
-
-    <!-- ✅ SCRIPT AUTOMATICO PER IDENTIFICAZIONE CON PLANTNET -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Campi Jotform (ID presi dal sorgente che mi hai mandato)
-        const fileInput = document.getElementById("input_8");   // File Upload
-        const nomeSci   = document.getElementById("input_9");   // Nome Scientifico
-        const nomeCom   = document.getElementById("input_7");   // Nome Comune
-        const affid     = document.getElementById("input_12");  // Affidabilità
-        const aller     = document.getElementById("input_13");  // Allergenicità
-
-        if (!fileInput) {
-          console.warn("Campo file input_8 non trovato. Controlla che il codice Jotform sia stato incollato correttamente.");
-          return;
-        }
-
-        let isIdentifying = false;
-
-        // Quando l'utente sceglie un file, parte in automatico l'identificazione
-        fileInput.addEventListener("change", function () {
-          const file = fileInput.files[0];
-          if (!file) return;
-          if (isIdentifying) return;
-          isIdentifying = true;
-
-          // Messaggio di stato
-          if (nomeSci)  nomeSci.value = "Identificazione in corso...";
-          if (nomeCom)  nomeCom.value = "";
-          if (affid)    affid.value   = "";
-          if (aller)    aller.value   = "";
-
-          const reader = new FileReader();
-
-          reader.onloadend = async () => {
-            try {
-              const base64 = reader.result.split(",")[1];
-
-              const res = await fetch("/.netlify/functions/plantnet-identify", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imageBase64: base64 })
-              });
-
-              if (!res.ok) {
-                const txt = await res.text();
-                console.error("Errore funzione Netlify:", res.status, txt);
-                alert("Errore durante l'identificazione della pianta.");
-                if (nomeSci) nomeSci.value = "";
-                return;
-              }
-
-              const data = await res.json();
-
-              if (nomeSci)  nomeSci.value = data.scientificName || "";
-              if (nomeCom)  nomeCom.value = data.commonName || "";
-              if (affid)    affid.value   = data.reliability || "";
-              if (aller)    aller.value   = data.allergenicity || "N/D";
-            } catch (e) {
-              console.error(e);
-              alert("Errore imprevisto durante l'identificazione.");
-              if (nomeSci) nomeSci.value = "";
-            } finally {
-              isIdentifying = false;
-            }
-          };
-
-          reader.readAsDataURL(file);
-        });
-      });
-    </script>
-  </body>
-</html>
-
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        scientificName,
+        commonName,
+        reliability,
+        allergenicity: "N/D",
+      }),
+    };
+  } catch (error) {
+    console.error("Errore nella funzione Netlify:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Errore server", detail: String(error) }),
+    };
+  }
+};
