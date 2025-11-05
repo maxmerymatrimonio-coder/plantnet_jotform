@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
+      /* === STILE GENERALE === */
       body {
         margin: 0;
         padding: 0;
@@ -70,7 +71,8 @@
         padding: 8px;
         border-radius: 4px;
         border: 1px solid #9cb5dd;
-        background-color: #fff;
+        box-sizing: border-box;
+        background-color: #ffffff;
         font-size: 14px;
       }
 
@@ -78,6 +80,7 @@
         background-color: #f3f4ff;
       }
 
+      /* === Nome / Cognome responsive === */
       .two-columns {
         display: flex;
         flex-wrap: wrap;
@@ -85,7 +88,13 @@
       }
 
       .two-columns > div {
-        flex: 1 1 160px;
+        flex: 1 1 100%;
+      }
+
+      @media (min-width: 480px) {
+        .two-columns > div {
+          flex: 1 1 calc(50% - 6px);
+        }
       }
 
       .radio-inline {
@@ -112,6 +121,19 @@
         margin-bottom: 6px;
       }
 
+      .text-block {
+        font-size: 14px;
+        text-align: justify;
+      }
+
+      .buttons-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
       .btn {
         display: inline-flex;
         align-items: center;
@@ -128,29 +150,34 @@
 
       .btn-primary {
         background-color: #1d4ed8;
-        color: #fff;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
       }
 
       .btn-primary:hover:not(:disabled) {
         background-color: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
       }
 
       .btn-primary:disabled {
         background-color: #9ca3af;
         cursor: default;
+        box-shadow: none;
       }
 
       .btn-full {
         width: 100%;
         max-width: 310px;
-        justify-content: center;
       }
 
+      /* === Mappa === */
       #map {
         width: 100%;
         height: 300px;
         border-radius: 6px;
         border: 1px solid #9cb5dd;
+        overflow: hidden;
       }
 
       .map-coords {
@@ -186,227 +213,453 @@
         <h1>Area Metropolitana di Milano</h1>
         <div class="form-subHeader">Modulo di identificazione Piante</div>
 
-        <form id="plant-form" method="post" enctype="multipart/form-data">
+        <!-- METTI QUI IL TUO action (Netlify/Jotform) -->
+        <form
+          id="plant-form"
+          action=""
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
               🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
               <strong>1 – Fai upload foto:</strong> Carica almeno una
-              <strong>foto chiara e ravvicinata</strong> della pianta.
-              <br /><br />
+              <strong>foto chiara e ravvicinata</strong> della pianta.<br /><br />
               <strong>2 – Clicca “Identifica Specie”</strong> per compilare
               automaticamente i campi di identificazione.
             </div>
           </div>
 
+          <!-- UPLOAD + IDENTIFICA -->
           <div class="form-line">
-            <label for="plantImage">File Upload<span class="required-star">*</span></label>
-            <input type="file" id="plantImage" accept="image/*" required />
+            <label for="plantImage">
+              File Upload <span class="required-star">*</span>
+            </label>
+            <input
+              type="file"
+              id="plantImage"
+              name="plantImage"
+              accept="image/*"
+              required
+            />
             <div class="help-text">
               Supportati JPEG, PNG, HEIC (iPhone).
             </div>
-            <div style="margin-top:10px;">
-              <button type="button" id="identifyButton" class="btn btn-primary">Identifica Specie</button>
+
+            <div class="buttons-row" style="margin-top: 10px">
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="identifyButton"
+              >
+                Identifica Specie
+              </button>
             </div>
           </div>
 
+          <!-- DATI RILEVATORE -->
           <hr />
           <div class="section-title">Dati del rilevatore</div>
 
-          <div class="form-line two-columns">
-            <div>
-              <input type="text" id="nomeRilevatore" name="nomeRilevatore" placeholder="Nome" required />
-            </div>
-            <div>
-              <input type="text" id="cognomeRilevatore" name="cognomeRilevatore" placeholder="Cognome" required />
+          <div class="form-line">
+            <label>
+              Rilevatore <span class="required-star">*</span>
+            </label>
+            <div class="two-columns">
+              <div>
+                <input
+                  type="text"
+                  id="nomeRilevatore"
+                  name="nomeRilevatore"
+                  placeholder="Nome"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  id="cognomeRilevatore"
+                  name="cognomeRilevatore"
+                  placeholder="Cognome"
+                  required
+                />
+              </div>
             </div>
           </div>
 
           <div class="form-line">
-            <input type="email" id="email" name="email" placeholder="esempio@esempio.com" required />
+            <label for="email">
+              E-mail <span class="required-star">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="esempio@esempio.com"
+              required
+            />
           </div>
 
           <div class="form-line">
+            <label>
+              Chi sei? <span class="required-star">*</span>
+            </label>
             <div class="radio-inline">
-              <label><input type="radio" name="chiSei" value="Cittadino/Studente" required />Cittadino/Studente</label>
-              <label><input type="radio" name="chiSei" value="Esperto/Botanico" required />Esperto/Botanico</label>
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Cittadino/Studente"
+                  required
+                />
+                Cittadino/Studente
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Esperto/Botanico"
+                  required
+                />
+                Esperto/Botanico
+              </label>
             </div>
           </div>
 
+          <div class="form-line">
+            <label for="dataAvvistamento">Data avvistamento</label>
+            <input
+              type="date"
+              id="dataAvvistamento"
+              name="dataAvvistamento"
+            />
+            <div class="help-text">
+              Modifica se l’osservazione è avvenuta in una data diversa da
+              oggi.
+            </div>
+          </div>
+
+          <!-- GEOLOCALIZZAZIONE -->
           <hr />
           <div class="section-title">Geolocalizzazione</div>
-          <div id="map"></div>
-          <div class="map-coords">Coordinate: <span id="geolocDisplay">–</span></div>
-          <input type="hidden" id="geoloc" name="geoloc" />
 
-          <hr />
-          <div class="section-title">🌱 Esito identificazione</div>
           <div class="form-line">
-            <label>Affidabilità</label>
-            <input type="text" id="affidabilita" readonly />
-          </div>
-          <div class="form-line">
-            <label>Nome comune</label>
-            <input type="text" id="nomeComune" readonly />
-          </div>
-          <div class="form-line">
-            <label>Nome scientifico</label>
-            <input type="text" id="nomeScientifico" readonly />
+            <div class="text-block" style="margin-bottom: 6px">
+              📍 Controlla che la posizione sulla mappa corrisponda al luogo di
+              avvistamento oppure trascina il marcatore.
+            </div>
+            <div id="map"></div>
+            <div class="map-coords">
+              Coordinate selezionate:
+              <span id="geolocDisplay">–</span>
+            </div>
+            <input type="hidden" id="geoloc" name="geoloc" />
           </div>
 
+          <!-- ESITO IDENTIFICAZIONE -->
           <hr />
-          <div class="section-title">Consenso</div>
+          <div class="section-title">🌱 Esito identificazione (PlantNet)</div>
+
           <div class="form-line">
+            <label for="affidabilita">Affidabilità</label>
+            <input
+              type="text"
+              id="affidabilita"
+              name="affidabilita"
+              placeholder="es. 0.87"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeComune">Nome comune (IT)</label>
+            <input
+              type="text"
+              id="nomeComune"
+              name="nomeComune"
+              placeholder="Nome comune (IT, se disponibile)"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeScientifico">Nome scientifico</label>
+            <input
+              type="text"
+              id="nomeScientifico"
+              name="nomeScientifico"
+              placeholder="Nome scientifico"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="allergenicita">Allergenicità</label>
+            <input
+              type="text"
+              id="allergenicita"
+              name="allergenicita"
+              placeholder="Non disponibile / da compilare"
+              readonly
+            />
+          </div>
+
+          <!-- CONSENSO -->
+          <hr />
+          <div class="section-title">Consenso al trattamento dati</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              Il sottoscritto autorizza il trattamento dei dati personali nel
+              rispetto della normativa vigente (GDPR 2016/679).
+            </div>
             <div class="radio-inline">
-              <label><input type="radio" name="consenso" value="Acconsento" />Acconsento</label>
-              <label><input type="radio" name="consenso" value="Non Acconsento" />Non Acconsento</label>
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Acconsento"
+                />
+                Acconsento
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Non Acconsento"
+                />
+                Non Acconsento
+              </label>
             </div>
             <div id="consentWarning" class="warning">
               Per inviare il modulo è necessario selezionare “Acconsento”.
             </div>
           </div>
 
-          <button type="submit" id="submitButton" class="btn btn-primary btn-full" disabled>Invia</button>
+          <!-- INVIO -->
+          <div class="form-line" style="margin-top: 20px">
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="submitButton"
+              disabled
+            >
+              Invia
+            </button>
+            <div class="help-text" style="margin-top: 4px">
+              Questo modulo è potenziato dal servizio di riconoscimento
+              automatico PlantNet.
+            </div>
+          </div>
         </form>
       </div>
     </div>
 
-    <!-- Libreria per HEIC -->
+    <!-- Libreria per conversione HEIC -> JPEG -->
     <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 
     <script>
+      // Chiamata alla Netlify Function che parla con PlantNet
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageBase64 }),
         });
-        if (!response.ok) throw new Error("Errore identificazione");
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Errore da PlantNet/Function:", response.status, text);
+          throw new Error("Errore dalla funzione di identificazione");
+        }
+
         return response.json();
       }
 
-      // ✅ Funzione finale con gestione HEIC corretta
-      function fileToBase64ForPlantNet(file) {
-        return new Promise((resolve, reject) => {
-          const type = (file.type || "").toLowerCase();
-          const name = (file.name || "").toLowerCase();
-          const readable = ["jpeg", "jpg", "png", "webp"];
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("plant-form");
+        const imageInput = document.getElementById("plantImage");
+        const identifyButton = document.getElementById("identifyButton");
 
-          if (readable.some((t) => type.includes(t) || name.endsWith("." + t))) {
-            const r = new FileReader();
-            r.onload = () => resolve(r.result.split(",")[1] || "");
-            r.onerror = () => reject(new Error("Errore lettura file"));
-            r.readAsDataURL(file);
+        const nomeComuneInput = document.getElementById("nomeComune");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
+        const affidabilitaInput = document.getElementById("affidabilita");
+        const allergenicitaInput = document.getElementById("allergenicita");
+
+        const submitButton = document.getElementById("submitButton");
+        const consentWarning = document.getElementById("consentWarning");
+        const consentRadios = document.querySelectorAll('input[name="consenso"]');
+
+        // Gestione consenso (abilita / disabilita invio)
+        consentRadios.forEach((radio) => {
+          radio.addEventListener("change", () => {
+            if (radio.value === "Acconsento" && radio.checked) {
+              submitButton.disabled = false;
+              consentWarning.style.display = "none";
+            } else if (radio.value === "Non Acconsento" && radio.checked) {
+              submitButton.disabled = true;
+              consentWarning.style.display = "block";
+            }
+          });
+        });
+
+        // Blocco invio se non c'è consenso
+        form.addEventListener("submit", (e) => {
+          if (submitButton.disabled) {
+            e.preventDefault();
+            consentWarning.style.display = "block";
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+          }
+        });
+
+        // === CLICK SU "IDENTIFICA SPECIE" CON SUPPORTO HEIC ===
+        identifyButton.addEventListener("click", async () => {
+          const file = imageInput.files[0];
+          if (!file) {
+            alert("Per favore carica prima una foto della pianta.");
             return;
           }
 
+          let fileToUse = file;
+
+          // Riconosci HEIC / HEIF
           const isHeic =
-            type.includes("heic") ||
-            type.includes("heif") ||
-            name.endsWith(".heic") ||
-            name.endsWith(".heif");
+            file.type === "image/heic" ||
+            file.type === "image/heif" ||
+            /\.heic$/i.test(file.name) ||
+            /\.heif$/i.test(file.name);
 
-          if (isHeic) {
-            heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 })
-              .then((jpegBlob) => {
-                const r = new FileReader();
-                r.onload = () => resolve(r.result.split(",")[1] || "");
-                r.readAsDataURL(jpegBlob);
-              })
-              .catch((e) => {
-                if (e.message.includes("already browser readable")) {
-                  const r = new FileReader();
-                  r.onload = () => resolve(r.result.split(",")[1] || "");
-                  r.readAsDataURL(file);
-                } else reject(e);
+          if (isHeic && window.heic2any) {
+            try {
+              const convertedBlob = await heic2any({
+                blob: file,
+                toType: "image/jpeg",
+                quality: 0.9,
               });
-          } else {
-            const r = new FileReader();
-            r.onload = () => resolve(r.result.split(",")[1] || "");
-            r.onerror = () => reject(new Error("Errore lettura file"));
-            r.readAsDataURL(file);
-          }
-        });
-      }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const img = document.getElementById("plantImage");
-        const btn = document.getElementById("identifyButton");
-        const submit = document.getElementById("submitButton");
-        const consent = document.querySelectorAll('input[name="consenso"]');
-        const warn = document.getElementById("consentWarning");
-
-        const nomeC = document.getElementById("nomeComune");
-        const nomeS = document.getElementById("nomeScientifico");
-        const aff = document.getElementById("affidabilita");
-
-        consent.forEach((r) =>
-          r.addEventListener("change", () => {
-            if (r.value === "Acconsento" && r.checked) {
-              submit.disabled = false;
-              warn.style.display = "none";
-            } else if (r.value === "Non Acconsento" && r.checked) {
-              submit.disabled = true;
-              warn.style.display = "block";
+              fileToUse = new File(
+                [convertedBlob],
+                file.name.replace(/\.[^.]+$/, "") + ".jpg",
+                { type: "image/jpeg" }
+              );
+            } catch (err) {
+              // errore "image already browser readable": non è grave, uso l'originale
+              if (!(err && err.code === 1)) {
+                console.error("Errore nella conversione HEIC:", err);
+                alert(
+                  "Errore nella conversione della foto HEIC. " +
+                    "Prova a fare uno screenshot o a esportarla come JPEG."
+                );
+                return;
+              }
             }
-          })
-        );
-
-        btn.addEventListener("click", async () => {
-          if (!img.files[0]) return alert("Carica una foto prima.");
-          btn.disabled = true;
-          btn.textContent = "Identificazione in corso...";
-
-          try {
-            const base64 = await fileToBase64ForPlantNet(img.files[0]);
-            const res = await callPlantNetIdentify(base64);
-            nomeS.value = res.scientificName || "";
-            nomeC.value = res.commonName || "";
-            aff.value = res.reliability || "";
-          } catch (e) {
-            alert(
-              "Errore durante l'identificazione. Se la foto è HEIC, prova a esportarla come JPEG."
-            );
-          } finally {
-            btn.textContent = "Identifica Specie";
-            btn.disabled = false;
           }
+
+          const reader = new FileReader();
+
+          reader.onload = async () => {
+            const base64 = reader.result.split(",")[1] || "";
+            if (!base64) {
+              alert("Errore nella lettura dell'immagine.");
+              return;
+            }
+
+            const originalText = identifyButton.textContent;
+            identifyButton.textContent = "Identificazione in corso...";
+            identifyButton.disabled = true;
+
+            try {
+              const result = await callPlantNetIdentify(base64);
+
+              nomeScientificoInput.value = result.scientificName || "";
+              nomeComuneInput.value = result.commonName || "";
+              affidabilitaInput.value = result.reliability || "";
+              allergenicitaInput.value = result.allergenicity || "N/D";
+
+              window.scrollTo({
+                top:
+                  nomeScientificoInput.getBoundingClientRect().top +
+                  window.scrollY -
+                  80,
+                behavior: "smooth",
+              });
+            } catch (err) {
+              console.error(err);
+              alert(
+                "Errore durante l'identificazione. Se stai usando una foto HEIC e il problema persiste, " +
+                  "prova a fare uno screenshot o a esportarla come JPEG."
+              );
+            } finally {
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
+            }
+          };
+
+          reader.onerror = () => {
+            alert("Errore nella lettura del file immagine.");
+          };
+
+          reader.readAsDataURL(fileToUse);
         });
       });
 
-      // Google Maps
+      // === GOOGLE MAPS ===
       let map, marker;
+
       function initMap() {
-        const def = { lat: 45.4642, lng: 9.19 };
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: def,
+        const defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
+        const mapEl = document.getElementById("map");
+        if (!mapEl) return;
+
+        map = new google.maps.Map(mapEl, {
+          center: defaultLatLng,
           zoom: 11,
         });
-        marker = new google.maps.Marker({ map, position: def, draggable: true });
 
-        const input = document.getElementById("geoloc");
-        const disp = document.getElementById("geolocDisplay");
-        function update(pos) {
-          const val = pos.lat().toFixed(6) + ", " + pos.lng().toFixed(6);
-          input.value = val;
-          disp.textContent = val;
+        marker = new google.maps.Marker({
+          position: defaultLatLng,
+          map,
+          draggable: true,
+        });
+
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
+
+        function updateHiddenFromLatLng(latLng) {
+          if (!latLng || !geolocInput || !geolocDisplay) return;
+          const value =
+            latLng.lat().toFixed(6) + ", " + latLng.lng().toFixed(6);
+          geolocInput.value = value;
+          geolocDisplay.textContent = value;
         }
-        update(marker.getPosition());
-        marker.addListener("dragend", () => update(marker.getPosition()));
 
-        if (navigator.geolocation)
+        updateHiddenFromLatLng(marker.getPosition());
+
+        marker.addListener("dragend", () => {
+          updateHiddenFromLatLng(marker.getPosition());
+        });
+
+        if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
-            (p) => {
-              const c = { lat: p.coords.latitude, lng: p.coords.longitude };
-              map.setCenter(c);
-              marker.setPosition(c);
-              update(marker.getPosition());
+            (pos) => {
+              const coords = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              };
+              map.setCenter(coords);
+              marker.setPosition(coords);
+              updateHiddenFromLatLng(marker.getPosition());
             },
-            (e) => console.warn("Geo non disponibile:", e)
+            (err) => {
+              console.warn("Geolocalizzazione non disponibile:", err);
+            }
           );
+        }
       }
     </script>
 
-    <!-- 🔑 INSERISCI LA TUA GOOGLE MAPS API KEY QUI -->
+    <!-- Sostituisci con la tua API key di Google Maps -->
     <script
       async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
