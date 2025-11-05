@@ -1,11 +1,15 @@
-// Netlify Function: identifica pianta con PlantNET
-// Versione che lavora con imageBase64 e restituisce
-// scientificName, commonName, reliability, allergenicity
-const fetch = require("node-fetch");
+// netlify/functions/plantnet-identify.js
 
-exports.handler = async (event) => {
+// Function Netlify che riceve una foto in base64 dal frontend,
+// chiama PlantNet e restituisce i campi che il tuo index.html si aspetta:
+//  - scientificName
+//  - commonName
+//  - reliability
+//  - allergenicity
+
+export async function handler(event) {
   try {
-    // Accettiamo solo POST
+    // Controllo metodo
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 405,
@@ -13,76 +17,85 @@ exports.handler = async (event) => {
       };
     }
 
-    const body = JSON.parse(event.body || "{}");
-    const imageBase64 = body.imageBase64;
-    const apiKey = process.env.PLANTNET_API_KEY;
+    // Parsing del body JSON
+    let body;
+    try {
+      body = JSON.parse(event.body || "{}");
+    } catch (err) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Body non è JSON valido" }),
+      };
+    }
 
+    const { imageBase64 } = body;
+
+    if (!imageBase64) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Nessuna immagine ricevuta" }),
+      };
+    }
+
+    // Chiave PlantNet dalle variabili d'ambiente Netlify
+    const apiKey = process.env.PLANTNET_API_KEY;
     if (!apiKey) {
-      console.error("PLANTNET_API_KEY non configurata");
+      console.error("PLANTNET_API_KEY non impostata nelle env di Netlify");
       return {
         statusCode: 500,
         body: JSON.stringify({
-          error: "PLANTNET_API_KEY non configurata",
+          error: "Configurazione server mancante (API key)",
         }),
       };
     }
 
-    if (!imageBase64) {
-      console.error("imageBase64 mancante nel body");
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "Nessuna immagine ricevuta",
-        }),
-      };
-    }
+    // Endpoint PlantNet (adatta se usi un endpoint diverso)
+    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
 
-    // ✅ lingua italiana per i nomi comuni quando disponibili
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}&lang=it`;
-
+    // Chiamata a PlantNet usando la fetch nativa (NON fetch2!)
     const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        // PlantNet si aspetta le immagini come data URL oppure URL pubblici
         images: [`data:image/jpeg;base64,${imageBase64}`],
-        // puoi cambiare organs se vuoi (leaf / flower / fruit / habit...)
-        organs: ["leaf"],
+        // Organi indicativi: puoi adattarli
+        organs: ["leaf", "flower", "fruit", "bark"],
       }),
     });
 
     if (!response.ok) {
       const text = await response.text();
-      console.error("Errore PlantNET:", response.status, text);
+      console.error("Errore PlantNet:", response.status, text);
+
       return {
-        statusCode: response.status,
+        statusCode: 500,
         body: JSON.stringify({
-          error: "Errore da PlantNET",
+          error: "Errore server PlantNet",
+          status: response.status,
           detail: text,
         }),
       };
     }
 
     const data = await response.json();
-    const result = data.results && data.results[0];
+    const best = (data && data.results && data.results[0]) || {};
 
+    // Estrazione dati con fallback sicuri
     const scientificName =
-      result?.species?.scientificNameWithoutAuthor ||
-      result?.species?.scientificName ||
-      "Sconosciuta";
-
-    const commonNames = result?.species?.commonNames || [];
-    const commonName = commonNames[0] || "Nome comune non disponibile";
-
+      (best.species && best.species.scientificNameWithoutAuthor) || "";
+    const commonName =
+      (best.species &&
+        Array.isArray(best.species.commonNames) &&
+        best.species.commonNames[0]) ||
+      "";
     const reliability =
-      typeof result?.score === "number"
-        ? result.score.toFixed(2)
-        : "N/D";
+      typeof best.score === "number" ? best.score.toFixed(2) : "";
 
-    // Al momento non abbiamo vera info di allergenicità
+    // Per ora allergenicità non arriva da PlantNet -> placeholder
     const allergenicity = "N/D";
 
+    // Risposta per il frontend (index.html)
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -92,14 +105,14 @@ exports.handler = async (event) => {
         allergenicity,
       }),
     };
-  } catch (error) {
-    console.error("Errore nella funzione Netlify:", error);
+  } catch (err) {
+    console.error("Errore nella function plantnet-identify:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({
         error: "Errore server",
-        detail: String(error),
+        detail: err.message || String(err),
       }),
     };
   }
-};
+}
