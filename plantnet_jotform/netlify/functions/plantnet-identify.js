@@ -1,7 +1,6 @@
 // netlify/functions/plantnet-identify.js
-
-// Function Netlify: riceve un'immagine in base64 dal frontend,
-// invia la richiesta multipart a PlantNet e restituisce il risultato.
+// Versione aggiornata: invia immagini in multipart/form-data
+// e richiede i nomi comuni in italiano (lang=it)
 
 export async function handler(event) {
   try {
@@ -31,12 +30,13 @@ export async function handler(event) {
     // Conversione base64 in buffer binario
     const imageBuffer = Buffer.from(imageBase64, "base64");
 
-    // Creazione di un form-data multipart
+    // Costruzione del form multipart
     const form = new FormData();
     form.append("organs", "leaf");
     form.append("images", new Blob([imageBuffer]), "photo.jpg");
 
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
+    // Aggiungiamo lang=it per ottenere i nomi comuni in italiano
+    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -59,14 +59,25 @@ export async function handler(event) {
     const data = await response.json();
     const best = data.results?.[0];
 
+    // Estrai i dati principali (in lingua italiana se disponibili)
+    const scientificName = best?.species?.scientificNameWithoutAuthor || "";
+    const commonName =
+      (best?.species?.commonNames?.[0] &&
+        best.species.commonNames[0].toString()) ||
+      "";
+    const reliability =
+      typeof best?.score === "number" ? best.score.toFixed(2) : "";
+
+    // Placeholder per allergenicità
+    const allergenicity = "N/D";
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        scientificName: best?.species?.scientificNameWithoutAuthor || "",
-        commonName: best?.species?.commonNames?.[0] || "",
-        reliability:
-          typeof best?.score === "number" ? best.score.toFixed(2) : "",
-        allergenicity: "N/D",
+        scientificName,
+        commonName,
+        reliability,
+        allergenicity,
       }),
     };
   } catch (err) {
