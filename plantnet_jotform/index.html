@@ -3,72 +3,57 @@
 <head>
   <meta charset="utf-8" />
   <title>Area Metropolitana di Milano - Modulo di identificazione Piante</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ✅ Content Security Policy: permette JotForm + Google Maps -->
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self' https://eu.jotform.com https://cdn.jotfor.ms https://submit.jotform.com https://eu-submit.jotform.com https://www.jotform.com;
-          script-src 'self' 'unsafe-inline' 'unsafe-eval'
-                     https://cdn.jotfor.ms
-                     https://eu.jotform.com
-                     https://js.jotform.com
-                     https://maps.googleapis.com
-                     https://maps.gstatic.com;
-          style-src  'self' 'unsafe-inline'
-                     https://cdn.jotfor.ms
-                     https://fonts.googleapis.com;
-          img-src    'self' data: blob:
-                     https://cdn.jotfor.ms
-                     https://eu.jotform.com
-                     https://www.jotform.com
-                     https://maps.googleapis.com
-                     https://maps.gstatic.com;
-          font-src   'self' data:
-                     https://fonts.gstatic.com
-                     https://cdn.jotfor.ms;
-          connect-src 'self'
-                      https://eu.jotform.com
-                      https://cdn.jotfor.ms
-                      https://submit.jotform.com
-                      https://eu-submit.jotform.com
-                      https://upload.jotform.com
-                      https://maps.googleapis.com
-                      https://maps.gstatic.com;
-          frame-src  https://eu.jotform.com
-                     https://www.jotform.com
-                     https://submit.jotform.com
-                     https://eu-submit.jotform.com;
-          form-action 'self'
-                      https://eu-submit.jotform.com
-                      https://submit.jotform.com
-                      https://www.jotform.com;
-        ">
-
-  <!-- Stile di base pagina -->
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #2461b7;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    body.supernova {
+      background-color: #2461b7;
+    }
+    .form-all {
+      max-width: 752px;
+      margin: 40px auto;
+      background-color: #d6e7ff;
+      font-family: Inter, sans-serif;
+    }
+
+    /* Bottone Identifica Specie sotto il modulo e centrato */
+    .plantnet-identify-wrapper {
+      text-align: center;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+    #btn-identifica-specie {
+      background-color: #2461b7;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 28px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #btn-identifica-specie:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
-<body>
 
-<script>window.enableEventObserver=true</script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/static/prototype.forms.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/static/jotform.forms.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/js/vendor/imageinfo.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/file-uploader/fileuploader.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/js/punycode-1.4.1.min.js" type="text/javascript" defer></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/js/vendor/maskedinput_5.0.9.min.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/umd/d7892fde2ee/for-widgets-server.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/js/vendor/smoothscroll.min.js" type="text/javascript"></script>
-<script src="https://cdn.jotfor.ms/s/static/d7892fde2ee/js/errorNavigation.js" type="text/javascript"></script>
-<script type="text/javascript">
-	JotForm.newDefaultTheme = true;
+<body class="supernova">
+
+  <!-- 🔽🔽🔽 QUI INCOLLI TUTTO IL CODICE JOTFORM 🔽🔽🔽 -->
+  <!-- (tutto quello enorme che mi hai mandato, a partire da <script>window.enableEventObserver=true</script> 
+       fino a ... JotForm.isNewSACL=true;</script>) -->
+
+  <!-- *** INIZIO BLOCCO JOTFORM *** -->
+	<script>window.enableEventObserver=true</script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/static/prototype.forms.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/static/jotform.forms.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/js/vendor/imageinfo.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/file-uploader/fileuploader.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/js/punycode-1.4.1.min.js" type="text/javascript" defer></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/js/vendor/maskedinput_5.0.9.min.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/umd/40bb60070b6/for-widgets-server.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/js/vendor/smoothscroll.min.js" type="text/javascript"></script>
+<script src="https://cdn.jotfor.ms/s/static/40bb60070b6/js/errorNavigation.js" type="text/javascript"></script>
+<script type="text/javascript">	JotForm.newDefaultTheme = true;
 	JotForm.extendsNewTheme = false;
 	JotForm.singleProduct = false;
 	JotForm.newPaymentUIForNewCreatedForms = false;
@@ -80,64 +65,59 @@
 	JotForm.activeRedirect = "thanktext";
 	JotForm.uploadServerURL = "https://upload.jotform.com/upload";
 
-  JotForm.setConditions([{"action":[{"id":"action_1762285262065","visibility":"Hide","isError":false,"field":"4"}],"id":"1762285303759","index":"0","link":"Any","priority":"0","terms":[{"id":"term_1762285262065","field":"27","operator":"equals","value":"Non Acconsento","isError":false}],"type":"field"}]);
-	JotForm.clearFieldOnHide="disable";
+   JotForm.setConditions([{"action":[{"id":"action_1762285262065","visibility":"Hide","isError":false,"field":"4"}],"id":"1762285303759","index":"0","link":"Any","priority":"0","terms":[{"id":"term_1762285262065","field":"27","operator":"equals","value":"Non Acconsento","isError":false}],"type":"field"}]);	JotForm.clearFieldOnHide="disable";
 	JotForm.submitError="jumpToFirstError";
 	JotForm.isFullSource = true;
 
 	JotForm.init(function(){
 	/*INIT-START*/
 
-    JotForm.calendarMonths = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
-    if (!JotForm.calenderViewMonths) JotForm.calenderViewMonths = {};  JotForm.calenderViewMonths[25] = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
-    if (!JotForm.calenderViewDays) JotForm.calenderViewDays = {};  JotForm.calenderViewDays[25] = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
-    JotForm.calendarDays = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
-    JotForm.calendarOther = {"today":"Oggi"};
-    var languageOptions = document.querySelectorAll('#langList li'); 
-    for(var langIndex = 0; langIndex < languageOptions.length; langIndex++) { 
-      languageOptions[langIndex].on('click', function(e) { setTimeout(function(){ JotForm.setCalendar("25", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":"","countSelectedDaysOnly":false}); }, 0); });
-    } 
-    JotForm.onTranslationsFetch(function() { JotForm.setCalendar("25", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":"","countSelectedDaysOnly":false}); });
-    JotForm.formatDate({date:(new Date()), dateField:$("id_"+25)});
-    if (window.JotForm && JotForm.accessible) $('input_12').setAttribute('tabindex',0);
-    if (window.JotForm && JotForm.accessible) $('input_7').setAttribute('tabindex',0);
-    if (window.JotForm && JotForm.accessible) $('input_9').setAttribute('tabindex',0);
-    if (window.JotForm && JotForm.accessible) $('input_13').setAttribute('tabindex',0);
-    JotForm.alterTexts({"ageVerificationError":"Devi essere più grande di {minAge} anni di età per inviare questo modulo.","alphabetic":"Questo campo può contenere solo lettere","alphanumeric":"Questo campo può contenere solo lettere e numeri.","cancelAppointment":"Cancella Appuntamento","cancelSelection":"Cancella Selezione","ccDonationMinLimitError":"L'importo minimo è {minAmount} {currency}","ccInvalidCVC":"Il numero CVC non è valido","ccInvalidExpireDate":"La data di scadenza non è valida","ccInvalidExpireMonth":"Expiration month is invalid.","ccInvalidExpireYear":"Expiration year is invalid.","ccInvalidNumber":"Il Numero della Carta di Credito non è valido.","ccMissingDetails":"Please fill up the credit card details.","ccMissingDonation":"Inserisci valori numerici per l'ammontare della donazione.","ccMissingProduct":"Per favore scegli almeno un prodotto.","characterLimitError":"Troppi caratteri. Il limite è","characterMinLimitError":"Troppi pochi caratteri. Il minimo è","chooseAFile_infoMessage":"Scegli un file","confirmClearForm":"Sei sicuro di voler cancellare il contenuto del form?","confirmEmail":"L'e-mail non corrisponde","confirmSelection":"Confirm Selection","currency":"Questo campo può contenere solo valori di valuta.","cyrillic":"Questo campo può contenere solo caratteri cirillici","dateInvalid":"Questa data non è valida. Il formato per la data è {format}","dateInvalidSeparate":"Questa data non è valida. Inserisci un {element} valido.","dateLimited":"Questa data non è disponibile.","disallowDecimals":"Inserisci un numero intero.","doneButton":"Fatto","doneMessage":"Molto bene! Tutti gli errori sono stati corretti.","dragAndDropFilesHere_infoMessage":"Trascina e Rilascia i file qui","email":"Inserire un indirizzo e-mail valido","error":"Errore","fieldError":"il  campo presenta un errore.","fillMask":"Il valore del campo deve riempire la maschera.","formerSelectedTime":"Orario Precedente","freeEmailError":"Gli indirizzi email gratuiti non sono ammessi","generalError":"Ci sono errori nel modulo. Si prega di correggerli prima di continuare.","generalPageError":"Ci sono errori su questa pagina. Si prega di correggerli prima di continuare.","geoNotAvailableDesc":"Location provider not available. Please enter the address manually.","geoNotAvailableTitle":"Position Unavailable","geoPermissionDesc":"Check your browser's privacy settings.","geoPermissionTitle":"Permission Denied","geoTimeoutDesc":"Please check your internet connection and try again.","geoTimeoutTitle":"Timeout","gradingScoreError":"Il punteggio totale dovrebbe essere minore o uguale a","incompleteFields":"Ci sono campi obbligatori incompleti. Per favore completali.","inputCarretErrorA":"Il valore inserito non deve essere inferiore al valore minimo:","inputCarretErrorB":"Il valore inserito non deve essere maggiore al valore massimo:","invalidTime":"Inserisci un orario valido","justSoldOut":"Appena Esaurito","lessThan":"Il tuo punteggio dovrebbe essere inferiore a o uguale a","maxCharactersError":"The number of characters should not be more than the maximum value:","maxDigitsError":"Il massimo numero di cifre consentito è","maxFileSize_infoMessage":"Max. dimensione del file","maxSelectionsError":"Il numero massimo di selezioni permesse è","minCharactersError":"Il numero di caratteri non deve essere inferiore al valore minimo:","minSelectionsError":"Il numero minimo di selezioni richieste è","multipleError":"Ci sono {count} errori in questa pagina. Si prega di correggerli prima di procedere.","multipleFileUploads_emptyError":"{file} è vuoto, seleziona di nuovo i file omettendolo.","multipleFileUploads_fileLimitError":"Sono ammessi solo {fileLimit} file.","multipleFileUploads_minSizeError":"{file} è troppo piccolo, la dimensione minima è {minSizeLimit}","multipleFileUploads_onLeave":"Sto caricando i file, se lasci ora l'upload verrà annullato.","multipleFileUploads_sizeError":"{file} è troppo grande, la dimensione massima del file è {sizeLimit}.","multipleFileUploads_typeError":"{file} ha un'estensione non valida. Sono ammesse solo queste estensioni: {extensions}.","multipleFileUploads_uploadFailed":"Caricamento file fallito, rimuovi e carica nuovamente il file.","nextButtonText":"Avanti","noSlotsAvailable":"Nessuna fascia oraria disponibile","notEnoughStock":"Scorte insufficienti per la selezione corrente","notEnoughStock_remainedItems":"Stock insufficiente per la selezione corrente ({count} articoli rimasti)","noUploadExtensions":"File has no extension file type (e.g. .txt, .png, .jpeg)","numeric":"Questo campo può contenere solo valori numerici","oneError":"C'è {count} errore in questa pagina. Si prega di correggerlo prima di procedere.","pastDatesDisallowed":"La data non può essere già trascorsa.","pleaseWait":"Attendere prego...","prevButtonText":"Precedente","progressMiddleText":"di","required":"Questo campo è obbligatorio.","requiredLegend":"Tutti i campi contrassegnati con * sono richiesti e devono essere compilati.","requireEveryCell":"Tutte le celle sono obbligatorie.","requireEveryRow":"Tutte le righe sono obbligatorie.","requireOne":"È richiesto almeno un campo.","restrictedDomain":"This domain is not allowed","reviewBackText":"Torna sul Modulo","reviewSubmitText":"Ricontrolla e Invia","seeAllText":"Guarda Tutto","seeErrorsButton":"Guarda gli Errori","selectedTime":"Orario Selezionato","selectionSoldOut":"Selezione Esaurita","slotUnavailable":"Il giorno {date} alle ore {time} è già stato prenotato e non è disponibile. Seleziona per favore un'altra fascia oraria.","soldOut":"Esaurito","startButtonText":"INIZIA","submissionLimit":"È consentito una sola voce. &lt;br&gt; Gli invii multipli sono disabilitati per questo modulo.","submitButtonText":"Invia","subProductItemsLeft":"({count} elementi rimasti)","uploadExtensions":"È possibile caricare solo i seguenti file:","uploadFilesize":"Il file non può pesare più di:","uploadFilesizemin":"La dimensione del file non può essere inferiore a:","url":"Questo campo può contenere solo un URL valido","validateEmail":"Devi convalidare questa e-mail","wordLimitError":"Troppe parole. Il limite è","wordMinLimitError":"Troppe poche parole. Il minimo è","characterLimitError":"Troppe parole. Il limite è","characterMinLimitError":"Troppe poche parole. Il minimo è"});
-    setTimeout(function() {
-        JotForm.initMultipleUploads();
-    }, 2);
+ JotForm.calendarMonths = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+ if (!JotForm.calenderViewMonths) JotForm.calenderViewMonths = {};  JotForm.calenderViewMonths[25] = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+ if (!JotForm.calenderViewDays) JotForm.calenderViewDays = {};  JotForm.calenderViewDays[25] = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
+ JotForm.calendarDays = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
+ JotForm.calendarOther = {"today":"Oggi"};
+ var languageOptions = document.querySelectorAll('#langList li'); 
+ for(var langIndex = 0; langIndex < languageOptions.length; langIndex++) { 
+   languageOptions[langIndex].on('click', function(e) { setTimeout(function(){ JotForm.setCalendar("25", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":"","countSelectedDaysOnly":false}); }, 0); });
+ } 
+ JotForm.onTranslationsFetch(function() { JotForm.setCalendar("25", false, {"days":{"monday":true,"tuesday":true,"wednesday":true,"thursday":true,"friday":true,"saturday":true,"sunday":true},"future":true,"past":true,"custom":false,"ranges":false,"start":"","end":"","countSelectedDaysOnly":false}); });
+ JotForm.formatDate({date:(new Date()), dateField:$("id_"+25)});
+if (window.JotForm && JotForm.accessible) $('input_12').setAttribute('tabindex',0);
+if (window.JotForm && JotForm.accessible) $('input_7').setAttribute('tabindex',0);
+if (window.JotForm && JotForm.accessible) $('input_9').setAttribute('tabindex',0);
+if (window.JotForm && JotForm.accessible) $('input_13').setAttribute('tabindex',0);
+      JotForm.alterTexts({"ageVerificationError":"Devi essere più grande di {minAge} anni di età per inviare questo modulo.","alphabetic":"Questo campo può contenere solo lettere","alphanumeric":"Questo campo può contenere solo lettere e numeri.","cancelAppointment":"Cancella Appuntamento","cancelSelection":"Cancella Selezione","ccDonationMinLimitError":"L'importo minimo è {minAmount} {currency}","ccInvalidCVC":"Il numero CVC non è valido","ccInvalidExpireDate":"La data di scadenza non è valida","ccInvalidExpireMonth":"Expiration month is invalid.","ccInvalidExpireYear":"Expiration year is invalid.","ccInvalidNumber":"Il Numero della Carta di Credito non è valido.","ccMissingDetails":"Please fill up the credit card details.","ccMissingDonation":"Inserisci valori numerici per l'ammontare della donazione.","ccMissingProduct":"Per favore scegli almeno un prodotto.","characterLimitError":"Troppi caratteri. Il limite è","characterMinLimitError":"Troppi pochi caratteri. Il minimo è","chooseAFile_infoMessage":"Scegli un file","confirmClearForm":"Sei sicuro di voler cancellare il contenuto del form?","confirmEmail":"L'e-mail non corrisponde","confirmSelection":"Confirm Selection","currency":"Questo campo può contenere solo valori di valuta.","cyrillic":"Questo campo può contenere solo caratteri cirillici","dateInvalid":"Questa data non è valida. Il formato per la data è {format}","dateInvalidSeparate":"Questa data non è valida. Inserisci un {element} valido.","dateLimited":"Questa data non è disponibile.","disallowDecimals":"Inserisci un numero intero.","doneButton":"Fatto","doneMessage":"Molto bene! Tutti gli errori sono stati corretti.","dragAndDropFilesHere_infoMessage":"Trascina e Rilascia i file qui","email":"Inserire un indirizzo e-mail valido","error":"Errore","fieldError":"il  campo presenta un errore.","fillMask":"Il valore del campo deve riempire la maschera.","formerSelectedTime":"Orario Precedente","freeEmailError":"Gli indirizzi email gratuiti non sono ammessi","generalError":"Ci sono errori nel modulo. Si prega di correggerli prima di continuare.","generalPageError":"Ci sono errori su questa pagina. Si prega di correggerli prima di continuare.","geoNotAvailableDesc":"Location provider not available. Please enter the address manually.","geoNotAvailableTitle":"Position Unavailable","geoPermissionDesc":"Check your browser's privacy settings.","geoPermissionTitle":"Permission Denied","geoTimeoutDesc":"Please check your internet connection and try again.","geoTimeoutTitle":"Timeout","gradingScoreError":"Il punteggio totale dovrebbe essere minore o uguale a","incompleteFields":"Ci sono campi obbligatori incompleti. Per favore completali.","inputCarretErrorA":"Il valore inserito non deve essere inferiore al valore minimo:","inputCarretErrorB":"Il valore inserito non deve essere maggiore del valore massimo:","invalidTime":"Inserisci un orario valido","justSoldOut":"Appena Esaurito","lessThan":"Il tuo punteggio dovrebbe essere inferiore a o uguale a","maxCharactersError":"The number of characters should not be more than the maximum value:","maxDigitsError":"Il massimo numero di cifre consentito è","maxFileSize_infoMessage":"Max. dimensione del file","maxSelectionsError":"Il numero massimo di selezioni permesse è","minCharactersError":"Il numero di caratteri non deve essere inferiore al valore minimo:","minSelectionsError":"Il numero minimo di selezioni richieste è","multipleError":"Ci sono {count} errori in questa pagina. Si prega di correggerli prima di procedere.","multipleFileUploads_emptyError":"{file} è vuoto, seleziona di nuovo i file omettendolo.","multipleFileUploads_fileLimitError":"Sono ammessi solo {fileLimit} file.","multipleFileUploads_minSizeError":"{file} è troppo piccolo, la dimensione minima è {minSizeLimit}","multipleFileUploads_onLeave":"Sto caricando i file, se lasci ora l'upload verrà annullato.","multipleFileUploads_sizeError":"{file} è troppo grande, la dimensione massima del file è {sizeLimit}.","multipleFileUploads_typeError":"{file} ha un'estensione non valida. Sono ammesse solo queste estensioni: {extensions}.","multipleFileUploads_uploadFailed":"Caricamento file fallito, rimuovi e carica nuovamente il file.","nextButtonText":"Avanti","noSlotsAvailable":"Nessuna fascia oraria disponibile","notEnoughStock":"Scorte insufficienti per la selezione corrente","notEnoughStock_remainedItems":"Stock insufficiente per la selezione corrente ({count} articoli rimasti)","noUploadExtensions":"File has no extension file type (e.g. .txt, .png, .jpeg)","numeric":"Questo campo può contenere solo valori numerici","oneError":"C'è {count} errore in questa pagina. Si prega di correggerlo prima di procedere.","pastDatesDisallowed":"La data non può essere già trascorsa.","pleaseWait":"Attendere prego...","prevButtonText":"Precedente","progressMiddleText":"di","required":"Questo campo è obbligatorio.","requiredLegend":"Tutti i campi contrassegnati con * sono richiesti e devono essere compilati.","requireEveryCell":"Tutte le celle sono obbligatorie.","requireEveryRow":"Tutte le righe sono obbligatorie.","requireOne":"È richiesto almeno un campo.","restrictedDomain":"This domain is not allowed","reviewBackText":"Torna sul Modulo","reviewSubmitText":"Ricontrolla e Invia","seeAllText":"Guarda Tutto","seeErrorsButton":"Guarda gli Errori","selectedTime":"Orario Selezionato","selectionSoldOut":"Selezione Esaurita","slotUnavailable":"Il giorno {date} alle ore {time} è già stato prenotato e non è disponibile. Seleziona per favore un'altra fascia oraria.","soldOut":"Esaurito","startButtonText":"INIZIA","submissionLimit":"È consentito una sola voce. &lt;br&gt; Gli invii multipli sono disabilitati per questo modulo.","submitButtonText":"Invia","subProductItemsLeft":"({count} elementi rimasti)","uploadExtensions":"È possibile caricare solo i seguenti file:","uploadFilesize":"Il file non può pesare più di:","uploadFilesizemin":"La dimensione del file non può essere inferiore a:","url":"Questo campo può contenere solo un URL valido","validateEmail":"Devi convalidare questa e-mail","wordLimitError":"Troppe parole. Il limite è","wordMinLimitError":"Troppe poche parole. Il minimo è"});
+      setTimeout(function() {
+          JotForm.initMultipleUploads();
+      }, 2);
 	/*INIT-END*/
 	});
 
-  setTimeout(function() {
-    JotForm.paymentExtrasOnTheFly([null,{"name":"q1_header","qid":"1","text":"Area Metropolitana di Milano","type":"control_head"},null,null,{"name":"q4_submit","qid":"4","text":"Invia","type":"control_button"},null,null,{"description":"","name":"Nome_comune","qid":"7","subLabel":"","text":"Nome Comune","type":"control_textbox"},{"description":"","name":"fileUpload","qid":"8","subLabel":"","text":"File Upload","type":"control_fileupload"},{"description":"","name":"Nome_Scientifico","qid":"9","subLabel":"","text":"Nome Scientifico","type":"control_textbox"},null,null,{"description":"","name":"affidabilita","qid":"12","subLabel":"","text":"Affidabilita","type":"control_textbox"},{"description":"","name":"allergenicita","qid":"13","subLabel":"","text":"Allergenicita","type":"control_textbox"},null,{"name":"input15","qid":"15","text":"🌱 Istruzioni per la compilazione:\r\n1- Fai upload foto: Per ottenere un riconoscimento accurato, la segnalazione deve contenere almeno una foto chiara e ravvicinata della pianta. Se possibile, includi piu immagini che mostrino foglie, fiori, frutti o altri dettagli distintivi. Max 2 foto\r\n2- Clicca Identifica Specie ","type":"control_text"},{"name":"ltpStyletextalign","qid":"16","text":"🌱 ESITO IDENTIFICAZIONE ","type":"control_text"},null,null,null,null,{"name":"scriviUna","qid":"21","text":"Geolocalizzazione","type":"control_widget"},{"description":"","name":"rilevatore","qid":"22","text":"Rilevatore","type":"control_fullname"},{"description":"","name":"email","qid":"23","subLabel":"esempio@esempio.com","text":"E-mail","type":"control_email"},{"description":"","name":"chiSei","qid":"24","text":"Chi sei?","type":"control_radio"},{"description":"","name":"dataAvvistamento","qid":"25","text":"Data Avvistamento:","type":"control_datetime"},{"name":"input26","qid":"26","text":"  Controllare che la geolocalizzazione corrisponda al luogo di avvistamento oppure inserire nell'apposita barra di ricerca il nome corretto (via, piazza, parco etc) del luogo in cui e avvenuto l'avvistamento.","type":"control_text"},{"description":"","name":"ilSottoscritto","qid":"27","text":"Il sottoscritto autorizza il trattamento dei dati personali nel rispetto della vigente normativa sulla protezione dei dati personali ed, in particolare, il Regolamento Europeo per la protezione dei dati personali 2016\u002F679, il d.lgs. 30\u002F06\u002F2003 n. 196 e successive modifiche e integrazioni, come modificato da ultimo dal d.lgs. 10\u002F08\u002F2018 n. 101.","type":"control_radio"}]);
-  }, 20); 
+   setTimeout(function() {
+JotForm.paymentExtrasOnTheFly([null,{"name":"q1_header","qid":"1","text":"Area Metropolitana di Milano","type":"control_head"},null,null,{"name":"q4_submit","qid":"4","text":"Invia","type":"control_button"},null,null,{"description":"","name":"Nome_comune","qid":"7","subLabel":"","text":"Nome Comune","type":"control_textbox"},{"description":"","name":"fileUpload","qid":"8","subLabel":"","text":"File Upload","type":"control_fileupload"},{"description":"","name":"Nome_Scientifico","qid":"9","subLabel":"","text":"Nome Scientifico","type":"control_textbox"},null,null,{"description":"","name":"affidabilita","qid":"12","subLabel":"","text":"Affidabilita","type":"control_textbox"},{"description":"","name":"allergenicita","qid":"13","subLabel":"","text":"Allergenicita","type":"control_textbox"},null,{"name":"input15","qid":"15","text":"🌱 Istruzioni per la compilazione:\r\n1- Fai upload foto: Per ottenere un riconoscimento accurato, la segnalazione deve contenere almeno una foto chiara e ravvicinata della pianta. Se possibile, includi piu immagini che mostrino foglie, fiori, frutti o altri dettagli distintivi. Max 2 foto\r\n2- Clicca Identifica Specie ","type":"control_text"},{"name":"ltpStyletextalign","qid":"16","text":"🌱 ESITO IDENTIFICAZIONE ","type":"control_text"},null,null,null,null,{"name":"scriviUna","qid":"21","text":"Geolocalizzazione","type":"control_widget"},{"description":"","name":"rilevatore","qid":"22","text":"Rilevatore","type":"control_fullname"},{"description":"","name":"email","qid":"23","subLabel":"esempio@esempio.com","text":"E-mail","type":"control_email"},{"description":"","name":"chiSei","qid":"24","text":"Chi sei?","type":"control_radio"},{"description":"","name":"dataAvvistamento","qid":"25","text":"Data Avvistamento:","type":"control_datetime"},{"name":"input26","qid":"26","text":"  Controllare che la geolocalizzazione corrisponda al luogo di avvistamento oppure inserire nell'apposita barra di ricerca il nome corretto (via, piazza, parco etc) del luogo in cui e avvenuto l'avvistamento.","type":"control_text"},{"description":"","name":"ilSottoscritto","qid":"27","text":"Il sottoscritto autorizza il trattamento dei dati personali nel rispetto della vigente normativa sulla protezione dei dati personali ed, in particolare, il Regolamento Europeo per la protezione dei dati personali 2016\u002F679, il d.lgs. 30\u002F06\u002F2003 n. 196 e successive modifiche e integrazioni, come modificato da ultimo dal d.lgs. 10\u002F08\u002F2018 n. 101.","type":"control_radio"}]);}, 20); 
 </script>
-<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/stylebuilder/static/form-common.css?v=e6bb3ef"/>
-<style type="text/css">
-  @media print{
-    *{-webkit-print-color-adjust: exact !important;color-adjust: exact !important;}
-    .form-section{display:inline!important}
-    .form-pagebreak{display:none!important}
-    .form-section-closed{height:auto!important}
-    .page-section{position:initial!important}
-  }
-</style>
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/stylebuilder/static/form-common.css?v=e6bb3ef
+"/>
+<style type="text/css">@media print{*{-webkit-print-color-adjust: exact !important;color-adjust: exact !important;}.form-section{display:inline!important}.form-pagebreak{display:none!important}.form-section-closed{height:auto!important}.page-section{position:initial!important}}</style>
 <link id="custom-font" type="text/css" rel="stylesheet" href="//cdn.jotfor.ms/fonts/?family=Inter" />
-<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?v=3.3.66493&themeRevisionID=65660e4b326633110492e01a"/>
-<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/s/static/d7892fde2ee/css/styles/payment/payment_styles.css?3.3.66493" />
-<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/s/static/d7892fde2ee/css/styles/payment/payment_feature.css?3.3.66493" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?v=3.3.66497&themeRevisionID=65660e4b326633110492e01a"/>
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/s/static/40bb60070b6/css/styles/payment/payment_styles.css?3.3.66497" />
+<link type="text/css" rel="stylesheet" href="https://cdn.jotfor.ms/s/static/40bb60070b6/css/styles/payment/payment_feature.css?3.3.66497" />
 <style type="text/css" id="form-designer-style">
+    /* Injected CSS Code */
+/*PREFERENCES STYLE*/
     .form-all {
       font-family: Inter, sans-serif;
     }
   
     .form-label.form-label-auto {
-      display: block;
-      float: none;
-      text-align: left;
-      width: 100%;
+      
+    display: block;
+    float: none;
+    text-align: left;
+    width: 100%;
+  
     }
   
     .form-line {
@@ -161,12 +141,12 @@
       font-size: 16px
     }
   
-    .supernova {
-      background-color: #2461b7;
-    }
-    .supernova body {
-      background: transparent;
-    }
+  .supernova {
+    background-color: #2461b7;
+  }
+  .supernova body {
+    background: transparent;
+  }
   
     .supernova .form-all, .form-all {
       background-color: #d6e7ff;
@@ -234,6 +214,7 @@
       box-shadow: 0 0 3px #c61515;
     }
    
+      
     .supernova {
       background-repeat: no-repeat;
       background-size:cover;
@@ -241,32 +222,18 @@
       background-position: center top;
     }
 
-    .supernova, #stage {
-      background-image: none;
-    }
+      .supernova, #stage {
+        background-image: none;
+      }
     
-    .form-all {
-      background-image: none;
-    }
+      .form-all {
+        background-image: none;
+      }
+    /*PREFERENCES STYLE*//*__INSPECT_SEPERATOR__*/
+    /* Injected CSS Code */
 </style>
 
-<!-- CSS AGGIUNTO: pallini blu per i radio -->
-<style>
-  input.form-radio {
-    accent-color: #2461b7;
-  }
-</style>
-
-<form class="jotform-form" onsubmit="return typeof testSubmitFunction !== 'undefined' && testSubmitFunction();" action="https://eu-submit.jotform.com/submit/253044075525049" method="post" enctype="multipart/form-data" name="form_253044075525049" id="253044075525049" accept-charset="utf-8" autocomplete="on">
-  <input type="hidden" name="formID" value="253044075525049" />
-  <input type="hidden" id="JWTContainer" value="" />
-  <input type="hidden" id="cardinalOrderNumber" value="" />
-  <input type="hidden" id="jsExecutionTracker" name="jsExecutionTracker" value="build-date-1762294269121" />
-  <input type="hidden" id="submitSource" name="submitSource" value="unknown" />
-  <input type="hidden" id="submitDate" name="submitDate" value="undefined" />
-  <input type="hidden" id="buildDate" name="buildDate" value="1762294269121" />
-  <input type="hidden" name="uploadServerUrl" value="https://upload.jotform.com/upload" />
-  <input type="hidden" name="eventObserver" value="1" />
+<form class="jotform-form" onsubmit="return typeof testSubmitFunction !== 'undefined' && testSubmitFunction();" action="https://eu-submit.jotform.com/submit/253044075525049" method="post" enctype="multipart/form-data" name="form_253044075525049" id="253044075525049" accept-charset="utf-8" autocomplete="on"><input type="hidden" name="formID" value="253044075525049" /><input type="hidden" id="JWTContainer" value="" /><input type="hidden" id="cardinalOrderNumber" value="" /><input type="hidden" id="jsExecutionTracker" name="jsExecutionTracker" value="build-date-1762323774527" /><input type="hidden" id="submitSource" name="submitSource" value="unknown" /><input type="hidden" id="submitDate" name="submitDate" value="undefined" /><input type="hidden" id="buildDate" name="buildDate" value="1762323774527" /><input type="hidden" name="uploadServerUrl" value="https://upload.jotform.com/upload" /><input type="hidden" name="eventObserver" value="1" />
   <div role="main" class="form-all">
     <ul class="form-section page-section" role="presentation">
       <li id="cid_1" class="form-input-wide" data-type="control_head">
@@ -285,168 +252,101 @@
           <div id="text_15" class="form-html" data-component="text" tabindex="-1">
             <p style="text-align: justify;">🌱 <strong>Istruzioni per la compilazione:</strong></p>
             <p style="text-align: justify;"><strong>1- Fai upload foto: Per ottenere un riconoscimento accurato</strong>, la segnalazione deve contenere almeno una <strong>foto chiara</strong> e ravvicinata della pianta. Se possibile, includi più immagini che mostrino <strong>foglie, fiori, frutti o altri dettagli distintivi. Max 2 foto</strong></p>
-            <p style="text-align: justify;"><strong>2- Clicca Identifica Specie </strong></p>
+            <p style="text-align: justify;"><strong>2- Clicca Identifica Specie </strong></p>
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_fileupload" id="id_8">
-        <label class="form-label form-label-top" id="label_8" for="input_8" aria-hidden="false"> File Upload </label>
+      <li class="form-line" data-type="control_fileupload" id="id_8"><label class="form-label form-label-top" id="label_8" for="input_8" aria-hidden="false"> File Upload </label>
         <div id="cid_8" class="form-input-wide" data-layout="full">
           <div class="jfQuestion-fields" data-wrapper-react="true">
             <div class="jfField isFilled">
               <div class="jfUpload-wrapper">
                 <div class="jfUpload-container">
                   <div class="jfUpload-button-container">
-                    <div class="jfUpload-button" aria-hidden="true" tabindex="0" style="display:none" data-version="v2">
-                      Sfoglia File
-                      <div class="jfUpload-heading forDesktop">Trascina e Rilascia i file qui</div>
+                    <div class="jfUpload-button" aria-hidden="true" tabindex="0" style="display:none" data-version="v2">Sfoglia File<div class="jfUpload-heading forDesktop">Trascina e Rilascia i file qui</div>
                       <div class="jfUpload-heading forMobile">Scegli un file</div>
                     </div>
                   </div>
                 </div>
                 <div class="jfUpload-files-container">
-                  <div class="validate[multipleUpload]">
-                    <input type="file" id="input_8" name="q8_fileUpload[]" multiple class="form-upload-multiple"
-                           data-imagevalidate="yes"
-                           data-file-accept="pdf, doc, docx, xls, xlsx, csv, txt, rtf, html, zip, mp3, wma, mpg, flv, jpg, jpeg, png, gif"
-                           data-limit-file-size="Yes" data-file-maxsize="10854" data-file-minsize="0" data-file-limit="2"
-                           data-component="fileupload" aria-label="Sfoglia File" />
-                  </div>
+                  <div class="validate[multipleUpload]"><input type="file" id="input_8" name="q8_fileUpload[]" multiple="" class="form-upload-multiple" data-imagevalidate="yes" data-file-accept="pdf, doc, docx, xls, xlsx, csv, txt, rtf, html, zip, mp3, wma, mpg, flv, jpg, jpeg, png, gif" data-limit-file-size="Yes" data-file-maxsize="10854" data-file-minsize="0" data-file-limit="2" data-component="fileupload" aria-label="Sfoglia File" /></div>
                 </div>
               </div>
               <div data-wrapper-react="true"></div>
-            </div>
-            <span style="display:none" class="cancelText">Cancel</span>
-            <span style="display:none" class="ofText">of</span>
+            </div><span style="display:none" class="cancelText">Cancel</span><span style="display:none" class="ofText">of</span>
           </div>
         </div>
       </li>
-
-      <!-- PULSANTE IDENTIFICA SPECIE AGGIUNTO QUI -->
-      <li class="form-line" data-type="control_button" id="id_plantnet">
-        <div id="cid_plantnet" class="form-input-wide" data-layout="full">
-          <div class="form-buttons-wrapper form-buttons-auto jsTest-button-wrapperField" style="text-align:center;">
-            <button id="plantnet-identify-btn"
-                    type="button"
-                    class="form-submit-button submit-button jf-form-buttons"
-                    data-component="button">
-              🔍 Identifica Specie
-            </button>
-          </div>
-        </div>
-      </li>
-      <!-- FINE PULSANTE -->
-
-      <li class="form-line jf-required" data-type="control_fullname" id="id_22">
-        <label class="form-label form-label-top form-label-auto" id="label_22" for="first_22" aria-hidden="false"> Rilevatore<span class="form-required">*</span> </label>
+      <li class="form-line jf-required" data-type="control_fullname" id="id_22"><label class="form-label form-label-top form-label-auto" id="label_22" for="first_22" aria-hidden="false"> Rilevatore<span class="form-required">*</span> </label>
         <div id="cid_22" class="form-input-wide jf-required" data-layout="full">
-          <div data-wrapper-react="true">
-            <span class="form-sub-label-container" style="vertical-align:top" data-input-type="first">
-              <input type="text" id="first_22" name="q22_rilevatore[first]" class="form-textbox validate[required]" data-defaultvalue="" autoComplete="section-input_22 given-name" size="10" data-component="first" aria-labelledby="label_22 sublabel_22_first" required="" value="" />
-              <label class="form-sub-label" for="first_22" id="sublabel_22_first" style="min-height:13px">Nome</label>
-            </span>
-            <span class="form-sub-label-container" style="vertical-align:top" data-input-type="last">
-              <input type="text" id="last_22" name="q22_rilevatore[last]" class="form-textbox validate[required]" data-defaultvalue="" autoComplete="section-input_22 family-name" size="15" data-component="last" aria-labelledby="label_22 sublabel_22_last" required="" value="" />
-              <label class="form-sub-label" for="last_22" id="sublabel_22_last" style="min-height:13px">Cognome</label>
-            </span>
-          </div>
+          <div data-wrapper-react="true"><span class="form-sub-label-container" style="vertical-align:top" data-input-type="first"><input type="text" id="first_22" name="q22_rilevatore[first]" class="form-textbox validate[required]" data-defaultvalue="" autoComplete="section-input_22 given-name" size="10" data-component="first" aria-labelledby="label_22 sublabel_22_first" required="" value="" /><label class="form-sub-label" for="first_22" id="sublabel_22_first" style="min-height:13px">Nome</label></span><span class="form-sub-label-container" style="vertical-align:top" data-input-type="last"><input type="text" id="last_22" name="q22_rilevatore[last]" class="form-textbox validate[required]" data-defaultvalue="" autoComplete="section-input_22 family-name" size="15" data-component="last" aria-labelledby="label_22 sublabel_22_last" required="" value="" /><label class="form-sub-label" for="last_22" id="sublabel_22_last" style="min-height:13px">Cognome</label></span></div>
         </div>
       </li>
-      <li class="form-line jf-required" data-type="control_email" id="id_23">
-        <label class="form-label form-label-top form-label-auto" id="label_23" for="input_23" aria-hidden="false"> E-mail<span class="form-required">*</span> </label>
-        <div id="cid_23" class="form-input-wide jf-required" data-layout="half">
-          <span class="form-sub-label-container" style="vertical-align:top">
-            <input type="email" id="input_23" name="q23_email" class="form-textbox validate[required, Email]" data-defaultvalue="" autoComplete="section-input_23 email" style="width:310px" size="310" data-component="email" aria-labelledby="label_23 sublabel_input_23" required="" value="" />
-            <label class="form-sub-label" for="input_23" id="sublabel_input_23" style="min-height:13px">esempio@esempio.com</label>
-          </span>
-        </div>
+      <li class="form-line jf-required" data-type="control_email" id="id_23"><label class="form-label form-label-top form-label-auto" id="label_23" for="input_23" aria-hidden="false"> E-mail<span class="form-required">*</span> </label>
+        <div id="cid_23" class="form-input-wide jf-required" data-layout="half"> <span class="form-sub-label-container" style="vertical-align:top"><input type="email" id="input_23" name="q23_email" class="form-textbox validate[required, Email]" data-defaultvalue="" autoComplete="section-input_23 email" style="width:310px" size="310" data-component="email" aria-labelledby="label_23 sublabel_input_23" required="" value="" /><label class="form-sub-label" for="input_23" id="sublabel_input_23" style="min-height:13px">esempio@esempio.com</label></span> </div>
       </li>
-      <li class="form-line jf-required" data-type="control_radio" id="id_24">
-        <label class="form-label form-label-top form-label-auto" id="label_24" aria-hidden="false"> Chi sei?<span class="form-required">*</span> </label>
+      <li class="form-line jf-required" data-type="control_radio" id="id_24"><label class="form-label form-label-top form-label-auto" id="label_24" aria-hidden="false"> Chi sei?<span class="form-required">*</span> </label>
         <div id="cid_24" class="form-input-wide jf-required" data-layout="full">
-          <div class="form-single-column" role="group" aria-labelledby="label_24" data-component="radio">
-            <span class="form-radio-item" style="clear:left">
-              <span class="dragger-item"></span>
-              <input aria-describedby="label_24" type="radio" class="form-radio validate[required]" id="input_24_0" name="q24_chiSei" required="" value="Cittadino/Studente" />
-              <label id="label_input_24_0" for="input_24_0">Cittadino/Studente</label>
-            </span>
-            <span class="form-radio-item" style="clear:left">
-              <span class="dragger-item"></span>
-              <input aria-describedby="label_24" type="radio" class="form-radio validate[required]" id="input_24_1" name="q24_chiSei" required="" value="Espeto/Botanico" />
-              <label id="label_input_24_1" for="input_24_1">Espeto/Botanico</label>
-            </span>
-          </div>
+          <div class="form-single-column" role="group" aria-labelledby="label_24" data-component="radio"><span class="form-radio-item" style="clear:left"><span class="dragger-item"></span><input aria-describedby="label_24" type="radio" class="form-radio validate[required]" id="input_24_0" name="q24_chiSei" required="" value="Cittadino/Studente" /><label id="label_input_24_0" for="input_24_0">Cittadino/Studente</label></span><span class="form-radio-item" style="clear:left"><span class="dragger-item"></span><input aria-describedby="label_24" type="radio" class="form-radio validate[required]" id="input_24_1" name="q24_chiSei" required="" value="Espeto/Botanico" /><label id="label_input_24_1" for="input_24_1">Espeto/Botanico</label></span></div>
         </div>
       </li>
-      <li class="form-line" data-type="control_datetime" id="id_25">
-        <label class="form-label form-label-top form-label-auto" id="label_25" for="lite_mode_25" aria-hidden="false"> Data Avvistamento: </label>
+      <li class="form-line" data-type="control_datetime" id="id_25"><label class="form-label form-label-top form-label-auto" id="label_25" for="lite_mode_25" aria-hidden="false"> Data Avvistamento: </label>
         <div id="cid_25" class="form-input-wide" data-layout="half">
           <div data-wrapper-react="true">
-            <div style="display:none">
-              <span class="form-sub-label-container" style="vertical-align:top">
-                <input class="currentDate form-textbox validate[limitDate]" id="day_25" name="q25_dataAvvistamento[day]" type="tel" size="2" data-maxlength="2" data-age="" maxLength="2" autoComplete="off" aria-labelledby="label_25 sublabel_25_day" value="04" />
-                <span class="date-separate" aria-hidden="true"> /</span>
-                <label class="form-sub-label" for="day_25" id="sublabel_25_day" style="min-height:13px">Giorno</label>
-              </span>
-              <span class="form-sub-label-container" style="vertical-align:top">
-                <input class="form-textbox validate[limitDate]" id="month_25" name="q25_dataAvvistamento[month]" type="tel" size="2" data-maxlength="2" data-age="" maxLength="2" autoComplete="off" aria-labelledby="label_25 sublabel_25_month" value="11" />
-                <span class="date-separate" aria-hidden="true"> /</span>
-                <label class="form-sub-label" for="month_25" id="sublabel_25_month" style="min-height:13px">Mese</label>
-              </span>
-              <span class="form-sub-label-container" style="vertical-align:top">
-                <input class="form-textbox validate[limitDate]" id="year_25" name="q25_dataAvvistamento[year]" type="tel" size="4" data-maxlength="4" data-age="" maxLength="4" autoComplete="off" aria-labelledby="label_25 sublabel_25_year" value="2025" />
-                <label class="form-sub-label" for="year_25" id="sublabel_25_year" style="min-height:13px">Anno</label>
-              </span>
-            </div>
-            <span class="form-sub-label-container" style="vertical-align:top">
-              <input class="form-textbox validate[limitDate, validateLiteDate]" id="lite_mode_25" type="text" size="12" data-maxlength="12" maxLength="12" data-age="" data-format="ddmmyyyy" data-seperator="/" placeholder="GG/MM/AAAA" data-placeholder="DD/MM/YYYY" autoComplete="off" aria-labelledby="label_25 sublabel_25_litemode" value="04/11/2025" />
-              <button type="button" class=" newDefaultTheme-dateIcon focusable icon-liteMode" id="input_25_pick" data-component="datetime" aria-hidden="true" data-allow-time="No" data-version="v2"></button>
-              <label class="form-sub-label" for="lite_mode_25" id="sublabel_25_litemode" style="min-height:13px">Modifica se l&#x27;osservazione è in altra data</label>
-            </span>
+            <div style="display:none"><span class="form-sub-label-container" style="vertical-align:top"><input class="currentDate form-textbox validate[limitDate]" id="day_25" name="q25_dataAvvistamento[day]" type="tel" size="2" data-maxlength="2" data-age="" maxLength="2" autoComplete="off" aria-labelledby="label_25 sublabel_25_day" value="05" /><span class="date-separate" aria-hidden="true"> /</span><label class="form-sub-label" for="day_25" id="sublabel_25_day" style="min-height:13px">Giorno</label></span><span class="form-sub-label-container" style="vertical-align:top"><input class="form-textbox validate[limitDate]" id="month_25" name="q25_dataAvvistamento[month]" type="tel" size="2" data-maxlength="2" data-age="" maxLength="2" autoComplete="off" aria-labelledby="label_25 sublabel_25_month" value="11" /><span class="date-separate" aria-hidden="true"> /</span><label class="form-sub-label" for="month_25" id="sublabel_25_month" style="min-height:13px">Mese</label></span><span class="form-sub-label-container" style="vertical-align:top"><input class="form-textbox validate[limitDate]" id="year_25" name="q25_dataAvvistamento[year]" type="tel" size="4" data-maxlength="4" data-age="" maxLength="4" autoComplete="off" aria-labelledby="label_25 sublabel_25_year" value="2025" /><label class="form-sub-label" for="year_25" id="sublabel_25_year" style="min-height:13px">Anno</label></span></div><span class="form-sub-label-container" style="vertical-align:top"><input class="form-textbox validate[limitDate, validateLiteDate]" id="lite_mode_25" type="text" size="12" data-maxlength="12" maxLength="12" data-age="" data-format="ddmmyyyy" data-seperator="/" placeholder="GG/MM/AAAA" data-placeholder="DD/MM/YYYY" autoComplete="off" aria-labelledby="label_25 sublabel_25_litemode" value="05/11/2025" /><button type="button" class=" newDefaultTheme-dateIcon focusable icon-liteMode" id="input_25_pick" data-component="datetime" aria-hidden="true" data-allow-time="No" data-version="v2"></button><label class="form-sub-label" for="lite_mode_25" id="sublabel_25_litemode" style="min-height:13px">Modifica se l&#x27;osservazione è in altra data</label></span>
           </div>
         </div>
       </li>
       <li class="form-line" data-type="control_text" id="id_26">
         <div id="cid_26" class="form-input-wide" data-layout="full">
           <div id="text_26" class="form-html" data-component="text" tabindex="-1">
-            <p style="text-align: justify;"> <img src="https://www.jotform.com/uploads/GuardaMI/form_files/gps_PNG38.648c1811a21e80.51280571.png" alt="" width="12" height="19" /> Controllare che la geolocalizzazione corrisponda al luogo di avvistamento oppure inserire nell'apposita barra di ricerca il nome corretto (via, piazza, parco etc) del luogo in cui è avvenuto l'avvistamento.</p>
+            <p style="text-align: justify;"> <img src="https://www.jotform.com/uploads/GuardaMI/form_files/gps_PNG38.648c1811a21e80.51280571.png" alt="" width="12" height="19" /> Controllare che la geolocalizzazione corrisponda al luogo di avvistamento oppure inserire nell'apposita barra di ricerca il nome corretto (via, piazza, parco etc) del luogo in cui è avvenuto l'avvistamento.</p>
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_widget" id="id_21">
-        <label class="form-label form-label-top" id="label_21" for="input_21" aria-hidden="false"> Geolocalizzazione </label>
+      <li class="form-line" data-type="control_widget" id="id_21"><label class="form-label form-label-top" id="label_21" for="input_21" aria-hidden="false"> Geolocalizzazione </label>
         <div id="cid_21" class="form-input-wide" data-layout="full">
-          <div data-widget-name="Ubicazione GPS" style="width:100%;text-align:Left;overflow-x:auto" data-component="widget-field">
-            <iframe data-client-id="5379f8c6d6aa823065000009" data-unique-id="" title="Ubicazione GPS" frameBorder="0" scrolling="no" allowtransparency="true" allow="geolocation; microphone; camera; autoplay; encrypted-media; fullscreen" data-type="iframe" class="custom-field-frame" id="customFieldFrame_21" src="" style="max-width:600px;border:none;width:100%;height:500px" data-width="600" data-height="500"></iframe>
-            <div class="widget-inputs-wrapper">
-              <input id="input_21" class="form-hidden form-widget" type="hidden" name="q21_scriviUna" value="" />
-              <input id="widget_settings_21" class="form-hidden form-widget-settings" type="hidden" data-version="2" value="%5B%7B%22name%22%3A%22apiKey%22%2C%22value%22%3A%22AIzaSyAaUqeVLCO3p4W3Xsc4a0B6bkKLtK3PytA%22%7D%2C%7B%22name%22%3A%22showMinimap%22%2C%22value%22%3A%22Yes%22%7D%2C%7B%22name%22%3A%22hintText%22%2C%22value%22%3A%22Suggerimento%3A%20Puoi%20trascinare%20il%20Marcatore%20per%20cambiare%20la%20tua%20posizione%22%7D%2C%7B%22name%22%3A%22inputPlaceholder%22%2C%22value%22%3A%22Digita%20Indirizzo%22%7D%2C%7B%22name%22%3A%22errorLocation%22%2C%22value%22%3A%22Posizione%20non%20trovata!%22%7D%2C%7B%22name%22%3A%22outputTypes%22%2C%22value%22%3A%22Address%20~%20Latitude%20and%20Longitude%22%7D%5D" />
-            </div>
+          <div data-widget-name="Ubicazione GPS" style="width:100%;text-align:Left;overflow-x:auto" data-component="widget-field"><iframe data-client-id="5379f8c6d6aa823065000009" data-unique-id="" title="Ubicazione GPS" frameBorder="0" scrolling="no" allowtransparency="true" allow="geolocation; microphone; camera; autoplay; encrypted-media; fullscreen" data-type="iframe" class="custom-field-frame" id="customFieldFrame_21" src="" style="max-width:600px;border:none;width:100%;height:500px" data-width="600" data-height="500"></iframe>
+            <div class="widget-inputs-wrapper"><input id="input_21" class="form-hidden form-widget  " type="hidden" name="q21_scriviUna" value="" /><input id="widget_settings_21" class="form-hidden form-widget-settings" type="hidden" data-version="2" value="%5B%7B%22name%22%3A%22apiKey%22%2C%22value%22%3A%22AIzaSyAaUqeVLCO3p4W3Xsc4a0B6bkKLtK3PytA%22%7D%2C%7B%22name%22%3A%22showMinimap%22%2C%22value%22%3A%22Yes%22%7D%2C%7B%22name%22%3A%22hintText%22%2C%22value%22%3A%22Suggerimento%3A%20Puoi%20trascinare%20il%20Marcatore%20per%20cambiare%20la%20tua%20posizione%22%7D%2C%7B%22name%22%3A%22inputPlaceholder%22%2C%22value%22%3A%22Digita%20Indirizzo%22%7D%2C%7B%22name%22%3A%22errorLocation%22%2C%22value%22%3A%22Posizione%20non%20trovata!%22%7D%2C%7B%22name%22%3A%22outputTypes%22%2C%22value%22%3A%22Address%20~%20Latitude%20and%20Longitude%22%7D%5D" /></div>
             <script type="text/javascript">
-              setTimeout(function() {
-                function renderWidget() {
+              setTimeout(function()
+              {
+                function renderWidget()
+                {
                   var _cFieldFrame = document.getElementById("customFieldFrame_21");
-                  if (_cFieldFrame) {
-                    _cFieldFrame.onload = function() {
-                      if (typeof widgetFrameLoaded !== 'undefined') {
-                        widgetFrameLoaded(21, {"formID": 253044075525049}, undefined, {});
+                  if (_cFieldFrame)
+                  {
+                    _cFieldFrame.onload = function()
+                    {
+                      if (typeof widgetFrameLoaded !== 'undefined')
+                      {
+                        widgetFrameLoaded(21,
+                        {
+                          "formID": 253044075525049
+                        }, undefined,
+                        {})
                       }
                     };
                     _cFieldFrame.src = "https://eu.jotform.com/form-widgets/gps-location/?qid=21&isOpenedInPortal=undefined&isOpenedInAgent=undefined&align=Left&ref=" +
-                      encodeURIComponent(window.location.protocol + "//" + window.location.host) +
+                      encodeURIComponent(window.location.protocol + "//" + window.location.host) + '' + '' + '' +
                       '&injectCSS=' + encodeURIComponent(window.location.search.indexOf("ndt=1") > -1);
                     _cFieldFrame.addClassName("custom-field-frame-rendered");
                   }
                 }
-                if (false) {
-                  var _interval = setInterval(function() {
+                if (false)
+                {
+                  var _interval = setInterval(function()
+                  {
                     var dataMode = document.querySelector('html').getAttribute('data-mode');
-                    if (dataMode === 'fillMode') {
+                    if (dataMode === 'fillMode')
+                    {
                       renderWidget()
                       clearInterval(_interval);
                     }
                   }, 1000);
-                } else {
+                }
+                else
+                {
                   renderWidget();
                 }
               }, 0);
@@ -457,58 +357,30 @@
       <li class="form-line" data-type="control_text" id="id_16">
         <div id="cid_16" class="form-input-wide" data-layout="full">
           <div id="text_16" class="form-html" data-component="text" tabindex="-1">
-            <p style="text-align: justify;">🌱<strong> ESITO IDENTIFICAZIONE </strong></p>
+            <p style="text-align: justify;">🌱<strong> ESITO IDENTIFICAZIONE </strong></p>
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_12">
-        <label class="form-label form-label-top form-label-auto" id="label_12" for="input_12" aria-hidden="false"> Affidabilità </label>
-        <div id="cid_12" class="form-input-wide" data-layout="half">
-          <input type="text" id="input_12" name="q12_affidabilita" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_12" value="" />
-        </div>
+      <li class="form-line" data-type="control_textbox" id="id_12"><label class="form-label form-label-top form-label-auto" id="label_12" for="input_12" aria-hidden="false"> Affidabilità </label>
+        <div id="cid_12" class="form-input-wide" data-layout="half"> <input type="text" id="input_12" name="q12_affidabilita" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_12" value="" /> </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_7">
-        <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7" aria-hidden="false"> Nome Comune </label>
-        <div id="cid_7" class="form-input-wide" data-layout="half">
-          <input type="text" id="input_7" name="q7_Nome_comune" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_7" value="" />
-        </div>
+      <li class="form-line" data-type="control_textbox" id="id_7"><label class="form-label form-label-top form-label-auto" id="label_7" for="input_7" aria-hidden="false"> Nome Comune </label>
+        <div id="cid_7" class="form-input-wide" data-layout="half"> <input type="text" id="input_7" name="q7_Nome_comune" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_7" value="" /> </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_9">
-        <label class="form-label form-label-top form-label-auto" id="label_9" for="input_9" aria-hidden="false"> Nome Scientifico </label>
-        <div id="cid_9" class="form-input-wide" data-layout="half">
-          <input type="text" id="input_9" name="q9_Nome_Scientifico" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_9" value="" />
-        </div>
+      <li class="form-line" data-type="control_textbox" id="id_9"><label class="form-label form-label-top form-label-auto" id="label_9" for="input_9" aria-hidden="false"> Nome Scientifico </label>
+        <div id="cid_9" class="form-input-wide" data-layout="half"> <input type="text" id="input_9" name="q9_Nome_Scientifico" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_9" value="" /> </div>
       </li>
-      <li class="form-line" data-type="control_textbox" id="id_13">
-        <label class="form-label form-label-top form-label-auto" id="label_13" for="input_13" aria-hidden="false"> Allergenicità </label>
-        <div id="cid_13" class="form-input-wide" data-layout="half">
-          <input type="text" id="input_13" name="q13_allergenicita" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_13" value="" />
-        </div>
+      <li class="form-line" data-type="control_textbox" id="id_13"><label class="form-label form-label-top form-label-auto" id="label_13" for="input_13" aria-hidden="false"> Allergenicità </label>
+        <div id="cid_13" class="form-input-wide" data-layout="half"> <input type="text" id="input_13" name="q13_allergenicita" data-type="input-textbox" class="form-textbox" data-defaultvalue="" style="width:310px" size="310" data-component="textbox" aria-labelledby="label_13" value="" /> </div>
       </li>
-      <li class="form-line" data-type="control_radio" id="id_27">
-        <label class="form-label form-label-top form-label-auto" id="label_27" aria-hidden="false">
-          Il sottoscritto autorizza il trattamento dei dati personali nel rispetto della vigente normativa sulla protezione dei dati personali ed, in particolare, il Regolamento Europeo per la protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n. 196 e successive modifiche e integrazioni, come modificato da ultimo dal d.lgs. 10/08/2018 n. 101.
-        </label>
+      <li class="form-line" data-type="control_radio" id="id_27"><label class="form-label form-label-top form-label-auto" id="label_27" aria-hidden="false"> Il sottoscritto autorizza il trattamento dei dati personali nel rispetto della vigente normativa sulla protezione dei dati personali ed, in particolare, il Regolamento Europeo per la protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n. 196 e successive modifiche e integrazioni, come modificato da ultimo dal d.lgs. 10/08/2018 n. 101. </label>
         <div id="cid_27" class="form-input-wide" data-layout="full">
-          <div class="form-single-column" role="group" aria-labelledby="label_27" data-component="radio">
-            <span class="form-radio-item" style="clear:left">
-              <span class="dragger-item"></span>
-              <input aria-describedby="label_27" type="radio" class="form-radio" id="input_27_0" name="q27_ilSottoscritto" value="Acconsento" />
-              <label id="label_input_27_0" for="input_27_0">Acconsento</label>
-            </span>
-            <span class="form-radio-item" style="clear:left">
-              <span class="dragger-item"></span>
-              <input aria-describedby="label_27" type="radio" class="form-radio" id="input_27_1" name="q27_ilSottoscritto" value="Non Acconsento" />
-              <label id="label_input_27_1" for="input_27_1">Non Acconsento</label>
-            </span>
-          </div>
+          <div class="form-single-column" role="group" aria-labelledby="label_27" data-component="radio"><span class="form-radio-item" style="clear:left"><span class="dragger-item"></span><input aria-describedby="label_27" type="radio" class="form-radio" id="input_27_0" name="q27_ilSottoscritto" value="Acconsento" /><label id="label_input_27_0" for="input_27_0">Acconsento</label></span><span class="form-radio-item" style="clear:left"><span class="dragger-item"></span><input aria-describedby="label_27" type="radio" class="form-radio" id="input_27_1" name="q27_ilSottoscritto" value="Non Acconsento" /><label id="label_input_27_1" for="input_27_1">Non Acconsento</label></span></div>
         </div>
       </li>
       <li class="form-line form-field-hidden" style="display:none;" data-type="control_button" id="id_4">
         <div id="cid_4" class="form-input-wide" data-layout="full">
-          <div data-align="auto" class="form-buttons-wrapper form-buttons-auto jsTest-button-wrapperField">
-            <button id="input_4" type="submit" class="form-submit-button submit-button jf-form-buttons jsTest-submitField legacy-submit" data-component="button" data-content="">Invia</button>
-          </div>
+          <div data-align="auto" class="form-buttons-wrapper form-buttons-auto   jsTest-button-wrapperField"><button id="input_4" type="submit" class="form-submit-button submit-button jf-form-buttons jsTest-submitField legacy-submit" data-component="button" data-content="">Invia</button></div>
         </div>
       </li>
       <li style="display:none">Should be Empty: <input type="text" name="website" value="" type="hidden" /></li>
@@ -519,88 +391,106 @@
   </script>
   <script>
     JotForm.poweredByText = "Creato con Jotform";
-  </script>
-  <input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="253044075525049" />
+  </script><input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="253044075525049" />
   <script type="text/javascript">
     var all_spc = document.querySelectorAll("form[id='253044075525049'] .si" + "mple" + "_spc");
-    for (var i = 0; i < all_spc.length; i++) {
+    for (var i = 0; i < all_spc.length; i++)
+    {
       all_spc[i].value = "253044075525049-253044075525049";
     }
   </script>
 </form>
-<link id="color-scheme-style" href="https://cdn.jotfor.ms/stylebuilder/static/color-scheme.css?v=3.3.66493" type="text/css" rel="stylesheet" />
-<script type="text/javascript">JotForm.ownerView=true;</script>
-<script type="text/javascript">JotForm.forwardToEu=true;</script>
-<script type="text/javascript">JotForm.isNewSACL=true;</script>
+<link id=color-scheme-style href="https://cdn.jotfor.ms/stylebuilder/static/color-scheme.css?v=3.3.66497" type="text/css" rel="stylesheet" /><script type="text/javascript">JotForm.ownerView=true;</script><script type="text/javascript">JotForm.forwardToEu=true;</script><script type="text/javascript">JotForm.isNewSACL=true;</script>
+  
+  <!-- *** FINE BLOCCO JOTFORM *** -->
 
-<!-- SCRIPT INTEGRAZIONE PLANTNET -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const identifyBtn      = document.getElementById("plantnet-identify-btn");
-  const fileInput        = document.getElementById("input_8");
-  const affidInput       = document.getElementById("input_12");
-  const nomeComuneInput  = document.getElementById("input_7");
-  const nomeScientInput  = document.getElementById("input_9");
-  const allergInput      = document.getElementById("input_13");
+  <!-- Bottone Identifica Specie sotto il modulo -->
+  <div class="plantnet-identify-wrapper">
+    <button type="button" id="btn-identifica-specie">Identifica Specie</button>
+  </div>
 
-  if (!identifyBtn) return;
-
-  identifyBtn.addEventListener("click", async function () {
-    if (!fileInput || !fileInput.files || !fileInput.files[0]) {
-      alert("Per favore carica prima una foto della pianta.");
-      return;
-    }
-
-    const oldLabel = identifyBtn.textContent;
-    identifyBtn.disabled   = true;
-    identifyBtn.textContent = "Identificazione in corso...";
-
-    try {
-      const base64 = await fileToBase64(fileInput.files[0]);
-      const cleanBase64 = base64.split(",")[1] || base64;
-
-      const resp = await fetch("/.netlify/functions/plantnet-identify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: cleanBase64 })
+  <!-- Script integrazione con Netlify Function plantnet-identify -->
+  <script>
+    // Converte un File (immagine) in base64 (senza prefisso data:)
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result || "";
+          const base64 = result.toString().split(",")[1] || "";
+          resolve(base64);
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
       });
-
-      const data = await resp.json();
-
-      if (!resp.ok) {
-        console.error("Errore da funzione PlantNet:", data);
-        alert("Errore durante l'identificazione della pianta.");
-        return;
-      }
-
-      if (nomeScientInput) nomeScientInput.value = data.scientificName || "";
-      if (nomeComuneInput) nomeComuneInput.value = data.commonName || "";
-      if (affidInput)      affidInput.value      = data.reliability ? data.reliability + " / 1.00" : "";
-      if (allergInput && data.allergenicity && data.allergenicity !== "N/D") {
-        allergInput.value = data.allergenicity;
-      }
-
-      alert("Identificazione completata.");
-    } catch (err) {
-      console.error("Errore imprevisto:", err);
-      alert("Errore imprevisto durante l'identificazione.");
-    } finally {
-      identifyBtn.disabled = false;
-      identifyBtn.textContent = oldLabel;
     }
-  });
 
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+    async function identificaSpecieDaJotform() {
+      try {
+        // Campo upload di Jotform (q8_fileUpload)
+        const fileInput = document.getElementById("input_8");
+        const file = fileInput?.files?.[0];
+
+        if (!file) {
+          alert("Carica prima una foto della pianta (max 2).");
+          return;
+        }
+
+        console.log("📤 Invio immagine alla funzione Netlify...");
+
+        const imageBase64 = await fileToBase64(file);
+
+        const response = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ imageBase64 }),
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("❌ Errore chiamata funzione Netlify:", response.status, text);
+          alert("Errore durante l'identificazione della pianta.");
+          return;
+        }
+
+        const data = await response.json();
+        console.log("✅ Risposta funzione Netlify:", data);
+
+        const scientificName = data.scientificName || "Sconosciuta";
+        const commonName = data.commonName || "Nome comune non disponibile";
+        const reliability = data.reliability || "N/D";
+        const allergenicity = data.allergenicity || "N/D";
+
+        // Campi Jotform
+        const inputAffidabilita   = document.getElementById("input_12"); // Affidabilità
+        const inputNomeComune     = document.getElementById("input_7");  // Nome Comune
+        const inputNomeScientifico= document.getElementById("input_9");  // Nome Scientifico
+        const inputAllergenicita  = document.getElementById("input_13"); // Allergenicità
+
+        if (inputAffidabilita)    inputAffidabilita.value    = reliability;
+        if (inputNomeComune)      inputNomeComune.value      = commonName;
+        if (inputNomeScientifico) inputNomeScientifico.value = scientificName;
+        if (inputAllergenicita)   inputAllergenicita.value   = allergenicity;
+
+        alert("Identificazione completata. Controlla l'esito nei campi in basso.");
+      } catch (error) {
+        console.error("❌ Errore generale nell'identificazione:", error);
+        alert("Errore imprevisto durante l'identificazione.");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("btn-identifica-specie");
+      if (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          identificaSpecieDaJotform();
+        });
+      }
     });
-  }
-});
-</script>
+  </script>
 
 </body>
 </html>
-
