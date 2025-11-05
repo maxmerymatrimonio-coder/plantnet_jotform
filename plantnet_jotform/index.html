@@ -1,723 +1,606 @@
-<!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="utf-8" />
-    <title>Modulo di identificazione Piante - Area Metropolitana di Milano</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="UTF-8" />
+  <title>Modulo di identificazione Piante</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <style>
-      /* --- STILE GENERALE SIMILE A JOTFORM --- */
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: #2461b7;
-        color: #12458c;
+  <style>
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #2461b7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #d6e7ff;
+      border-radius: 16px;
+      padding: 24px 24px 32px;
+      box-sizing: border-box;
+      color: #12458c;
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      font-size: 26px;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .instructions {
+      background: #c0d8ff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .instructions p {
+      margin: 4px 0;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #8aa7d6;
+      box-sizing: border-box;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input[type="file"] {
+      font-size: 14px;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .row .col {
+      flex: 1 1 0;
+      min-width: 140px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .radio-group label {
+      font-weight: 400;
+    }
+
+    .identify-wrapper {
+      text-align: center;
+      margin: 16px 0 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      font-family: inherit;
+      background: #12458c;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.2s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .btn:not(:disabled):hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    }
+
+    .btn-icon {
+      margin-right: 6px;
+    }
+
+    .submit-row {
+      margin-top: 24px;
+      text-align: right;
+    }
+
+    .submit-row .btn {
+      min-width: 120px;
+    }
+
+    .map-section {
+      margin-top: 8px;
+      margin-bottom: 18px;
+    }
+
+    #map {
+      width: 100%;
+      height: 320px;
+      border-radius: 10px;
+      margin-top: 8px;
+      border: 1px solid #8aa7d6;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 12px;
+      text-align: center;
+      color: #2c5fa6;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        margin: 10px;
+        padding: 18px 14px 24px;
       }
+    }
+  </style>
+</head>
 
-      .page-wrapper {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 24px 12px;
-      }
+<body>
+  <div class="page">
+    <h1>Modulo di identificazione Piante</h1>
+    <p class="subtitle">Area Metropolitana di Milano</p>
 
-      .form-all {
-        background-color: #d6e7ff;
-        max-width: 752px;
-        width: 100%;
-        border-radius: 8px;
-        padding: 24px 20px 32px 20px;
-        box-sizing: border-box;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-      }
-
-      h1 {
-        margin: 0 0 4px 0;
-        font-size: 24px;
-        text-align: center;
-      }
-
-      .form-subHeader {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 16px;
-      }
-
-      .form-line {
-        margin-top: 12px;
-        margin-bottom: 12px;
-      }
-
-      label {
-        display: block;
-        font-weight: 500;
-        margin-bottom: 4px;
-      }
-
-      .required-star {
-        color: #dc2626;
-        margin-left: 3px;
-      }
-
-      input[type="text"],
-      input[type="email"],
-      input[type="date"],
-      input[type="file"] {
-        width: 100%;
-        max-width: 310px;
-        padding: 8px;
-        border-radius: 4px;
-        border: 1px solid #9cb5dd;
-        box-sizing: border-box;
-        background-color: #ffffff;
-        font-size: 14px;
-      }
-
-      input[readonly] {
-        background-color: #f3f4ff;
-      }
-
-      .two-columns {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .two-columns > div {
-        flex: 1 1 160px;
-      }
-
-      .radio-inline {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .radio-inline label {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-weight: 400;
-      }
-
-      .help-text {
-        font-size: 13px;
-        color: #2c5fa6;
-      }
-
-      .section-title {
-        font-weight: 600;
-        margin-top: 18px;
-        margin-bottom: 6px;
-      }
-
-      .text-block {
-        font-size: 14px;
-        text-align: justify;
-      }
-
-      /* Pulsanti */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 16px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        transition: background-color 0.15s ease, transform 0.05s ease,
-          box-shadow 0.15s ease;
-        white-space: nowrap;
-      }
-
-      .btn-primary {
-        background-color: #1d4ed8;
-        color: #ffffff;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
-      }
-
-      .btn-primary:hover:not(:disabled) {
-        background-color: #1e40af;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
-      }
-
-      .btn-primary:disabled {
-        background-color: #9ca3af;
-        cursor: default;
-        box-shadow: none;
-      }
-
-      .btn-full {
-        width: 100%;
-        max-width: 310px;
-        justify-content: center;
-      }
-
-      .buttons-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin-top: 10px;
-      }
-
-      /* Mappa */
-      #map {
-        width: 100%;
-        height: 300px;
-        border-radius: 6px;
-        border: 1px solid #9cb5dd;
-        overflow: hidden;
-      }
-
-      .map-coords {
-        margin-top: 4px;
-        font-size: 13px;
-        color: #2c5fa6;
-      }
-
-      .warning {
-        font-size: 13px;
-        color: #b91c1c;
-        margin-top: 4px;
-        display: none;
-      }
-
-      hr {
-        border: none;
-        border-bottom: 1px solid #9cb5dd;
-        margin: 16px 0;
-      }
-
-      @media (max-width: 600px) {
-        .form-all {
-          padding: 16px 12px 24px 12px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page-wrapper">
-      <div class="form-all">
-        <h1>Area Metropolitana di Milano</h1>
-        <div class="form-subHeader">Modulo di identificazione Piante</div>
-
-        <!--
-          IMPORTANTE:
-          - action = endpoint di submit Jotform
-          - method = POST
-          - enctype = multipart/form-data (serve per il file)
-        -->
-        <form
-          id="plant-form"
-          action="https://eu-submit.jotform.com/submit/253044075525049"
-          method="post"
-          enctype="multipart/form-data"
-          accept-charset="utf-8"
-        >
-          <!-- Hidden base Jotform -->
-          <input type="hidden" name="formID" value="253044075525049" />
-          <input
-            type="hidden"
-            id="simple_spc"
-            name="simple_spc"
-            value="253044075525049-253044075525049"
-          />
-          <input type="hidden" name="website" value="" />
-
-          <!-- ISTRUZIONI -->
-          <div class="form-line">
-            <div class="text-block">
-              🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
-              <strong>1 – Fai upload foto:</strong> Per ottenere un
-              riconoscimento accurato, la segnalazione deve contenere almeno
-              una <strong>foto chiara e ravvicinata</strong> della pianta. Se
-              possibile, includi più immagini che mostrino
-              <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
-              (max 2 foto)<br /><br />
-              <strong>2 – Clicca “Identifica Specie”</strong> per compilare
-              automaticamente i campi di identificazione.
-            </div>
-          </div>
-
-          <!-- UPLOAD + IDENTIFICA -->
-          <div class="form-line">
-            <label for="input_8">
-              File Upload <span class="required-star">*</span>
-            </label>
-            <!-- name = q8_fileUpload[] (come in Jotform) -->
-            <input
-              type="file"
-              id="input_8"
-              name="q8_fileUpload[]"
-              accept="image/*"
-              required
-            />
-
-            <div class="buttons-row">
-              <button
-                type="button"
-                class="btn btn-primary"
-                id="identifyButton"
-              >
-                Identifica Specie
-              </button>
-            </div>
-            <div class="help-text">
-              Carica almeno una foto chiara e ravvicinata della pianta (foglie,
-              fiori, frutti, ecc.).
-            </div>
-          </div>
-
-          <!-- DATI RILEVATORE -->
-          <hr />
-          <div class="section-title">Dati del rilevatore</div>
-
-          <div class="form-line">
-            <label>
-              Rilevatore <span class="required-star">*</span>
-            </label>
-            <div class="two-columns">
-              <div>
-                <!-- name = q22_rilevatore[first] -->
-                <input
-                  type="text"
-                  id="nomeRilevatore"
-                  name="q22_rilevatore[first]"
-                  placeholder="Nome"
-                  required
-                />
-              </div>
-              <div>
-                <!-- name = q22_rilevatore[last] -->
-                <input
-                  type="text"
-                  id="cognomeRilevatore"
-                  name="q22_rilevatore[last]"
-                  placeholder="Cognome"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="form-line">
-            <label for="email">
-              E-mail <span class="required-star">*</span>
-            </label>
-            <!-- name = q23_email -->
-            <input
-              type="email"
-              id="email"
-              name="q23_email"
-              placeholder="esempio@esempio.com"
-              required
-            />
-          </div>
-
-          <div class="form-line">
-            <label>
-              Chi sei? <span class="required-star">*</span>
-            </label>
-            <!-- name = q24_chiSei ; valori come in Jotform -->
-            <div class="radio-inline">
-              <label>
-                <input
-                  type="radio"
-                  name="q24_chiSei"
-                  value="Cittadino/Studente"
-                  required
-                />
-                Cittadino/Studente
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="q24_chiSei"
-                  value="Espeto/Botanico"
-                  required
-                />
-                Esperto/Botanico
-              </label>
-            </div>
-          </div>
-
-          <!-- DATA AVVISTAMENTO (user-friendly) -->
-          <div class="form-line">
-            <label for="dataAvvistamento">Data avvistamento</label>
-            <input
-              type="date"
-              id="dataAvvistamento"
-              name="dataAvvistamento_fake"
-            />
-            <div class="help-text">
-              Modifica se l’osservazione è avvenuta in una data diversa da oggi.
-            </div>
-
-            <!-- Campi hidden che Jotform si aspetta -->
-            <input
-              type="hidden"
-              id="day_25"
-              name="q25_dataAvvistamento[day]"
-            />
-            <input
-              type="hidden"
-              id="month_25"
-              name="q25_dataAvvistamento[month]"
-            />
-            <input
-              type="hidden"
-              id="year_25"
-              name="q25_dataAvvistamento[year]"
-            />
-          </div>
-
-          <!-- GEOLOCALIZZAZIONE -->
-          <hr />
-          <div class="section-title">Geolocalizzazione</div>
-
-          <div class="form-line">
-            <div class="text-block" style="margin-bottom: 6px">
-              📍 Controlla che la posizione sulla mappa corrisponda al luogo di
-              avvistamento oppure trascina il marcatore nella posizione
-              corretta.
-            </div>
-            <div id="map"></div>
-            <div class="map-coords">
-              Coordinate selezionate:
-              <span id="geolocDisplay">–</span>
-            </div>
-            <!-- name = q21_scriviUna (campo widget Jotform) -->
-            <input type="hidden" id="geoloc" name="q21_scriviUna" />
-          </div>
-
-          <!-- ESITO IDENTIFICAZIONE -->
-          <hr />
-          <div class="section-title">🌱 Esito identificazione (PlantNet)</div>
-
-          <div class="form-line">
-            <label for="affidabilita">Affidabilità</label>
-            <!-- name = q12_affidabilita -->
-            <input
-              type="text"
-              id="affidabilita"
-              name="q12_affidabilita"
-              placeholder="es. 0.87"
-              readonly
-            />
-          </div>
-
-          <div class="form-line">
-            <label for="nomeComune">Nome comune</label>
-            <!-- name = q7_Nome_comune -->
-            <input
-              type="text"
-              id="nomeComune"
-              name="q7_Nome_comune"
-              placeholder="Nome comune (IT, se disponibile)"
-              readonly
-            />
-          </div>
-
-          <div class="form-line">
-            <label for="nomeScientifico">Nome scientifico</label>
-            <!-- name = q9_Nome_Scientifico -->
-            <input
-              type="text"
-              id="nomeScientifico"
-              name="q9_Nome_Scientifico"
-              placeholder="Nome scientifico"
-              readonly
-            />
-          </div>
-
-          <div class="form-line">
-            <label for="allergenicita">Allergenicità</label>
-            <!-- name = q13_allergenicita -->
-            <input
-              type="text"
-              id="allergenicita"
-              name="q13_allergenicita"
-              placeholder="Non disponibile / da compilare"
-              readonly
-            />
-          </div>
-
-          <!-- CONSENSO -->
-          <hr />
-          <div class="section-title">Consenso al trattamento dati</div>
-
-          <div class="form-line">
-            <div class="text-block" style="margin-bottom: 6px">
-              Il sottoscritto autorizza il trattamento dei dati personali nel
-              rispetto della vigente normativa sulla protezione dei dati
-              personali ed, in particolare, il Regolamento Europeo per la
-              protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n.
-              196 e successive modifiche e integrazioni, come modificato da
-              ultimo dal d.lgs. 10/08/2018 n. 101.
-            </div>
-            <!-- name = q27_ilSottoscritto -->
-            <div class="radio-inline">
-              <label>
-                <input
-                  type="radio"
-                  name="q27_ilSottoscritto"
-                  value="Acconsento"
-                />
-                Acconsento
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="q27_ilSottoscritto"
-                  value="Non Acconsento"
-                />
-                Non Acconsento
-              </label>
-            </div>
-            <div id="consentWarning" class="warning">
-              Per inviare il modulo è necessario selezionare “Acconsento”.
-            </div>
-          </div>
-
-          <!-- INVIO -->
-          <div class="form-line" style="margin-top: 20px">
-            <button
-              type="submit"
-              class="btn btn-primary btn-full"
-              id="submitButton"
-              disabled
-            >
-              Invia
-            </button>
-            <div class="help-text" style="margin-top: 4px">
-              Questo modulo è potenziato dal servizio di riconoscimento
-              automatico PlantNet.
-            </div>
-          </div>
-        </form>
-      </div>
+    <div class="instructions">
+      <p>🌱 <strong>Istruzioni per la compilazione:</strong></p>
+      <p><strong>1.</strong> Carica una foto chiara e ravvicinata della pianta (foglie, fiori, frutti, max 2 foto).</p>
+      <p><strong>2.</strong> Clicca su <strong>Identifica Specie</strong> per compilare automaticamente i campi.</p>
+      <p><strong>3.</strong> Controlla i dati e premi <strong>Invia</strong>.</p>
     </div>
 
-    <!-- SCRIPT PRINCIPALE -->
-    <script>
-      // Chiamata alla Netlify Function per PlantNet
-      async function callPlantNetIdentify(imageBase64) {
-        const response = await fetch("/.netlify/functions/plantnet-identify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64 }),
-        });
+    <!-- FORM che invia a Jotform -->
+    <form
+      id="plant-form"
+      action="https://eu-submit.jotform.com/submit/253044075525049"
+      method="post"
+      enctype="multipart/form-data"
+      autocomplete="on"
+    >
+      <input type="hidden" name="formID" value="253044075525049" />
 
-        if (!response.ok) {
-          const text = await response.text();
-          console.error("Errore da PlantNet/Function:", response.status, text);
-          throw new Error("Errore dalla funzione di identificazione");
-        }
+      <!-- FOTO -->
+      <div class="field">
+        <label for="input_8">Carica foto (max 2 immagini)</label>
+        <input
+          type="file"
+          id="input_8"
+          name="q8_fileUpload[]"
+          accept="image/*"
+          multiple
+          required
+        />
+      </div>
 
-        return response.json();
-      }
+      <!-- Pulsante IDENTIFICA -->
+      <div class="identify-wrapper">
+        <button type="button" id="identify-btn" class="btn">
+          <span class="btn-icon">🔍</span>
+          Identifica Specie
+        </button>
+      </div>
 
-      document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("plant-form");
+      <!-- ESITO IDENTIFICAZIONE -->
+      <div class="field">
+        <label>🌱 Esito identificazione</label>
+      </div>
 
-        const imageInput = document.getElementById("input_8");
-        const identifyButton = document.getElementById("identifyButton");
+      <div class="row">
+        <div class="field col">
+          <label for="input_12">Affidabilità</label>
+          <input
+            type="text"
+            id="input_12"
+            name="q12_affidabilita"
+            placeholder="es. 0.87"
+          />
+        </div>
 
-        const nomeComuneInput = document.getElementById("nomeComune");
-        const nomeScientificoInput = document.getElementById("nomeScientifico");
-        const affidabilitaInput = document.getElementById("affidabilita");
-        const allergenicitaInput = document.getElementById("allergenicita");
+        <div class="field col">
+          <label for="input_7">Nome Comune</label>
+          <input
+            type="text"
+            id="input_7"
+            name="q7_Nome_comune"
+            placeholder="es. Passiflora"
+          />
+        </div>
+      </div>
 
-        const submitButton = document.getElementById("submitButton");
-        const consentWarning = document.getElementById("consentWarning");
-        const consentRadios = document.querySelectorAll(
-          'input[name="q27_ilSottoscritto"]'
-        );
+      <div class="row">
+        <div class="field col">
+          <label for="input_9">Nome Scientifico</label>
+          <input
+            type="text"
+            id="input_9"
+            name="q9_Nome_Scientifico"
+            placeholder="es. Passiflora caerulea"
+          />
+        </div>
 
-        const dateInput = document.getElementById("dataAvvistamento");
-        const day25 = document.getElementById("day_25");
-        const month25 = document.getElementById("month_25");
-        const year25 = document.getElementById("year_25");
+        <div class="field col">
+          <label for="input_13">Allergenicità</label>
+          <input
+            type="text"
+            id="input_13"
+            name="q13_allergenicita"
+            placeholder="es. bassa / media / alta"
+          />
+        </div>
+      </div>
 
-        // Imposta di default la data di oggi nel campo "date" user-friendly
-        (function setDefaultToday() {
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          const mm = String(today.getMonth() + 1).padStart(2, "0");
-          const dd = String(today.getDate()).padStart(2, "0");
-          dateInput.value = `${yyyy}-${mm}-${dd}`;
-          day25.value = dd;
-          month25.value = mm;
-          year25.value = yyyy;
-        })();
+      <!-- RILEVATORE -->
+      <div class="field">
+        <label>Rilevatore <span style="color:#dc2626">*</span></label>
+        <div class="row">
+          <div class="col">
+            <input
+              type="text"
+              id="first_22"
+              name="q22_rilevatore[first]"
+              placeholder="Nome"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              id="last_22"
+              name="q22_rilevatore[last]"
+              placeholder="Cognome"
+              required
+            />
+          </div>
+        </div>
+      </div>
 
-        // Sincronizza il campo date con i 3 hidden per Jotform
-        dateInput.addEventListener("change", () => {
-          if (!dateInput.value) return;
-          const [yyyy, mm, dd] = dateInput.value.split("-");
-          if (yyyy && mm && dd) {
-            day25.value = dd;
-            month25.value = mm;
-            year25.value = yyyy;
-          }
-        });
+      <!-- EMAIL -->
+      <div class="field">
+        <label for="input_23">E-mail <span style="color:#dc2626">*</span></label>
+        <input
+          type="email"
+          id="input_23"
+          name="q23_email"
+          placeholder="esempio@esempio.com"
+          required
+        />
+      </div>
 
-        // Gestione consenso: abilita/disabilita INVIA
-        consentRadios.forEach((radio) => {
-          radio.addEventListener("change", () => {
-            if (radio.value === "Acconsento" && radio.checked) {
-              submitButton.disabled = false;
-              consentWarning.style.display = "none";
-            } else if (radio.value === "Non Acconsento" && radio.checked) {
-              submitButton.disabled = true;
-              consentWarning.style.display = "block";
-            }
-          });
-        });
+      <!-- CHI SEI -->
+      <div class="field">
+        <label>Chi sei? <span style="color:#dc2626">*</span></label>
+        <div class="radio-group">
+          <label>
+            <input
+              type="radio"
+              id="input_24_0"
+              name="q24_chiSei"
+              value="Cittadino/Studente"
+              required
+            />
+            Cittadino/Studente
+          </label>
+          <label>
+            <input
+              type="radio"
+              id="input_24_1"
+              name="q24_chiSei"
+              value="Esperto/Botanico"
+              required
+            />
+            Esperto/Botanico
+          </label>
+        </div>
+      </div>
 
-        // Gestione SUBMIT: blocca solo se "Non Acconsento"
-        form.addEventListener("submit", (e) => {
-          if (submitButton.disabled) {
-            e.preventDefault();
-            consentWarning.style.display = "block";
-            window.scrollTo({
-              top: document.body.scrollHeight,
-              behavior: "smooth",
-            });
-            return;
-          }
+      <!-- DATA AVVISTAMENTO -->
+      <div class="field">
+        <label for="obs_date">Data Avvistamento</label>
+        <input type="date" id="obs_date" />
+        <!-- Campi nascosti nel formato che si aspetta Jotform -->
+        <input type="hidden" id="day_25"   name="q25_dataAvvistamento[day]" />
+        <input type="hidden" id="month_25" name="q25_dataAvvistamento[month]" />
+        <input type="hidden" id="year_25"  name="q25_dataAvvistamento[year]" />
+      </div>
 
-          // Aggiorna ancora i campi data Jotform per sicurezza
-          if (dateInput.value) {
-            const [yyyy, mm, dd] = dateInput.value.split("-");
-            if (yyyy && mm && dd) {
-              day25.value = dd;
-              month25.value = mm;
-              year25.value = yyyy;
-            }
-          }
-          // Nessun preventDefault => il browser invia VERSO JOTFORM
-        });
+      <!-- GEOLOCALIZZAZIONE (sostituisce widget Jotform) -->
+      <div class="field map-section">
+        <label for="address">Geolocalizzazione</label>
+        <input
+          type="text"
+          id="address"
+          placeholder="Digita indirizzo o sposta il marcatore sulla mappa"
+        />
+        <div id="map"></div>
+        <!-- Campo che Jotform riceverà al posto del widget -->
+        <textarea
+          id="q21_scriviUna"
+          name="q21_scriviUna"
+          rows="2"
+          style="margin-top:8px;"
+          placeholder="Indirizzo e coordinate verranno inseriti qui dalla mappa"
+        ></textarea>
+        <input type="hidden" id="latitude" name="latitude" />
+        <input type="hidden" id="longitude" name="longitude" />
+      </div>
 
-        // Gestione clic su "Identifica Specie"
-        identifyButton.addEventListener("click", () => {
-          if (!imageInput.files || !imageInput.files[0]) {
-            alert("Per favore carica prima una foto della pianta.");
-            return;
-          }
+      <!-- CONSENSO PRIVACY -->
+      <div class="field">
+        <label>
+          Il sottoscritto autorizza il trattamento dei dati personali nel
+          rispetto della vigente normativa sulla protezione dei dati personali
+          ed, in particolare, il Regolamento Europeo per la protezione dei
+          dati personali 2016/679, il d.lgs. 30/06/2003 n. 196 e successive
+          modifiche e integrazioni, come modificato da ultimo dal d.lgs.
+          10/08/2018 n. 101.
+        </label>
+        <div class="radio-group">
+          <label>
+            <input
+              type="radio"
+              id="input_27_0"
+              name="q27_ilSottoscritto"
+              value="Acconsento"
+              required
+            />
+            Acconsento
+          </label>
+          <label>
+            <input
+              type="radio"
+              id="input_27_1"
+              name="q27_ilSottoscritto"
+              value="Non Acconsento"
+              required
+            />
+            Non Acconsento
+          </label>
+        </div>
+        <div
+          id="consent-warning"
+          style="color:#dc2626; font-size:13px; margin-top:6px; display:none;"
+        >
+          Per inviare il modulo è necessario acconsentire al trattamento dei dati.
+        </div>
+      </div>
 
-          const file = imageInput.files[0];
-          const reader = new FileReader();
+      <!-- SUBMIT -->
+      <div class="submit-row">
+        <button type="submit" id="submit-btn" class="btn">
+          Invia
+        </button>
+      </div>
 
-          reader.onload = async () => {
-            const base64 = reader.result.split(",")[1] || "";
-            if (!base64) {
-              alert("Errore nella lettura dell'immagine.");
-              return;
-            }
+      <!-- Livello honeypot come in Jotform -->
+      <input type="hidden" name="website" value="" />
+    </form>
 
-            const originalText = identifyButton.textContent;
-            identifyButton.textContent = "Identificazione in corso...";
-            identifyButton.disabled = true;
+    <div class="footer-note">
+      Modulo inviato tramite Jotform – identificazione automatica fornita da PlantNET 🌱
+    </div>
+  </div>
 
-            try {
-              const result = await callPlantNetIdentify(base64);
+  <!-- ===================== SCRIPTS ===================== -->
 
-              nomeScientificoInput.value = result.scientificName || "";
-              nomeComuneInput.value = result.commonName || "";
-              affidabilitaInput.value = result.reliability || "";
-              allergenicitaInput.value = result.allergenicity || "N/D";
+  <!-- Google Maps (usa la tua API key già configurata) -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlzaSyAulqeVLC03p4W3Xsc4a0B6bkKLtK3pYtA&libraries=places&callback=initMap"
+    async
+    defer>
+  </script>
 
-              window.scrollTo({
-                top:
-                  nomeScientificoInput.getBoundingClientRect().top +
-                  window.scrollY -
-                  80,
-                behavior: "smooth",
-              });
-            } catch (err) {
-              console.error(err);
-              alert("Errore imprevisto durante l'identificazione.");
-            } finally {
-              identifyButton.textContent = originalText;
-              identifyButton.disabled = false;
-            }
-          };
+  <script>
+    // ---------- MAPPA ----------
+    function initMap() {
+      const defaultPos = { lat: 45.4642, lng: 9.19 }; // Milano
 
-          reader.onerror = () => {
-            alert("Errore nella lettura del file immagine.");
-          };
-
-          reader.readAsDataURL(file);
-        });
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        center: defaultPos,
       });
 
-      // --- GOOGLE MAPS ---
-      let map, marker;
+      const marker = new google.maps.Marker({
+        position: defaultPos,
+        map,
+        draggable: true,
+      });
 
-      function initMap() {
-        const defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
-        const mapEl = document.getElementById("map");
-        if (!mapEl) return;
+      const latInput = document.getElementById("latitude");
+      const lngInput = document.getElementById("longitude");
+      const addressInput = document.getElementById("address");
+      const geoTextarea = document.getElementById("q21_scriviUna");
 
-        map = new google.maps.Map(mapEl, {
-          center: defaultLatLng,
-          zoom: 11,
-        });
+      function updateGeoFields(position, addressText) {
+        const lat = position.lat();
+        const lng = position.lng();
+        latInput.value = lat;
+        lngInput.value = lng;
 
-        marker = new google.maps.Marker({
-          position: defaultLatLng,
-          map,
-          draggable: true,
-        });
+        const addr = addressText || addressInput.value || "";
+        geoTextarea.value = addr
+          ? addr + " | lat: " + lat.toFixed(6) + ", lng: " + lng.toFixed(6)
+          : "lat: " + lat.toFixed(6) + ", lng: " + lng.toFixed(6);
+      }
 
-        const geolocInput = document.getElementById("geoloc");
-        const geolocDisplay = document.getElementById("geolocDisplay");
+      google.maps.event.addListener(marker, "dragend", function () {
+        updateGeoFields(marker.getPosition());
+      });
 
-        function updateHiddenFromLatLng(latLng) {
-          if (!latLng || !geolocInput || !geolocDisplay) return;
-          const value =
-            latLng.lat().toFixed(6) + ", " + latLng.lng().toFixed(6);
-          geolocInput.value = value;
-          geolocDisplay.textContent = value;
+      const autocomplete = new google.maps.places.Autocomplete(addressInput);
+      autocomplete.bindTo("bounds", map);
+
+      autocomplete.addListener("place_changed", function () {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) return;
+
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(14);
+        }
+        marker.setPosition(place.geometry.location);
+        updateGeoFields(place.geometry.location, place.formatted_address);
+      });
+
+      // Imposta valori iniziali
+      updateGeoFields(marker.getPosition(), "Milano (posizione predefinita)");
+    }
+
+    // ---------- IDENTIFICA SPECIE (PlantNET tramite Netlify) ----------
+    document.addEventListener("DOMContentLoaded", function () {
+      const identifyButton = document.getElementById("identify-btn");
+      const fileInput = document.getElementById("input_8");
+
+      identifyButton.addEventListener("click", async function () {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          alert("Carica prima almeno una foto della pianta.");
+          return;
         }
 
-        updateHiddenFromLatLng(marker.getPosition());
+        const originalText = identifyButton.textContent;
+        identifyButton.disabled = true;
+        identifyButton.textContent = "Identificazione in corso...";
 
-        marker.addListener("dragend", () => {
-          updateHiddenFromLatLng(marker.getPosition());
-        });
+        const formData = new FormData();
+        formData.append("image", fileInput.files[0]);
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              const coords = {
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude,
-              };
-              map.setCenter(coords);
-              marker.setPosition(coords);
-              updateHiddenFromLatLng(marker.getPosition());
-            },
-            (err) => {
-              console.warn("Geolocalizzazione non disponibile:", err);
-            }
-          );
+        try {
+          const res = await fetch("/.netlify/functions/plantnet-identify", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            throw new Error("Errore Netlify: " + res.status);
+          }
+
+          const data = await res.json();
+          console.log("Risposta PlantNET:", data);
+
+          // Lettura "robusta" dei campi, a seconda di come risponde la funzione
+          const best =
+            data.bestMatch ||
+            data.plant ||
+            data.result ||
+            data;
+
+          const sci =
+            best.scientificName ||
+            best.speciesScientificName ||
+            data.scientificName ||
+            "";
+
+          const commonIt =
+            (best.commonNames && (best.commonNames.it || best.commonNames.italian)) ||
+            best.commonNameIt ||
+            best.common_name ||
+            data.commonName ||
+            "";
+
+          const reliability =
+            best.score ||
+            best.probability ||
+            best.reliability ||
+            data.score ||
+            "";
+
+          const allerg =
+            best.allergenic ||
+            best.allergenicity ||
+            data.allergenic ||
+            data.allergenicity ||
+            "";
+
+          if (!sci && !commonIt) {
+            alert("Impossibile identificare la pianta. Riprova con una foto più chiara.");
+          }
+
+          document.getElementById("input_9").value = sci;
+          document.getElementById("input_7").value = commonIt;
+          document.getElementById("input_12").value = reliability;
+          document.getElementById("input_13").value = allerg;
+        } catch (err) {
+          console.error(err);
+          alert("Errore in fase di identificazione. Riprova tra qualche istante.");
+        } finally {
+          identifyButton.disabled = false;
+          identifyButton.textContent = originalText;
+        }
+      });
+
+      // ---------- DATA AVVISTAMENTO -> campi nascosti Jotform ----------
+      const form = document.getElementById("plant-form");
+      const obsDateInput = document.getElementById("obs_date");
+      const dayField = document.getElementById("day_25");
+      const monthField = document.getElementById("month_25");
+      const yearField = document.getElementById("year_25");
+
+      form.addEventListener("submit", function () {
+        const value = obsDateInput.value; // formato YYYY-MM-DD
+        if (value) {
+          const [year, month, day] = value.split("-");
+          dayField.value = day;
+          monthField.value = month;
+          yearField.value = year;
+        }
+      });
+
+      // ---------- CONSENSO PRIVACY: nascondi Invia se NON Acconsento ----------
+      const consentYes = document.getElementById("input_27_0");
+      const consentNo = document.getElementById("input_27_1");
+      const submitBtn = document.getElementById("submit-btn");
+      const consentWarning = document.getElementById("consent-warning");
+
+      function updateConsent() {
+        if (consentNo.checked) {
+          submitBtn.disabled = true;
+          consentWarning.style.display = "block";
+        } else {
+          submitBtn.disabled = false;
+          consentWarning.style.display = "none";
         }
       }
-    </script>
 
-    <!-- Sostituisci YOUR_GOOGLE_MAPS_API_KEY_HERE con la tua API key -->
-    <script
-      async
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE&callback=initMap"
-    ></script>
-  </body>
+      consentYes.addEventListener("change", updateConsent);
+      consentNo.addEventListener("change", updateConsent);
+      updateConsent();
+    });
+  </script>
+</body>
 </html>
