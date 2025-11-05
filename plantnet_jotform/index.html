@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
-      /* === STILE GENERALE === */
+      /* --- STILE GENERALE SIMILE A JOTFORM --- */
       body {
         margin: 0;
         padding: 0;
@@ -65,9 +65,10 @@
       input[type="text"],
       input[type="email"],
       input[type="date"],
-      input[type="file"] {
+      input[type="file"],
+      .fake-input {
         width: 100%;
-        max-width: 310px;
+        max-width: 100%;
         padding: 8px;
         border-radius: 4px;
         border: 1px solid #9cb5dd;
@@ -80,21 +81,35 @@
         background-color: #f3f4ff;
       }
 
-      /* === Nome / Cognome responsive === */
       .two-columns {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 10px;
       }
 
       .two-columns > div {
-        flex: 1 1 100%;
+        flex: 1 1 0;
+        min-width: 0;
       }
 
-      @media (min-width: 480px) {
-        .two-columns > div {
-          flex: 1 1 calc(50% - 6px);
+      .two-columns input {
+        width: 100%;
+      }
+
+      @media (max-width: 480px) {
+        .two-columns {
+          flex-direction: column;
         }
+      }
+
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .radio-group label {
+        font-weight: 400;
       }
 
       .radio-inline {
@@ -126,6 +141,7 @@
         text-align: justify;
       }
 
+      /* Pulsanti */
       .buttons-row {
         display: flex;
         flex-wrap: wrap;
@@ -146,6 +162,7 @@
         font-weight: 600;
         transition: background-color 0.15s ease, transform 0.05s ease,
           box-shadow 0.15s ease;
+        white-space: nowrap;
       }
 
       .btn-primary {
@@ -168,10 +185,10 @@
 
       .btn-full {
         width: 100%;
-        max-width: 310px;
+        justify-content: center;
       }
 
-      /* === Mappa === */
+      /* Mappa */
       #map {
         width: 100%;
         height: 300px;
@@ -186,6 +203,7 @@
         color: #2c5fa6;
       }
 
+      /* Avviso consenso */
       .warning {
         font-size: 13px;
         color: #b91c1c;
@@ -206,26 +224,34 @@
       }
     </style>
   </head>
-
   <body>
     <div class="page-wrapper">
       <div class="form-all">
         <h1>Area Metropolitana di Milano</h1>
         <div class="form-subHeader">Modulo di identificazione Piante</div>
 
-        <!-- METTI QUI IL TUO action (Netlify/Jotform) -->
+        <!--
+          FORM collegato a Jotform:
+          action = endpoint submit del form 253044075525049
+        -->
         <form
           id="plant-form"
-          action=""
+          action="https://eu-submit.jotform.com/submit/253044075525049"
           method="post"
           enctype="multipart/form-data"
+          autocomplete="on"
         >
+          <input type="hidden" name="formID" value="253044075525049" />
+
           <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
               🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
               <strong>1 – Fai upload foto:</strong> Carica almeno una
-              <strong>foto chiara e ravvicinata</strong> della pianta.<br /><br />
+              <strong>foto chiara e ravvicinata</strong> della pianta. Se
+              possibile, includi più immagini che mostrino
+              <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
+              (max 2 foto)<br /><br />
               <strong>2 – Clicca “Identifica Specie”</strong> per compilare
               automaticamente i campi di identificazione.
             </div>
@@ -239,12 +265,15 @@
             <input
               type="file"
               id="plantImage"
-              name="plantImage"
+              name="q8_fileUpload[]"
               accept="image/*"
               required
             />
+
             <div class="help-text">
-              Supportati JPEG, PNG, HEIC (iPhone).
+              Supportati JPEG, PNG, HEIC (iPhone). Per HEIC, se l'identificazione
+              dovesse dare errore, prova a fare uno screenshot o esportare come
+              JPEG.
             </div>
 
             <div class="buttons-row" style="margin-top: 10px">
@@ -270,8 +299,8 @@
               <div>
                 <input
                   type="text"
-                  id="nomeRilevatore"
-                  name="nomeRilevatore"
+                  id="first_22"
+                  name="q22_rilevatore[first]"
                   placeholder="Nome"
                   required
                 />
@@ -279,8 +308,8 @@
               <div>
                 <input
                   type="text"
-                  id="cognomeRilevatore"
-                  name="cognomeRilevatore"
+                  id="last_22"
+                  name="q22_rilevatore[last]"
                   placeholder="Cognome"
                   required
                 />
@@ -289,13 +318,13 @@
           </div>
 
           <div class="form-line">
-            <label for="email">
+            <label for="input_23">
               E-mail <span class="required-star">*</span>
             </label>
             <input
               type="email"
-              id="email"
-              name="email"
+              id="input_23"
+              name="q23_email"
               placeholder="esempio@esempio.com"
               required
             />
@@ -309,7 +338,7 @@
               <label>
                 <input
                   type="radio"
-                  name="chiSei"
+                  name="q24_chiSei"
                   value="Cittadino/Studente"
                   required
                 />
@@ -318,7 +347,7 @@
               <label>
                 <input
                   type="radio"
-                  name="chiSei"
+                  name="q24_chiSei"
                   value="Esperto/Botanico"
                   required
                 />
@@ -328,16 +357,32 @@
           </div>
 
           <div class="form-line">
-            <label for="dataAvvistamento">Data avvistamento</label>
+            <label for="dataAvvistamentoUI">Data avvistamento</label>
             <input
               type="date"
-              id="dataAvvistamento"
-              name="dataAvvistamento"
+              id="dataAvvistamentoUI"
+              name="dataAvvistamentoUI"
             />
             <div class="help-text">
-              Modifica se l’osservazione è avvenuta in una data diversa da
-              oggi.
+              Modifica se l’osservazione è avvenuta in una data diversa da oggi.
             </div>
+
+            <!-- campi nascosti in formato Jotform -->
+            <input
+              type="hidden"
+              id="day_25"
+              name="q25_dataAvvistamento[day]"
+            />
+            <input
+              type="hidden"
+              id="month_25"
+              name="q25_dataAvvistamento[month]"
+            />
+            <input
+              type="hidden"
+              id="year_25"
+              name="q25_dataAvvistamento[year]"
+            />
           </div>
 
           <!-- GEOLOCALIZZAZIONE -->
@@ -347,14 +392,16 @@
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
               📍 Controlla che la posizione sulla mappa corrisponda al luogo di
-              avvistamento oppure trascina il marcatore.
+              avvistamento oppure digita l’indirizzo nella barra del browser o
+              trascina il marcatore.
             </div>
             <div id="map"></div>
             <div class="map-coords">
               Coordinate selezionate:
               <span id="geolocDisplay">–</span>
             </div>
-            <input type="hidden" id="geoloc" name="geoloc" />
+            <!-- questo campo verrà inviato a Jotform -->
+            <input type="hidden" id="geoloc" name="q21_scriviUna" />
           </div>
 
           <!-- ESITO IDENTIFICAZIONE -->
@@ -366,18 +413,18 @@
             <input
               type="text"
               id="affidabilita"
-              name="affidabilita"
+              name="q12_affidabilita"
               placeholder="es. 0.87"
               readonly
             />
           </div>
 
           <div class="form-line">
-            <label for="nomeComune">Nome comune (IT)</label>
+            <label for="nomeComune">Nome comune</label>
             <input
               type="text"
               id="nomeComune"
-              name="nomeComune"
+              name="q7_Nome_comune"
               placeholder="Nome comune (IT, se disponibile)"
               readonly
             />
@@ -388,7 +435,7 @@
             <input
               type="text"
               id="nomeScientifico"
-              name="nomeScientifico"
+              name="q9_Nome_Scientifico"
               placeholder="Nome scientifico"
               readonly
             />
@@ -399,7 +446,7 @@
             <input
               type="text"
               id="allergenicita"
-              name="allergenicita"
+              name="q13_allergenicita"
               placeholder="Non disponibile / da compilare"
               readonly
             />
@@ -412,22 +459,28 @@
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
               Il sottoscritto autorizza il trattamento dei dati personali nel
-              rispetto della normativa vigente (GDPR 2016/679).
+              rispetto della vigente normativa sulla protezione dei dati
+              personali ed, in particolare, il Regolamento Europeo per la
+              protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n.
+              196 e successive modifiche e integrazioni, come modificato da
+              ultimo dal d.lgs. 10/08/2018 n. 101.
             </div>
             <div class="radio-inline">
               <label>
                 <input
                   type="radio"
-                  name="consenso"
+                  name="q27_ilSottoscritto"
                   value="Acconsento"
+                  required
                 />
                 Acconsento
               </label>
               <label>
                 <input
                   type="radio"
-                  name="consenso"
+                  name="q27_ilSottoscritto"
                   value="Non Acconsento"
+                  required
                 />
                 Non Acconsento
               </label>
@@ -456,11 +509,9 @@
       </div>
     </div>
 
-    <!-- Libreria per conversione HEIC -> JPEG -->
-    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-
+    <!-- SCRIPT PRINCIPALE -->
     <script>
-      // Chiamata alla Netlify Function che parla con PlantNet
+      // Chiamata alla Netlify Function / PlantNet
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
@@ -470,7 +521,11 @@
 
         if (!response.ok) {
           const text = await response.text();
-          console.error("Errore da PlantNet/Function:", response.status, text);
+          console.error(
+            "Errore da PlantNet/Function:",
+            response.status,
+            text
+          );
           throw new Error("Errore dalla funzione di identificazione");
         }
 
@@ -478,20 +533,50 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("plant-form");
         const imageInput = document.getElementById("plantImage");
         const identifyButton = document.getElementById("identifyButton");
 
         const nomeComuneInput = document.getElementById("nomeComune");
-        const nomeScientificoInput = document.getElementById("nomeScientifico");
+        const nomeScientificoInput =
+          document.getElementById("nomeScientifico");
         const affidabilitaInput = document.getElementById("affidabilita");
         const allergenicitaInput = document.getElementById("allergenicita");
 
         const submitButton = document.getElementById("submitButton");
         const consentWarning = document.getElementById("consentWarning");
-        const consentRadios = document.querySelectorAll('input[name="consenso"]');
+        const consentRadios = document.querySelectorAll(
+          'input[name="q27_ilSottoscritto"]'
+        );
 
-        // Gestione consenso (abilita / disabilita invio)
+        const dataUI = document.getElementById("dataAvvistamentoUI");
+        const dayHidden = document.getElementById("day_25");
+        const monthHidden = document.getElementById("month_25");
+        const yearHidden = document.getElementById("year_25");
+
+        // Imposta data di oggi di default
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        if (dataUI) {
+          dataUI.value = `${yyyy}-${mm}-${dd}`;
+          dayHidden.value = dd;
+          monthHidden.value = mm;
+          yearHidden.value = yyyy;
+        }
+
+        if (dataUI) {
+          dataUI.addEventListener("change", () => {
+            const val = dataUI.value; // yyyy-mm-dd
+            if (!val) return;
+            const [y, m, d] = val.split("-");
+            yearHidden.value = y || "";
+            monthHidden.value = m || "";
+            dayHidden.value = d || "";
+          });
+        }
+
+        // Gestione consenso (abilita/disabilita INVIA)
         consentRadios.forEach((radio) => {
           radio.addEventListener("change", () => {
             if (radio.value === "Acconsento" && radio.checked) {
@@ -504,56 +589,49 @@
           });
         });
 
-        // Blocco invio se non c'è consenso
-        form.addEventListener("submit", (e) => {
-          if (submitButton.disabled) {
-            e.preventDefault();
-            consentWarning.style.display = "block";
-            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-          }
-        });
+        // Controllo finale in submit (selezione consenso = Acconsento)
+        document
+          .getElementById("plant-form")
+          .addEventListener("submit", function (e) {
+            const selectedConsent = document.querySelector(
+              'input[name="q27_ilSottoscritto"]:checked'
+            );
+            if (!selectedConsent || selectedConsent.value !== "Acconsento") {
+              e.preventDefault();
+              consentWarning.style.display = "block";
+              submitButton.disabled = true;
+              return;
+            }
 
-        // === CLICK SU "IDENTIFICA SPECIE" CON SUPPORTO HEIC ===
-        identifyButton.addEventListener("click", async () => {
-          const file = imageInput.files[0];
-          if (!file) {
+            // assicuriamoci che la data sia splittata
+            if (dataUI && dataUI.value) {
+              const [y, m, d] = dataUI.value.split("-");
+              yearHidden.value = y || "";
+              monthHidden.value = m || "";
+              dayHidden.value = d || "";
+            }
+
+            // Disabilitiamo il bottone per evitare doppi invii
+            submitButton.disabled = true;
+          });
+
+        // Gestione clic su "Identifica Specie"
+        identifyButton.addEventListener("click", () => {
+          if (!imageInput.files || !imageInput.files[0]) {
             alert("Per favore carica prima una foto della pianta.");
             return;
           }
 
-          let fileToUse = file;
-
-          // Riconosci HEIC / HEIF
+          const file = imageInput.files[0];
           const isHeic =
-            file.type === "image/heic" ||
-            file.type === "image/heif" ||
-            /\.heic$/i.test(file.name) ||
-            /\.heif$/i.test(file.name);
+            /heic|heif/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
 
-          if (isHeic && window.heic2any) {
-            try {
-              const convertedBlob = await heic2any({
-                blob: file,
-                toType: "image/jpeg",
-                quality: 0.9,
-              });
-
-              fileToUse = new File(
-                [convertedBlob],
-                file.name.replace(/\.[^.]+$/, "") + ".jpg",
-                { type: "image/jpeg" }
-              );
-            } catch (err) {
-              // errore "image already browser readable": non è grave, uso l'originale
-              if (!(err && err.code === 1)) {
-                console.error("Errore nella conversione HEIC:", err);
-                alert(
-                  "Errore nella conversione della foto HEIC. " +
-                    "Prova a fare uno screenshot o a esportarla come JPEG."
-                );
-                return;
-              }
-            }
+          if (isHeic) {
+            alert(
+              "Errore durante l'identificazione. Se stai usando una foto HEIC e il problema persiste, " +
+                "prova a fare uno screenshot o esportarla come JPEG/PNG e ricaricare l'immagine."
+            );
+            return;
           }
 
           const reader = new FileReader();
@@ -586,10 +664,7 @@
               });
             } catch (err) {
               console.error(err);
-              alert(
-                "Errore durante l'identificazione. Se stai usando una foto HEIC e il problema persiste, " +
-                  "prova a fare uno screenshot o a esportarla come JPEG."
-              );
+              alert("Errore imprevisto durante l'identificazione.");
             } finally {
               identifyButton.textContent = originalText;
               identifyButton.disabled = false;
@@ -600,11 +675,11 @@
             alert("Errore nella lettura del file immagine.");
           };
 
-          reader.readAsDataURL(fileToUse);
+          reader.readAsDataURL(file);
         });
       });
 
-      // === GOOGLE MAPS ===
+      // --- GOOGLE MAPS ---
       let map, marker;
 
       function initMap() {
@@ -659,9 +734,10 @@
       }
     </script>
 
-    <!-- Sostituisci con la tua API key di Google Maps -->
+    <!-- 🔑 Sostituisci YOUR_GOOGLE_MAPS_API_KEY_HERE con la TUA API key -->
     <script
       async
+      defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
     ></script>
   </body>
