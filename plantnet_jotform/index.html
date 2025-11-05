@@ -65,8 +65,7 @@
       input[type="text"],
       input[type="email"],
       input[type="date"],
-      input[type="file"],
-      .fake-input {
+      input[type="file"] {
         width: 100%;
         max-width: 310px;
         padding: 8px;
@@ -89,16 +88,6 @@
 
       .two-columns > div {
         flex: 1 1 160px;
-      }
-
-      .radio-group {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .radio-group label {
-        font-weight: 400;
       }
 
       .radio-inline {
@@ -131,14 +120,6 @@
       }
 
       /* Pulsanti */
-      .buttons-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin-top: 8px;
-      }
-
       .btn {
         display: inline-flex;
         align-items: center;
@@ -172,19 +153,18 @@
         box-shadow: none;
       }
 
-      .btn-secondary {
-        background-color: #e5e7eb;
-        color: #111827;
-      }
-
-      .btn-secondary:hover:not(:disabled) {
-        background-color: #d1d5db;
-      }
-
       .btn-full {
         width: 100%;
         max-width: 310px;
         justify-content: center;
+      }
+
+      .buttons-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 10px;
       }
 
       /* Mappa */
@@ -202,7 +182,6 @@
         color: #2c5fa6;
       }
 
-      /* Avviso consenso */
       .warning {
         font-size: 13px;
         color: #b91c1c;
@@ -229,7 +208,29 @@
         <h1>Area Metropolitana di Milano</h1>
         <div class="form-subHeader">Modulo di identificazione Piante</div>
 
-        <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
+        <!--
+          IMPORTANTE:
+          - action = endpoint di submit Jotform
+          - method = POST
+          - enctype = multipart/form-data (serve per il file)
+        -->
+        <form
+          id="plant-form"
+          action="https://eu-submit.jotform.com/submit/253044075525049"
+          method="post"
+          enctype="multipart/form-data"
+          accept-charset="utf-8"
+        >
+          <!-- Hidden base Jotform -->
+          <input type="hidden" name="formID" value="253044075525049" />
+          <input
+            type="hidden"
+            id="simple_spc"
+            name="simple_spc"
+            value="253044075525049-253044075525049"
+          />
+          <input type="hidden" name="website" value="" />
+
           <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
@@ -247,18 +248,19 @@
 
           <!-- UPLOAD + IDENTIFICA -->
           <div class="form-line">
-            <label for="plantImage">
+            <label for="input_8">
               File Upload <span class="required-star">*</span>
             </label>
+            <!-- name = q8_fileUpload[] (come in Jotform) -->
             <input
               type="file"
-              id="plantImage"
-              name="plantImage"
+              id="input_8"
+              name="q8_fileUpload[]"
               accept="image/*"
               required
             />
 
-            <div class="buttons-row" style="margin-top: 10px">
+            <div class="buttons-row">
               <button
                 type="button"
                 class="btn btn-primary"
@@ -283,19 +285,21 @@
             </label>
             <div class="two-columns">
               <div>
+                <!-- name = q22_rilevatore[first] -->
                 <input
                   type="text"
                   id="nomeRilevatore"
-                  name="nomeRilevatore"
+                  name="q22_rilevatore[first]"
                   placeholder="Nome"
                   required
                 />
               </div>
               <div>
+                <!-- name = q22_rilevatore[last] -->
                 <input
                   type="text"
                   id="cognomeRilevatore"
-                  name="cognomeRilevatore"
+                  name="q22_rilevatore[last]"
                   placeholder="Cognome"
                   required
                 />
@@ -307,10 +311,11 @@
             <label for="email">
               E-mail <span class="required-star">*</span>
             </label>
+            <!-- name = q23_email -->
             <input
               type="email"
               id="email"
-              name="email"
+              name="q23_email"
               placeholder="esempio@esempio.com"
               required
             />
@@ -320,11 +325,12 @@
             <label>
               Chi sei? <span class="required-star">*</span>
             </label>
+            <!-- name = q24_chiSei ; valori come in Jotform -->
             <div class="radio-inline">
               <label>
                 <input
                   type="radio"
-                  name="chiSei"
+                  name="q24_chiSei"
                   value="Cittadino/Studente"
                   required
                 />
@@ -333,8 +339,8 @@
               <label>
                 <input
                   type="radio"
-                  name="chiSei"
-                  value="Esperto/Botanico"
+                  name="q24_chiSei"
+                  value="Espeto/Botanico"
                   required
                 />
                 Esperto/Botanico
@@ -342,16 +348,34 @@
             </div>
           </div>
 
+          <!-- DATA AVVISTAMENTO (user-friendly) -->
           <div class="form-line">
             <label for="dataAvvistamento">Data avvistamento</label>
             <input
               type="date"
               id="dataAvvistamento"
-              name="dataAvvistamento"
+              name="dataAvvistamento_fake"
             />
             <div class="help-text">
               Modifica se l’osservazione è avvenuta in una data diversa da oggi.
             </div>
+
+            <!-- Campi hidden che Jotform si aspetta -->
+            <input
+              type="hidden"
+              id="day_25"
+              name="q25_dataAvvistamento[day]"
+            />
+            <input
+              type="hidden"
+              id="month_25"
+              name="q25_dataAvvistamento[month]"
+            />
+            <input
+              type="hidden"
+              id="year_25"
+              name="q25_dataAvvistamento[year]"
+            />
           </div>
 
           <!-- GEOLOCALIZZAZIONE -->
@@ -361,15 +385,16 @@
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
               📍 Controlla che la posizione sulla mappa corrisponda al luogo di
-              avvistamento oppure digita l’indirizzo nella barra del browser o
-              trascina il marcatore.
+              avvistamento oppure trascina il marcatore nella posizione
+              corretta.
             </div>
             <div id="map"></div>
             <div class="map-coords">
               Coordinate selezionate:
               <span id="geolocDisplay">–</span>
             </div>
-            <input type="hidden" id="geoloc" name="geoloc" />
+            <!-- name = q21_scriviUna (campo widget Jotform) -->
+            <input type="hidden" id="geoloc" name="q21_scriviUna" />
           </div>
 
           <!-- ESITO IDENTIFICAZIONE -->
@@ -378,10 +403,11 @@
 
           <div class="form-line">
             <label for="affidabilita">Affidabilità</label>
+            <!-- name = q12_affidabilita -->
             <input
               type="text"
               id="affidabilita"
-              name="affidabilita"
+              name="q12_affidabilita"
               placeholder="es. 0.87"
               readonly
             />
@@ -389,10 +415,11 @@
 
           <div class="form-line">
             <label for="nomeComune">Nome comune</label>
+            <!-- name = q7_Nome_comune -->
             <input
               type="text"
               id="nomeComune"
-              name="nomeComune"
+              name="q7_Nome_comune"
               placeholder="Nome comune (IT, se disponibile)"
               readonly
             />
@@ -400,10 +427,11 @@
 
           <div class="form-line">
             <label for="nomeScientifico">Nome scientifico</label>
+            <!-- name = q9_Nome_Scientifico -->
             <input
               type="text"
               id="nomeScientifico"
-              name="nomeScientifico"
+              name="q9_Nome_Scientifico"
               placeholder="Nome scientifico"
               readonly
             />
@@ -411,10 +439,11 @@
 
           <div class="form-line">
             <label for="allergenicita">Allergenicità</label>
+            <!-- name = q13_allergenicita -->
             <input
               type="text"
               id="allergenicita"
-              name="allergenicita"
+              name="q13_allergenicita"
               placeholder="Non disponibile / da compilare"
               readonly
             />
@@ -433,11 +462,12 @@
               196 e successive modifiche e integrazioni, come modificato da
               ultimo dal d.lgs. 10/08/2018 n. 101.
             </div>
+            <!-- name = q27_ilSottoscritto -->
             <div class="radio-inline">
               <label>
                 <input
                   type="radio"
-                  name="consenso"
+                  name="q27_ilSottoscritto"
                   value="Acconsento"
                 />
                 Acconsento
@@ -445,7 +475,7 @@
               <label>
                 <input
                   type="radio"
-                  name="consenso"
+                  name="q27_ilSottoscritto"
                   value="Non Acconsento"
                 />
                 Non Acconsento
@@ -477,7 +507,7 @@
 
     <!-- SCRIPT PRINCIPALE -->
     <script>
-      // Funzione per chiamare la Function Netlify plantnet-identify
+      // Chiamata alla Netlify Function per PlantNet
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
@@ -495,7 +525,9 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        const imageInput = document.getElementById("plantImage");
+        const form = document.getElementById("plant-form");
+
+        const imageInput = document.getElementById("input_8");
         const identifyButton = document.getElementById("identifyButton");
 
         const nomeComuneInput = document.getElementById("nomeComune");
@@ -505,9 +537,39 @@
 
         const submitButton = document.getElementById("submitButton");
         const consentWarning = document.getElementById("consentWarning");
-        const consentRadios = document.querySelectorAll('input[name="consenso"]');
+        const consentRadios = document.querySelectorAll(
+          'input[name="q27_ilSottoscritto"]'
+        );
 
-        // Gestione consenso (abilita/disabilita INVIA)
+        const dateInput = document.getElementById("dataAvvistamento");
+        const day25 = document.getElementById("day_25");
+        const month25 = document.getElementById("month_25");
+        const year25 = document.getElementById("year_25");
+
+        // Imposta di default la data di oggi nel campo "date" user-friendly
+        (function setDefaultToday() {
+          const today = new Date();
+          const yyyy = today.getFullYear();
+          const mm = String(today.getMonth() + 1).padStart(2, "0");
+          const dd = String(today.getDate()).padStart(2, "0");
+          dateInput.value = `${yyyy}-${mm}-${dd}`;
+          day25.value = dd;
+          month25.value = mm;
+          year25.value = yyyy;
+        })();
+
+        // Sincronizza il campo date con i 3 hidden per Jotform
+        dateInput.addEventListener("change", () => {
+          if (!dateInput.value) return;
+          const [yyyy, mm, dd] = dateInput.value.split("-");
+          if (yyyy && mm && dd) {
+            day25.value = dd;
+            month25.value = mm;
+            year25.value = yyyy;
+          }
+        });
+
+        // Gestione consenso: abilita/disabilita INVIA
         consentRadios.forEach((radio) => {
           radio.addEventListener("change", () => {
             if (radio.value === "Acconsento" && radio.checked) {
@@ -520,24 +582,29 @@
           });
         });
 
-        // Blocca invio se non acconsente (ulteriore sicurezza)
-        document
-          .getElementById("plant-form")
-          .addEventListener("submit", function (e) {
-            if (submitButton.disabled) {
-              e.preventDefault();
-              consentWarning.style.display = "block";
-              window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth",
-              });
-            } else {
-              // Qui, per ora, blocchiamo comunque l'invio "reale" e mostriamo solo un messaggio.
-              // Quando avrai un backend (o vorrai collegare a Jotform, ecc.) potrai togliere e.preventDefault().
-              e.preventDefault();
-              alert("Modulo inviato (demo). Configura qui il tuo backend / Jotform.");
+        // Gestione SUBMIT: blocca solo se "Non Acconsento"
+        form.addEventListener("submit", (e) => {
+          if (submitButton.disabled) {
+            e.preventDefault();
+            consentWarning.style.display = "block";
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+            return;
+          }
+
+          // Aggiorna ancora i campi data Jotform per sicurezza
+          if (dateInput.value) {
+            const [yyyy, mm, dd] = dateInput.value.split("-");
+            if (yyyy && mm && dd) {
+              day25.value = dd;
+              month25.value = mm;
+              year25.value = yyyy;
             }
-          });
+          }
+          // Nessun preventDefault => il browser invia VERSO JOTFORM
+        });
 
         // Gestione clic su "Identifica Specie"
         identifyButton.addEventListener("click", () => {
@@ -569,8 +636,10 @@
               allergenicitaInput.value = result.allergenicity || "N/D";
 
               window.scrollTo({
-                top: nomeScientificoInput.getBoundingClientRect().top +
-                  window.scrollY - 80,
+                top:
+                  nomeScientificoInput.getBoundingClientRect().top +
+                  window.scrollY -
+                  80,
                 behavior: "smooth",
               });
             } catch (err) {
