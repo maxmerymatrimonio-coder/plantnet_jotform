@@ -1,413 +1,614 @@
 <!DOCTYPE html>
 <html lang="it">
   <head>
-    <meta charset="UTF-8" />
-    <title>Modulo di identificazione Piante</title>
+    <meta charset="utf-8" />
+    <title>Modulo di identificazione Piante - Area Metropolitana di Milano</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
-      * {
-        box-sizing: border-box;
-        font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui,
-          sans-serif;
-      }
-
+      /* --- STILE GENERALE SIMILE A JOTFORM --- */
       body {
         margin: 0;
         padding: 0;
-        background: #2461b7;
-      }
-
-      .page {
-        max-width: 900px;
-        margin: 24px auto;
-        padding: 24px;
-        border-radius: 16px;
-        background: #d6e7ff;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #2461b7;
         color: #12458c;
       }
 
+      .page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 24px 12px;
+      }
+
+      .form-all {
+        background-color: #d6e7ff;
+        max-width: 752px;
+        width: 100%;
+        border-radius: 8px;
+        padding: 24px 20px 32px 20px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+
       h1 {
-        margin-top: 0;
+        margin: 0 0 4px 0;
+        font-size: 24px;
         text-align: center;
-        font-size: 28px;
       }
 
-      .subtitle {
+      .form-subHeader {
         text-align: center;
-        margin-bottom: 24px;
-        font-weight: 500;
+        margin-bottom: 20px;
+        font-size: 16px;
       }
 
-      .instructions {
-        margin-bottom: 24px;
-        padding: 16px 20px;
-        background: #ffffff;
-        border-radius: 12px;
-        line-height: 1.5;
-      }
-
-      .instructions strong {
-        font-weight: 700;
-      }
-
-      .field {
-        margin-bottom: 16px;
+      .form-line {
+        margin-top: 12px;
+        margin-bottom: 12px;
       }
 
       label {
         display: block;
-        font-weight: 600;
+        font-weight: 500;
         margin-bottom: 4px;
+      }
+
+      .required-star {
+        color: #dc2626;
+        margin-left: 3px;
       }
 
       input[type="text"],
       input[type="email"],
       input[type="date"],
       input[type="file"],
-      select {
+      .fake-input {
         width: 100%;
-        padding: 8px 10px;
-        border-radius: 8px;
-        border: 1px solid #b0c5e6;
+        max-width: 310px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #9cb5dd;
+        box-sizing: border-box;
+        background-color: #ffffff;
         font-size: 14px;
       }
 
-      input[type="file"] {
-        padding: 6px 0;
+      input[readonly] {
+        background-color: #f3f4ff;
       }
 
       .two-columns {
         display: flex;
-        gap: 12px;
         flex-wrap: wrap;
+        gap: 12px;
       }
 
-      .two-columns .field {
-        flex: 1 1 200px;
+      .two-columns > div {
+        flex: 1 1 160px;
       }
 
       .radio-group {
         display: flex;
         flex-direction: column;
         gap: 4px;
-        margin-top: 4px;
       }
 
       .radio-group label {
         font-weight: 400;
       }
 
-      .identify-wrapper {
-        margin: 16px 0 24px;
-        text-align: center;
+      .radio-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
       }
 
-      button {
-        cursor: pointer;
-      }
-
-      .btn-primary {
-        background: #1f4fa0;
-        color: #ffffff;
-        border: none;
-        border-radius: 999px;
-        padding: 10px 26px;
-        font-size: 15px;
-        font-weight: 600;
+      .radio-inline label {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-      }
-
-      .btn-primary[disabled] {
-        opacity: 0.6;
-        cursor: wait;
-      }
-
-      .btn-submit {
-        background: #1f4fa0;
-        color: #ffffff;
-        border: none;
-        border-radius: 999px;
-        padding: 10px 26px;
-        font-size: 15px;
-        font-weight: 600;
-      }
-
-      .section-title {
-        margin-top: 24px;
-        margin-bottom: 8px;
-        font-size: 18px;
-        font-weight: 700;
-      }
-
-      #map {
-        width: 100%;
-        height: 260px;
-        border-radius: 12px;
-        border: 1px solid #b0c5e6;
-        margin-top: 8px;
+        gap: 4px;
+        font-weight: 400;
       }
 
       .help-text {
-        font-size: 12px;
+        font-size: 13px;
         color: #2c5fa6;
       }
 
+      .section-title {
+        font-weight: 600;
+        margin-top: 18px;
+        margin-bottom: 6px;
+      }
+
+      .text-block {
+        font-size: 14px;
+        text-align: justify;
+      }
+
+      /* Pulsanti */
+      .buttons-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background-color 0.15s ease, transform 0.05s ease,
+          box-shadow 0.15s ease;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background-color: #1d4ed8;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background-color: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+      }
+
+      .btn-primary:disabled {
+        background-color: #9ca3af;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .btn-secondary {
+        background-color: #e5e7eb;
+        color: #111827;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background-color: #d1d5db;
+      }
+
+      .btn-full {
+        width: 100%;
+        max-width: 310px;
+        justify-content: center;
+      }
+
+      /* Mappa */
+      #map {
+        width: 100%;
+        height: 300px;
+        border-radius: 6px;
+        border: 1px solid #9cb5dd;
+        overflow: hidden;
+      }
+
+      .map-coords {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #2c5fa6;
+      }
+
+      /* Avviso consenso */
+      .warning {
+        font-size: 13px;
+        color: #b91c1c;
+        margin-top: 4px;
+        display: none;
+      }
+
+      hr {
+        border: none;
+        border-bottom: 1px solid #9cb5dd;
+        margin: 16px 0;
+      }
+
       @media (max-width: 600px) {
-        .page {
-          margin: 12px;
-          padding: 16px;
+        .form-all {
+          padding: 16px 12px 24px 12px;
         }
       }
     </style>
   </head>
-
   <body>
-    <div class="page">
-      <h1>Modulo di identificazione Piante</h1>
-      <p class="subtitle">Area Metropolitana di Milano</p>
+    <div class="page-wrapper">
+      <div class="form-all">
+        <h1>Area Metropolitana di Milano</h1>
+        <div class="form-subHeader">Modulo di identificazione Piante</div>
 
-      <div class="instructions">
-        <p>🌱 <strong>Istruzioni per la compilazione:</strong></p>
-        <p>
-          <strong>1.</strong> Carica una
-          <strong>foto chiara e ravvicinata</strong> della pianta (foglie, fiori,
-          frutti, max 2 foto).
-        </p>
-        <p>
-          <strong>2.</strong> Clicca su
-          <strong>Identifica Specie</strong> per compilare automaticamente i
-          campi.
-        </p>
-        <p>
-          <strong>3.</strong> Controlla i dati e premi
-          <strong>Invia</strong>.
-        </p>
+        <!--
+          action=""
+          👉 Per ora l'invio va alla stessa pagina.
+          Quando avrai un backend / Jotform / Netlify Form
+          potrai cambiare l'action o aggiungere l'attributo data-netlify="true", ecc.
+        -->
+        <form id="plant-form" action="" method="post" enctype="multipart/form-data">
+          <!-- ISTRUZIONI -->
+          <div class="form-line">
+            <div class="text-block">
+              🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
+              <strong>1 – Fai upload foto:</strong> Per ottenere un
+              riconoscimento accurato, la segnalazione deve contenere almeno
+              una <strong>foto chiara e ravvicinata</strong> della pianta. Se
+              possibile, includi più immagini che mostrino
+              <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
+              (max 2 foto)<br /><br />
+              <strong>2 – Clicca “Identifica Specie”</strong> per compilare
+              automaticamente i campi di identificazione.
+            </div>
+          </div>
+
+          <!-- UPLOAD + IDENTIFICA -->
+          <div class="form-line">
+            <label for="plantImage">
+              File Upload <span class="required-star">*</span>
+            </label>
+            <input
+              type="file"
+              id="plantImage"
+              name="plantImage"
+              accept="image/*"
+              required
+            />
+
+            <div class="buttons-row" style="margin-top: 10px">
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="identifyButton"
+              >
+                Identifica Specie
+              </button>
+            </div>
+            <div class="help-text">
+              Carica almeno una foto chiara e ravvicinata della pianta (foglie,
+              fiori, frutti, ecc.). Max 2 foto.
+            </div>
+          </div>
+
+          <!-- DATI RILEVATORE -->
+          <hr />
+          <div class="section-title">Dati del rilevatore</div>
+
+          <div class="form-line">
+            <label>
+              Rilevatore <span class="required-star">*</span>
+            </label>
+            <div class="two-columns">
+              <div>
+                <input
+                  type="text"
+                  id="nomeRilevatore"
+                  name="nomeRilevatore"
+                  placeholder="Nome"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  id="cognomeRilevatore"
+                  name="cognomeRilevatore"
+                  placeholder="Cognome"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-line">
+            <label for="email">
+              E-mail <span class="required-star">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="esempio@esempio.com"
+              required
+            />
+          </div>
+
+          <div class="form-line">
+            <label>
+              Chi sei? <span class="required-star">*</span>
+            </label>
+            <div class="radio-inline">
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Cittadino/Studente"
+                  required
+                />
+                Cittadino/Studente
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Esperto/Botanico"
+                  required
+                />
+                Esperto/Botanico
+              </label>
+            </div>
+          </div>
+
+          <div class="form-line">
+            <label for="dataAvvistamento">Data avvistamento</label>
+            <input
+              type="date"
+              id="dataAvvistamento"
+              name="dataAvvistamento"
+            />
+            <div class="help-text">
+              Modifica se l’osservazione è avvenuta in una data diversa da oggi.
+            </div>
+          </div>
+
+          <!-- GEOLOCALIZZAZIONE -->
+          <hr />
+          <div class="section-title">Geolocalizzazione</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              📍 Controlla che la posizione sulla mappa corrisponda al luogo di
+              avvistamento oppure digita l’indirizzo nella barra del browser o
+              trascina il marcatore.
+            </div>
+            <div id="map"></div>
+            <div class="map-coords">
+              Coordinate selezionate:
+              <span id="geolocDisplay">–</span>
+            </div>
+            <input type="hidden" id="geoloc" name="geoloc" />
+          </div>
+
+          <!-- ESITO IDENTIFICAZIONE -->
+          <hr />
+          <div class="section-title">🌱 Esito identificazione (PlantNet)</div>
+
+          <div class="form-line">
+            <label for="affidabilita">Affidabilità</label>
+            <input
+              type="text"
+              id="affidabilita"
+              name="affidabilita"
+              placeholder="es. 0.87"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeComune">Nome comune</label>
+            <input
+              type="text"
+              id="nomeComune"
+              name="nomeComune"
+              placeholder="Nome comune (IT, se disponibile)"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeScientifico">Nome scientifico</label>
+            <input
+              type="text"
+              id="nomeScientifico"
+              name="nomeScientifico"
+              placeholder="Nome scientifico"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="allergenicita">Allergenicità</label>
+            <input
+              type="text"
+              id="allergenicita"
+              name="allergenicita"
+              placeholder="Non disponibile / da compilare"
+              readonly
+            />
+          </div>
+
+          <!-- CONSENSO -->
+          <hr />
+          <div class="section-title">Consenso al trattamento dati</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              Il sottoscritto autorizza il trattamento dei dati personali nel
+              rispetto della vigente normativa sulla protezione dei dati
+              personali ed, in particolare, il Regolamento Europeo per la
+              protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n.
+              196 e successive modifiche e integrazioni, come modificato da
+              ultimo dal d.lgs. 10/08/2018 n. 101.
+            </div>
+            <div class="radio-inline">
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Acconsento"
+                />
+                Acconsento
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Non Acconsento"
+                />
+                Non Acconsento
+              </label>
+            </div>
+            <div id="consentWarning" class="warning">
+              Per inviare il modulo è necessario selezionare “Acconsento”.
+            </div>
+          </div>
+
+          <!-- INVIO -->
+          <div class="form-line" style="margin-top: 20px">
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="submitButton"
+              disabled
+            >
+              Invia
+            </button>
+            <div class="help-text" style="margin-top: 4px">
+              Questo modulo è potenziato dal servizio di riconoscimento
+              automatico PlantNet.
+            </div>
+          </div>
+        </form>
       </div>
-
-      <!-- FORM che invia i dati a Jotform -->
-      <form
-        id="plant-form"
-        action="https://eu-submit.jotform.com/submit/253044075525049"
-        method="post"
-        enctype="multipart/form-data"
-        autocomplete="on"
-      >
-        <!-- campi nascosti minimi per Jotform -->
-        <input type="hidden" name="formID" value="253044075525049" />
-
-        <!-- =================== FOTO + IDENTIFICA =================== -->
-        <div class="field">
-          <label for="photo">Carica foto*</label>
-          <input
-            type="file"
-            id="photo"
-            name="q8_fileUpload[]"
-            accept="image/*"
-            required
-          />
-        </div>
-
-        <div class="identify-wrapper">
-          <button type="button" id="identify-button" class="btn-primary">
-            🔍 Identifica Specie
-          </button>
-        </div>
-
-        <!-- =================== ESITO IDENTIFICAZIONE =================== -->
-        <div class="section-title">🌱 Esito identificazione</div>
-
-        <div class="field">
-          <label for="affidabilita">Affidabilità</label>
-          <input
-            type="text"
-            id="affidabilita"
-            name="q12_affidabilita"
-            placeholder="es. 92%"
-          />
-        </div>
-
-        <div class="field">
-          <label for="nome-comune">Nome comune</label>
-          <input
-            type="text"
-            id="nome-comune"
-            name="q7_Nome_comune"
-            placeholder="es. Tiglio"
-          />
-        </div>
-
-        <div class="field">
-          <label for="nome-scientifico">Nome scientifico</label>
-          <input
-            type="text"
-            id="nome-scientifico"
-            name="q9_Nome_Scientifico"
-            placeholder="es. Tilia cordata"
-          />
-        </div>
-
-        <div class="field">
-          <label for="allergenicita">Allergenicità</label>
-          <input
-            type="text"
-            id="allergenicita"
-            name="q13_allergenicita"
-            placeholder="es. Bassa / Media / Alta"
-          />
-        </div>
-
-        <!-- =================== DATI RILEVATORE =================== -->
-        <div class="section-title">Dati del rilevatore</div>
-
-        <div class="two-columns">
-          <div class="field">
-            <label for="nome">Nome*</label>
-            <input
-              type="text"
-              id="nome"
-              name="q22_rilevatore[first]"
-              required
-            />
-          </div>
-          <div class="field">
-            <label for="cognome">Cognome*</label>
-            <input
-              type="text"
-              id="cognome"
-              name="q22_rilevatore[last]"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="email">E-mail*</label>
-          <input type="email" id="email" name="q23_email" required />
-        </div>
-
-        <div class="field">
-          <label>Chi sei?*</label>
-          <div class="radio-group">
-            <label>
-              <input
-                type="radio"
-                name="q24_chiSei"
-                value="Cittadino/Studente"
-                required
-              />
-              Cittadino/Studente
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="q24_chiSei"
-                value="Esperto/Botanico"
-                required
-              />
-              Esperto/Botanico
-            </label>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="data-avvistamento">Data avvistamento</label>
-          <input
-            type="date"
-            id="data-avvistamento"
-            name="q25_dataAvvistamento"
-          />
-        </div>
-
-        <!-- =================== MAPPA / GEOLOCALIZZAZIONE =================== -->
-        <div class="section-title">Geolocalizzazione</div>
-
-        <div class="field">
-          <label for="search-address">Cerca indirizzo</label>
-          <input
-            type="text"
-            id="search-address"
-            placeholder="Digita indirizzo o luogo"
-          />
-          <p class="help-text">
-            Puoi trascinare il marcatore sulla mappa per correggere la posizione.
-          </p>
-        </div>
-
-        <div id="map"></div>
-        <!-- campo nascosto che verrà mandato a Jotform -->
-        <input
-          type="hidden"
-          id="geo-hidden"
-          name="q21_scriviUna"
-          value=""
-        />
-
-        <!-- =================== CONSENSO PRIVACY =================== -->
-        <div class="section-title">Consenso privacy</div>
-
-        <div class="field">
-          <p style="font-size: 13px; margin-bottom: 4px">
-            Il sottoscritto autorizza il trattamento dei dati personali nel
-            rispetto della vigente normativa sulla protezione dei dati
-            personali (Reg. UE 2016/679 e normativa nazionale).
-          </p>
-          <div class="radio-group">
-            <label>
-              <input
-                type="radio"
-                name="q27_ilSottoscritto"
-                value="Acconsento"
-                required
-              />
-              Acconsento
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="q27_ilSottoscritto"
-                value="Non Acconsento"
-                required
-              />
-              Non Acconsento
-            </label>
-          </div>
-          <p
-            id="consent-warning"
-            style="color: #b91c1c; font-size: 13px; margin-top: 4px; display: none"
-          >
-            Per inviare il modulo è necessario acconsentire al trattamento dei
-            dati.
-          </p>
-        </div>
-
-        <!-- =================== INVIO =================== -->
-        <div style="margin-top: 24px; text-align: right">
-          <button type="submit" class="btn-submit">Invia</button>
-        </div>
-      </form>
     </div>
 
-    <!-- ================ SCRIPTS ================ -->
-    <!-- Google Maps (usa la tua API key che ora funziona) -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=places&callback=initMap"
-      async
-      defer
-    ></script>
-
+    <!-- SCRIPT PRINCIPALE -->
     <script>
-      // ================== MAPPA / GEOLOCALIZZAZIONE ==================
-      let map, marker, autocomplete;
+      // Funzione per chiamare la Function Netlify plantnet-identify
+      async function callPlantNetIdentify(imageBase64) {
+        const response = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64 }),
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Errore da PlantNet/Function:", response.status, text);
+          throw new Error("Errore dalla funzione di identificazione");
+        }
+
+        return response.json();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const imageInput = document.getElementById("plantImage");
+        const identifyButton = document.getElementById("identifyButton");
+
+        const nomeComuneInput = document.getElementById("nomeComune");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
+        const affidabilitaInput = document.getElementById("affidabilita");
+        const allergenicitaInput = document.getElementById("allergenicita");
+
+        const submitButton = document.getElementById("submitButton");
+        const consentWarning = document.getElementById("consentWarning");
+        const consentRadios = document.querySelectorAll('input[name="consenso"]');
+
+        // Gestione consenso (abilita/disabilita INVIA)
+        consentRadios.forEach((radio) => {
+          radio.addEventListener("change", () => {
+            if (radio.value === "Acconsento" && radio.checked) {
+              submitButton.disabled = false;
+              consentWarning.style.display = "none";
+            } else if (radio.value === "Non Acconsento" && radio.checked) {
+              submitButton.disabled = true;
+              consentWarning.style.display = "block";
+            }
+          });
+        });
+
+        // Gestione invio: blocca solo se non ha acconsentito
+        document
+          .getElementById("plant-form")
+          .addEventListener("submit", function (e) {
+            if (submitButton.disabled) {
+              // Non ha acconsentito
+              e.preventDefault();
+              consentWarning.style.display = "block";
+              window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+              });
+            }
+            // Se submitButton NON è disabilitato:
+            // ➜ niente e.preventDefault()
+            // ➜ il browser esegue il submit normale (nessuna "modalità demo")
+          });
+
+        // Gestione clic su "Identifica Specie"
+        identifyButton.addEventListener("click", () => {
+          if (!imageInput.files || !imageInput.files[0]) {
+            alert("Per favore carica prima una foto della pianta.");
+            return;
+          }
+
+          const file = imageInput.files[0];
+          const reader = new FileReader();
+
+          reader.onload = async () => {
+            const base64 = reader.result.split(",")[1] || "";
+            if (!base64) {
+              alert("Errore nella lettura dell'immagine.");
+              return;
+            }
+
+            const originalText = identifyButton.textContent;
+            identifyButton.textContent = "Identificazione in corso...";
+            identifyButton.disabled = true;
+
+            try {
+              const result = await callPlantNetIdentify(base64);
+
+              // Riempi i campi con i dati restituiti dalla Function
+              nomeScientificoInput.value = result.scientificName || "";
+              nomeComuneInput.value = result.commonName || "";
+              affidabilitaInput.value = result.reliability || "";
+              allergenicitaInput.value = result.allergenicity || "N/D";
+
+              window.scrollTo({
+                top:
+                  nomeScientificoInput.getBoundingClientRect().top +
+                  window.scrollY -
+                  80,
+                behavior: "smooth",
+              });
+            } catch (err) {
+              console.error(err);
+              alert("Errore imprevisto durante l'identificazione.");
+            } finally {
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
+            }
+          };
+
+          reader.onerror = () => {
+            alert("Errore nella lettura del file immagine.");
+          };
+
+          reader.readAsDataURL(file);
+        });
+      });
+
+      // --- GOOGLE MAPS ---
+      let map, marker;
 
       function initMap() {
         const defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
+        const mapEl = document.getElementById("map");
+        if (!mapEl) return;
 
-        map = new google.maps.Map(document.getElementById("map"), {
+        map = new google.maps.Map(mapEl, {
           center: defaultLatLng,
-          zoom: 12,
+          zoom: 11,
         });
 
         marker = new google.maps.Marker({
@@ -416,161 +617,46 @@
           draggable: true,
         });
 
-        const input = document.getElementById("search-address");
-        autocomplete = new google.maps.places.Autocomplete(input, {
-          fields: ["formatted_address", "geometry"],
-        });
-        autocomplete.bindTo("bounds", map);
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
 
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (!place.geometry || !place.geometry.location) {
-            alert("Indirizzo non valido");
-            return;
-          }
+        function updateHiddenFromLatLng(latLng) {
+          if (!latLng || !geolocInput || !geolocDisplay) return;
+          const value =
+            latLng.lat().toFixed(6) + ", " + latLng.lng().toFixed(6);
+          geolocInput.value = value;
+          geolocDisplay.textContent = value;
+        }
 
-          map.panTo(place.geometry.location);
-          map.setZoom(15);
-          marker.setPosition(place.geometry.location);
-
-          updateGeoHidden(place.formatted_address, place.geometry.location);
-        });
+        updateHiddenFromLatLng(marker.getPosition());
 
         marker.addListener("dragend", () => {
-          const pos = marker.getPosition();
-          if (!pos) return;
-          updateGeoHidden(null, pos);
+          updateHiddenFromLatLng(marker.getPosition());
         });
 
-        // inizializza hidden
-        updateGeoHidden("Milano (posizione predefinita)", defaultLatLng);
-      }
-
-      function updateGeoHidden(address, latLng) {
-        const hidden = document.getElementById("geo-hidden");
-        const lat = latLng.lat ? latLng.lat() : latLng.lat;
-        const lng = latLng.lng ? latLng.lng() : latLng.lng;
-        const text =
-          (address ? address + " | " : "") +
-          "Lat: " +
-          lat.toFixed(6) +
-          ", Lng: " +
-          lng.toFixed(6);
-        hidden.value = text;
-      }
-
-      // ================== PLANTNET / IDENTIFICA SPECIE ==================
-      document.addEventListener("DOMContentLoaded", () => {
-        const fileInput = document.getElementById("photo");
-        const identifyButton = document.getElementById("identify-button");
-
-        const affidabilitaInput = document.getElementById("affidabilita");
-        const nomeComuneInput = document.getElementById("nome-comune");
-        const nomeScientificoInput =
-          document.getElementById("nome-scientifico");
-        const allergenicitaInput =
-          document.getElementById("allergenicita");
-
-        identifyButton.addEventListener("click", async () => {
-          if (!fileInput.files || fileInput.files.length === 0) {
-            alert("Per favore carica prima una foto della pianta.");
-            return;
-          }
-
-          const formData = new FormData();
-          formData.append("image", fileInput.files[0]);
-
-          const originalText = identifyButton.textContent;
-          identifyButton.disabled = true;
-          identifyButton.textContent = "Identificazione in corso...";
-
-          try {
-            const response = await fetch(
-              "/.netlify/functions/plantnet-identify",
-              {
-                method: "POST",
-                body: formData,
-              }
-            );
-
-            if (!response.ok) {
-              const txt = await response.text().catch(() => "");
-              console.error(
-                "Errore Netlify",
-                response.status,
-                txt
-              );
-              alert(
-                "Errore dal server di identificazione (codice " +
-                  response.status +
-                  ")."
-              );
-              return;
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const coords = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              };
+              map.setCenter(coords);
+              marker.setPosition(coords);
+              updateHiddenFromLatLng(marker.getPosition());
+            },
+            (err) => {
+              console.warn("Geolocalizzazione non disponibile:", err);
             }
-
-            const data = await response.json();
-            console.log("Risposta PlantNet:", data);
-
-            // Proviamo vari nomi di proprietà, così sei coperto
-            affidabilitaInput.value =
-              data.affidabilita || data.affidability || "";
-            nomeComuneInput.value =
-              data.nomeComune || data.commonName || data.common_name || "";
-            nomeScientificoInput.value =
-              data.nomeScientifico ||
-              data.scientificName ||
-              data.scientific_name ||
-              "";
-            allergenicitaInput.value =
-              data.allergenicita || data.allergenicity || "";
-
-            const labelPianta =
-              nomeComuneInput.value ||
-              nomeScientificoInput.value ||
-              "sconosciuta";
-
-            alert("Pianta identificata: " + labelPianta);
-          } catch (err) {
-            console.error(err);
-            alert(
-              "Errore imprevisto durante l'identificazione. Controlla la console del browser."
-            );
-          } finally {
-            identifyButton.disabled = false;
-            identifyButton.textContent = originalText;
-          }
-        });
-
-        // ================== BLOCCO INVIO SE NON ACCONSENTE ==================
-        const consentRadios = document.querySelectorAll(
-          "input[name='q27_ilSottoscritto']"
-        );
-        const consentWarning = document.getElementById("consent-warning");
-        const form = document.getElementById("plant-form");
-
-        consentRadios.forEach((r) => {
-          r.addEventListener("change", () => {
-            if (r.value === "Non Acconsento" && r.checked) {
-              consentWarning.style.display = "block";
-            } else {
-              consentWarning.style.display = "none";
-            }
-          });
-        });
-
-        form.addEventListener("submit", (e) => {
-          const selected = document.querySelector(
-            "input[name='q27_ilSottoscritto']:checked"
           );
-          if (!selected || selected.value !== "Acconsento") {
-            e.preventDefault();
-            consentWarning.style.display = "block";
-            alert(
-              "Per inviare il modulo devi acconsentire al trattamento dei dati."
-            );
-          }
-        });
-      });
+        }
+      }
     </script>
+
+    <!-- ⚠️ QUI DEVI METTERE LA TUA API KEY DI GOOGLE MAPS ⚠️ -->
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
+    ></script>
   </body>
 </html>
