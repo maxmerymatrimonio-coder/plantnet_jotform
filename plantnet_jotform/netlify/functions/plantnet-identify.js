@@ -1,9 +1,10 @@
 // netlify/functions/plantnet-identify.js
-// Versione aggiornata: invia immagini in multipart/form-data
-// e richiede i nomi comuni in italiano (lang=it)
+// Chiama PlantNet con immagini in multipart/form-data
+// Preferisce nomi comuni in italiano (lang=it) e ha fallback sicuri.
 
 export async function handler(event) {
   try {
+    // Solo POST
     if (event.httpMethod !== "POST") {
       return {
         statusCode: 405,
@@ -11,7 +12,9 @@ export async function handler(event) {
       };
     }
 
+    // Legge il body JSON inviato dalla pagina
     const { imageBase64 } = JSON.parse(event.body || "{}");
+
     if (!imageBase64) {
       return {
         statusCode: 400,
@@ -27,16 +30,18 @@ export async function handler(event) {
       };
     }
 
-    // Conversione base64 in buffer binario
+    // Converte il base64 in buffer binario
     const imageBuffer = Buffer.from(imageBase64, "base64");
 
-    // Costruzione del form multipart
+    // Costruisce il form multipart per PlantNet
     const form = new FormData();
+    // Puoi cambiare "leaf" in "flower", "fruit", ecc. se vuoi
     form.append("organs", "leaf");
     form.append("images", new Blob([imageBuffer]), "photo.jpg");
 
-    // Aggiungiamo lang=it per ottenere i nomi comuni in italiano
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
+    // lang=it → PlantNet prova a dare nomi comuni in italiano
+    const apiUrl =
+      `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -59,18 +64,33 @@ export async function handler(event) {
     const data = await response.json();
     const best = data.results?.[0];
 
-    // Estrai i dati principali (in lingua italiana se disponibili)
+    // Nome scientifico (base)
     const scientificName = best?.species?.scientificNameWithoutAuthor || "";
-    const commonName =
-      (best?.species?.commonNames?.[0] &&
-        best.species.commonNames[0].toString()) ||
-      "";
+
+    // Fallback per i nomi comuni:
+    // 1) se ci sono commonNames li unisce con ", "
+    // 2) se non ci sono, usa comunque il nome scientifico
+    let commonName = "";
+    const commonNamesArr = Array.isArray(best?.species?.commonNames)
+      ? best.species.commonNames
+      : [];
+
+    if (commonNamesArr.length > 0) {
+      commonName = commonNamesArr.join(", ");
+    } else if (scientificName) {
+      commonName = scientificName;
+    } else {
+      commonName = "";
+    }
+
+    // Affidabilità (score 0–1 → due decimali)
     const reliability =
       typeof best?.score === "number" ? best.score.toFixed(2) : "";
 
-    // Placeholder per allergenicità
+    // Per ora non abbiamo un vero dato di allergenicità da PlantNet
     const allergenicity = "N/D";
 
+    // Risposta “pulita” per il frontend
     return {
       statusCode: 200,
       body: JSON.stringify({
