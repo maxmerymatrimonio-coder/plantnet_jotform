@@ -2,7 +2,7 @@
 <html lang="it">
   <head>
     <meta charset="utf-8" />
-    <title>Modulo di identificazione Piante - Area Metropolitana di Milano</title>
+    <title>GuardaMI Plant-ID - Area Metropolitana di Milano</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
@@ -68,7 +68,7 @@
       input[type="file"],
       .fake-input {
         width: 100%;
-        max-width: 100%;
+        max-width: 310px;
         padding: 8px;
         border-radius: 4px;
         border: 1px solid #9cb5dd;
@@ -84,22 +84,12 @@
       .two-columns {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 12px;
       }
 
       .two-columns > div {
-        flex: 1 1 0;
+        flex: 1 1 160px;
         min-width: 0;
-      }
-
-      .two-columns input {
-        width: 100%;
-      }
-
-      @media (max-width: 480px) {
-        .two-columns {
-          flex-direction: column;
-        }
       }
 
       .radio-group {
@@ -183,8 +173,18 @@
         box-shadow: none;
       }
 
+      .btn-secondary {
+        background-color: #e5e7eb;
+        color: #111827;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background-color: #d1d5db;
+      }
+
       .btn-full {
         width: 100%;
+        max-width: 310px;
         justify-content: center;
       }
 
@@ -217,9 +217,25 @@
         margin: 16px 0;
       }
 
+      /* Messaggio di conferma invio */
+      .success-message {
+        display: none;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #166534;
+      }
+
       @media (max-width: 600px) {
         .form-all {
           padding: 16px 12px 24px 12px;
+        }
+
+        .two-columns {
+          flex-direction: column;
+        }
+
+        .two-columns > div {
+          width: 100%;
         }
       }
     </style>
@@ -228,27 +244,18 @@
     <div class="page-wrapper">
       <div class="form-all">
         <h1>Area Metropolitana di Milano</h1>
-        <div class="form-subHeader">Modulo di identificazione Piante</div>
+        <div class="form-subHeader">GuardaMI Plant-ID · Modulo di identificazione piante</div>
 
-        <!--
-          FORM collegato a Jotform:
-          action = endpoint submit del form 253044075525049
-        -->
-        <form
-          id="plant-form"
-          action="https://eu-submit.jotform.com/submit/253044075525049"
-          method="post"
-          enctype="multipart/form-data"
-          autocomplete="on"
-        >
-          <input type="hidden" name="formID" value="253044075525049" />
-
+        <!-- ATTENZIONE: questo form NON va direttamente a Jotform.
+             L'invio a Jotform viene fatto via fetch nel JavaScript. -->
+        <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
           <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
               🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
-              <strong>1 – Fai upload foto:</strong> Carica almeno una
-              <strong>foto chiara e ravvicinata</strong> della pianta. Se
+              <strong>1 – Fai upload foto:</strong> Per ottenere un
+              riconoscimento accurato, la segnalazione deve contenere almeno
+              una <strong>foto chiara e ravvicinata</strong> della pianta. Se
               possibile, includi più immagini che mostrino
               <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
               (max 2 foto)<br /><br />
@@ -265,16 +272,10 @@
             <input
               type="file"
               id="plantImage"
-              name="q8_fileUpload[]"
+              name="plantImage"
               accept="image/*"
               required
             />
-
-            <div class="help-text">
-              Supportati JPEG, PNG, HEIC (iPhone). Per HEIC, se l'identificazione
-              dovesse dare errore, prova a fare uno screenshot o esportare come
-              JPEG.
-            </div>
 
             <div class="buttons-row" style="margin-top: 10px">
               <button
@@ -284,6 +285,11 @@
               >
                 Identifica Specie
               </button>
+            </div>
+            <div class="help-text">
+              Carica almeno una foto chiara e ravvicinata della pianta (foglie,
+              fiori, frutti, ecc.). I formati HEIC verranno convertiti
+              automaticamente quando possibile.
             </div>
           </div>
 
@@ -299,8 +305,8 @@
               <div>
                 <input
                   type="text"
-                  id="first_22"
-                  name="q22_rilevatore[first]"
+                  id="nomeRilevatore"
+                  name="nomeRilevatore"
                   placeholder="Nome"
                   required
                 />
@@ -308,8 +314,8 @@
               <div>
                 <input
                   type="text"
-                  id="last_22"
-                  name="q22_rilevatore[last]"
+                  id="cognomeRilevatore"
+                  name="cognomeRilevatore"
                   placeholder="Cognome"
                   required
                 />
@@ -318,13 +324,13 @@
           </div>
 
           <div class="form-line">
-            <label for="input_23">
+            <label for="email">
               E-mail <span class="required-star">*</span>
             </label>
             <input
               type="email"
-              id="input_23"
-              name="q23_email"
+              id="email"
+              name="email"
               placeholder="esempio@esempio.com"
               required
             />
@@ -338,7 +344,7 @@
               <label>
                 <input
                   type="radio"
-                  name="q24_chiSei"
+                  name="chiSei"
                   value="Cittadino/Studente"
                   required
                 />
@@ -347,7 +353,7 @@
               <label>
                 <input
                   type="radio"
-                  name="q24_chiSei"
+                  name="chiSei"
                   value="Esperto/Botanico"
                   required
                 />
@@ -357,32 +363,15 @@
           </div>
 
           <div class="form-line">
-            <label for="dataAvvistamentoUI">Data avvistamento</label>
+            <label for="dataAvvistamento">Data avvistamento</label>
             <input
               type="date"
-              id="dataAvvistamentoUI"
-              name="dataAvvistamentoUI"
+              id="dataAvvistamento"
+              name="dataAvvistamento"
             />
             <div class="help-text">
               Modifica se l’osservazione è avvenuta in una data diversa da oggi.
             </div>
-
-            <!-- campi nascosti in formato Jotform -->
-            <input
-              type="hidden"
-              id="day_25"
-              name="q25_dataAvvistamento[day]"
-            />
-            <input
-              type="hidden"
-              id="month_25"
-              name="q25_dataAvvistamento[month]"
-            />
-            <input
-              type="hidden"
-              id="year_25"
-              name="q25_dataAvvistamento[year]"
-            />
           </div>
 
           <!-- GEOLOCALIZZAZIONE -->
@@ -392,16 +381,14 @@
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
               📍 Controlla che la posizione sulla mappa corrisponda al luogo di
-              avvistamento oppure digita l’indirizzo nella barra del browser o
-              trascina il marcatore.
+              avvistamento oppure trascina il marcatore per correggerla.
             </div>
             <div id="map"></div>
             <div class="map-coords">
               Coordinate selezionate:
               <span id="geolocDisplay">–</span>
             </div>
-            <!-- questo campo verrà inviato a Jotform -->
-            <input type="hidden" id="geoloc" name="q21_scriviUna" />
+            <input type="hidden" id="geoloc" name="geoloc" />
           </div>
 
           <!-- ESITO IDENTIFICAZIONE -->
@@ -413,7 +400,7 @@
             <input
               type="text"
               id="affidabilita"
-              name="q12_affidabilita"
+              name="affidabilita"
               placeholder="es. 0.87"
               readonly
             />
@@ -424,7 +411,7 @@
             <input
               type="text"
               id="nomeComune"
-              name="q7_Nome_comune"
+              name="nomeComune"
               placeholder="Nome comune (IT, se disponibile)"
               readonly
             />
@@ -435,7 +422,7 @@
             <input
               type="text"
               id="nomeScientifico"
-              name="q9_Nome_Scientifico"
+              name="nomeScientifico"
               placeholder="Nome scientifico"
               readonly
             />
@@ -446,7 +433,7 @@
             <input
               type="text"
               id="allergenicita"
-              name="q13_allergenicita"
+              name="allergenicita"
               placeholder="Non disponibile / da compilare"
               readonly
             />
@@ -469,18 +456,16 @@
               <label>
                 <input
                   type="radio"
-                  name="q27_ilSottoscritto"
+                  name="consenso"
                   value="Acconsento"
-                  required
                 />
                 Acconsento
               </label>
               <label>
                 <input
                   type="radio"
-                  name="q27_ilSottoscritto"
+                  name="consenso"
                   value="Non Acconsento"
-                  required
                 />
                 Non Acconsento
               </label>
@@ -500,6 +485,9 @@
             >
               Invia
             </button>
+            <div id="successMessage" class="success-message">
+              ✅ Modulo inviato con successo! Puoi inserire una nuova segnalazione.
+            </div>
             <div class="help-text" style="margin-top: 4px">
               Questo modulo è potenziato dal servizio di riconoscimento
               automatico PlantNet.
@@ -511,7 +499,10 @@
 
     <!-- SCRIPT PRINCIPALE -->
     <script>
-      // Chiamata alla Netlify Function / PlantNet
+      // URL di Jotform (il tuo modulo)
+      const JOTFORM_URL = "https://eu-submit.jotform.com/submit/253044075525049";
+
+      // Funzione per chiamare la Function Netlify plantnet-identify
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
@@ -521,15 +512,56 @@
 
         if (!response.ok) {
           const text = await response.text();
-          console.error(
-            "Errore da PlantNet/Function:",
-            response.status,
-            text
-          );
+          console.error("Errore da PlantNet/Function:", response.status, text);
           throw new Error("Errore dalla funzione di identificazione");
         }
 
         return response.json();
+      }
+
+      // Helper: converte un file in base64 (per JPG/PNG ecc.)
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result || "";
+            const base64 = String(result).split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = () => reject(new Error("Errore nella lettura del file"));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Helper: prova a convertire HEIC in JPEG usando canvas (se il browser lo supporta)
+      function heicToJpegBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataUrl = reader.result;
+            const img = new Image();
+            img.onload = () => {
+              try {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.9);
+                const base64 = jpegDataUrl.split(",")[1] || "";
+                resolve(base64);
+              } catch (e) {
+                reject(e);
+              }
+            };
+            img.onerror = () =>
+              reject(new Error("Il browser non riesce a leggere il formato HEIC"));
+            img.src = dataUrl;
+          };
+          reader.onerror = () =>
+            reject(new Error("Errore nella lettura del file HEIC"));
+          reader.readAsDataURL(file);
+        });
       }
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -537,44 +569,24 @@
         const identifyButton = document.getElementById("identifyButton");
 
         const nomeComuneInput = document.getElementById("nomeComune");
-        const nomeScientificoInput =
-          document.getElementById("nomeScientifico");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
         const affidabilitaInput = document.getElementById("affidabilita");
         const allergenicitaInput = document.getElementById("allergenicita");
 
         const submitButton = document.getElementById("submitButton");
         const consentWarning = document.getElementById("consentWarning");
-        const consentRadios = document.querySelectorAll(
-          'input[name="q27_ilSottoscritto"]'
-        );
+        const successMessage = document.getElementById("successMessage");
 
-        const dataUI = document.getElementById("dataAvvistamentoUI");
-        const dayHidden = document.getElementById("day_25");
-        const monthHidden = document.getElementById("month_25");
-        const yearHidden = document.getElementById("year_25");
+        const consentRadios = document.querySelectorAll('input[name="consenso"]');
 
-        // Imposta data di oggi di default
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, "0");
-        const dd = String(today.getDate()).padStart(2, "0");
-        if (dataUI) {
-          dataUI.value = `${yyyy}-${mm}-${dd}`;
-          dayHidden.value = dd;
-          monthHidden.value = mm;
-          yearHidden.value = yyyy;
-        }
+        const nomeRilevatore = document.getElementById("nomeRilevatore");
+        const cognomeRilevatore = document.getElementById("cognomeRilevatore");
+        const emailInput = document.getElementById("email");
+        const dataAvvistamento = document.getElementById("dataAvvistamento");
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
 
-        if (dataUI) {
-          dataUI.addEventListener("change", () => {
-            const val = dataUI.value; // yyyy-mm-dd
-            if (!val) return;
-            const [y, m, d] = val.split("-");
-            yearHidden.value = y || "";
-            monthHidden.value = m || "";
-            dayHidden.value = d || "";
-          });
-        }
+        const form = document.getElementById("plant-form");
 
         // Gestione consenso (abilita/disabilita INVIA)
         consentRadios.forEach((radio) => {
@@ -589,114 +601,236 @@
           });
         });
 
-        // Controllo finale in submit (selezione consenso = Acconsento)
-        document
-          .getElementById("plant-form")
-          .addEventListener("submit", function (e) {
-            const selectedConsent = document.querySelector(
-              'input[name="q27_ilSottoscritto"]:checked'
-            );
-            if (!selectedConsent || selectedConsent.value !== "Acconsento") {
-              e.preventDefault();
-              consentWarning.style.display = "block";
-              submitButton.disabled = true;
-              return;
-            }
-
-            // assicuriamoci che la data sia splittata
-            if (dataUI && dataUI.value) {
-              const [y, m, d] = dataUI.value.split("-");
-              yearHidden.value = y || "";
-              monthHidden.value = m || "";
-              dayHidden.value = d || "";
-            }
-
-            // Disabilitiamo il bottone per evitare doppi invii
-            submitButton.disabled = true;
-          });
-
         // Gestione clic su "Identifica Specie"
-        identifyButton.addEventListener("click", () => {
+        identifyButton.addEventListener("click", async () => {
           if (!imageInput.files || !imageInput.files[0]) {
             alert("Per favore carica prima una foto della pianta.");
             return;
           }
 
           const file = imageInput.files[0];
+          const fileName = (file.name || "").toLowerCase();
+          const fileType = (file.type || "").toLowerCase();
+
           const isHeic =
-            /heic|heif/i.test(file.type) || /\.hei[cf]$/i.test(file.name);
+            fileType.includes("heic") ||
+            fileName.endsWith(".heic") ||
+            fileName.endsWith(".heif");
 
-          if (isHeic) {
-            alert(
-              "Errore durante l'identificazione. Se stai usando una foto HEIC e il problema persiste, " +
-                "prova a fare uno screenshot o esportarla come JPEG/PNG e ricaricare l'immagine."
-            );
-            return;
-          }
+          const originalText = identifyButton.textContent;
+          identifyButton.textContent = "Identificazione in corso...";
+          identifyButton.disabled = true;
 
-          const reader = new FileReader();
+          try {
+            let base64 = "";
 
-          reader.onload = async () => {
-            const base64 = reader.result.split(",")[1] || "";
+            if (isHeic) {
+              try {
+                base64 = await heicToJpegBase64(file);
+              } catch (convErr) {
+                console.error(convErr);
+                alert(
+                  "Il tuo browser non supporta ancora la conversione automatica dalle foto HEIC. " +
+                    "Per favore esporta la foto come JPG/PNG e riprova."
+                );
+                identifyButton.textContent = originalText;
+                identifyButton.disabled = false;
+                return;
+              }
+            } else {
+              base64 = await fileToBase64(file);
+            }
+
             if (!base64) {
               alert("Errore nella lettura dell'immagine.");
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
               return;
             }
 
-            const originalText = identifyButton.textContent;
-            identifyButton.textContent = "Identificazione in corso...";
-            identifyButton.disabled = true;
+            const result = await callPlantNetIdentify(base64);
 
-            try {
-              const result = await callPlantNetIdentify(base64);
+            nomeScientificoInput.value = result.scientificName || "";
+            nomeComuneInput.value = result.commonName || "";
+            affidabilitaInput.value = result.reliability || "";
+            allergenicitaInput.value = result.allergenicity || "N/D";
 
-              nomeScientificoInput.value = result.scientificName || "";
-              nomeComuneInput.value = result.commonName || "";
-              affidabilitaInput.value = result.reliability || "";
-              allergenicitaInput.value = result.allergenicity || "N/D";
+            // Scorri alla sezione esito
+            window.scrollTo({
+              top:
+                nomeScientificoInput.getBoundingClientRect().top +
+                window.scrollY -
+                80,
+              behavior: "smooth",
+            });
+          } catch (err) {
+            console.error(err);
+            alert("Errore imprevisto durante l'identificazione.");
+          } finally {
+            identifyButton.textContent = originalText;
+            identifyButton.disabled = false;
+          }
+        });
 
-              window.scrollTo({
-                top:
-                  nomeScientificoInput.getBoundingClientRect().top +
-                  window.scrollY -
-                  80,
-                behavior: "smooth",
-              });
-            } catch (err) {
-              console.error(err);
-              alert("Errore imprevisto durante l'identificazione.");
-            } finally {
-              identifyButton.textContent = originalText;
-              identifyButton.disabled = false;
+        // Invio a JOTFORM via fetch (no-cors), restando sulla stessa pagina
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          successMessage.style.display = "none";
+
+          // Controllo consenso per sicurezza
+          const consentValue = (
+            new FormData(form).get("consenso") || ""
+          ).toString();
+          if (consentValue !== "Acconsento") {
+            submitButton.disabled = true;
+            consentWarning.style.display = "block";
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+            return;
+          }
+
+          if (!imageInput.files || !imageInput.files[0]) {
+            alert("Per inviare il modulo devi caricare almeno una foto.");
+            return;
+          }
+
+          const originalText = submitButton.textContent;
+          submitButton.disabled = true;
+          submitButton.textContent = "Invio in corso...";
+
+          try {
+            const formData = new FormData();
+
+            // ID del modulo Jotform
+            formData.append("formID", "253044075525049");
+
+            // File (nome campo Jotform: q8_fileUpload[])
+            formData.append("q8_fileUpload[]", imageInput.files[0]);
+
+            // Esito identificazione (nomi Jotform)
+            formData.append("q7_Nome_comune", nomeComuneInput.value || "");
+            formData.append(
+              "q9_Nome_Scientifico",
+              nomeScientificoInput.value || ""
+            );
+            formData.append("q12_affidabilita", affidabilitaInput.value || "");
+            formData.append(
+              "q13_allergenicita",
+              allergenicitaInput.value || ""
+            );
+
+            // Dati rilevatore (nomi Jotform)
+            formData.append(
+              "q22_rilevatore[first]",
+              nomeRilevatore.value || ""
+            );
+            formData.append(
+              "q22_rilevatore[last]",
+              cognomeRilevatore.value || ""
+            );
+            formData.append("q23_email", emailInput.value || "");
+
+            const chiSeiRadio = document.querySelector(
+              'input[name="chiSei"]:checked'
+            );
+            formData.append(
+              "q24_chiSei",
+              chiSeiRadio ? chiSeiRadio.value : ""
+            );
+
+            // Data avvistamento → separata in giorno/mese/anno come Jotform
+            const dateStr = (dataAvvistamento.value || "").trim(); // "YYYY-MM-DD"
+            if (dateStr) {
+              const parts = dateStr.split("-");
+              if (parts.length === 3) {
+                const year = parts[0];
+                const month = parts[1];
+                const day = parts[2];
+                formData.append("q25_dataAvvistamento[day]", day);
+                formData.append("q25_dataAvvistamento[month]", month);
+                formData.append("q25_dataAvvistamento[year]", year);
+              }
             }
-          };
 
-          reader.onerror = () => {
-            alert("Errore nella lettura del file immagine.");
-          };
+            // Geolocalizzazione (campo testo Jotform)
+            formData.append("q21_scriviUna", geolocInput.value || "");
 
-          reader.readAsDataURL(file);
+            // Consenso (Jotform: q27_ilSottoscritto)
+            formData.append("q27_ilSottoscritto", consentValue);
+
+            // Invio verso Jotform.
+            // mode: "no-cors" => non vediamo la risposta, ma l'invio viene comunque effettuato.
+            await fetch(JOTFORM_URL, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+
+            // Se arriviamo qui, assumiamo invio ok
+            successMessage.style.display = "block";
+            alert(
+              "Modulo inviato con successo! Riceverai la conferma da Jotform. Puoi inserire una nuova segnalazione."
+            );
+
+            // Reset form per una nuova segnalazione
+            form.reset();
+            submitButton.disabled = true;
+            consentWarning.style.display = "none";
+            submitButton.textContent = originalText;
+
+            // Reset esito identificazione
+            nomeComuneInput.value = "";
+            nomeScientificoInput.value = "";
+            affidabilitaInput.value = "";
+            allergenicitaInput.value = "";
+
+            // Reset geolocalizzazione (torna a Milano di default)
+            if (window.marker && window.map && window.defaultLatLng) {
+              window.marker.setPosition(window.defaultLatLng);
+              window.map.setCenter(window.defaultLatLng);
+              const val =
+                window.defaultLatLng.lat.toFixed(6) +
+                ", " +
+                window.defaultLatLng.lng.toFixed(6);
+              geolocInput.value = val;
+              geolocDisplay.textContent = val;
+            }
+
+            // Torna in alto al modulo
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } catch (err) {
+            console.error(err);
+            alert(
+              "Si è verificato un errore durante l'invio. Per favore riprova tra poco."
+            );
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          }
         });
       });
 
       // --- GOOGLE MAPS ---
+      window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
       let map, marker;
 
       function initMap() {
-        const defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
         const mapEl = document.getElementById("map");
         if (!mapEl) return;
 
         map = new google.maps.Map(mapEl, {
-          center: defaultLatLng,
+          center: window.defaultLatLng,
           zoom: 11,
         });
+        window.map = map;
 
         marker = new google.maps.Marker({
-          position: defaultLatLng,
+          position: window.defaultLatLng,
           map,
           draggable: true,
         });
+        window.marker = marker;
 
         const geolocInput = document.getElementById("geoloc");
         const geolocDisplay = document.getElementById("geolocDisplay");
@@ -734,10 +868,9 @@
       }
     </script>
 
-    <!-- 🔑 Sostituisci YOUR_GOOGLE_MAPS_API_KEY_HERE con la TUA API key -->
+    <!-- 🔑 METTI QUI LA TUA API KEY DI GOOGLE MAPS -->
     <script
       async
-      defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
     ></script>
   </body>
