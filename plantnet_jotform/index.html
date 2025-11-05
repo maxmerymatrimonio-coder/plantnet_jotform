@@ -173,6 +173,14 @@
       color: #2c5fa6;
     }
 
+    /* Mappa */
+    #map {
+      margin-top: 8px;
+      height: 320px;
+      border-radius: 12px;
+      border: 1px solid #94a3c3;
+    }
+
     @media (max-width: 600px) {
       .page {
         margin: 8px;
@@ -323,15 +331,16 @@
         />
       </div>
 
-      <!-- GEOLOCALIZZAZIONE SEMPLICE (testo libero) -->
+      <!-- GEOLOCALIZZAZIONE CON MAPPA -->
       <div class="field">
-        <label for="geo_input">Geolocalizzazione (indirizzo o luogo)</label>
+        <label for="geo_input">Geolocalizzazione</label>
         <input
           type="text"
           id="geo_input"
           name="q21_scriviUna"
-          placeholder="Via, piazza, parco, ecc."
+          placeholder="Digita indirizzo oppure trascina il marcatore sulla mappa"
         />
+        <div id="map"></div>
       </div>
 
       <!-- CONSENSO PRIVACY -->
@@ -386,7 +395,6 @@
     const statusEl = document.getElementById("identify-status");
 
     identifyBtn.addEventListener("click", async () => {
-      // Deve esserci almeno una foto
       if (!fileInput.files || fileInput.files.length === 0) {
         statusEl.textContent =
           "Per favore carica almeno una foto prima di identificare.";
@@ -399,7 +407,6 @@
       statusEl.textContent = "Identificazione in corso...";
 
       const formData = new FormData();
-      // Prendiamo solo la prima immagine per PlantNET
       formData.append("image", fileInput.files[0]);
       formData.append("organs", "leaf,flower,fruit");
 
@@ -429,7 +436,6 @@
             (best.species && best.species.commonNames) || [];
           const commonName = commonNames[0] || "";
 
-          // Allergenicità – per ora generica
           let allerg = "";
           if (sciName.toLowerCase().includes("ambrosia")) {
             allerg = "Allergenicità elevata (Ambrosia)";
@@ -439,7 +445,6 @@
             allerg = "Dati allergenicità non disponibili";
           }
 
-          // Compila i campi Jotform
           document.getElementById("input_12").value = reliability;
           document.getElementById("input_7").value = commonName;
           document.getElementById("input_9").value = sciName;
@@ -453,7 +458,7 @@
       } catch (err) {
         console.error(err);
         statusEl.textContent =
-          "Errore durante l'identificazione. Riprova più tardi.";
+          "Errore durante l'identificazione (Netlify: " + err.message + ").";
         statusEl.className = "status error";
       } finally {
         identifyBtn.disabled = false;
@@ -480,6 +485,83 @@
       r.addEventListener("change", updateConsent)
     );
     updateConsent(); // stato iniziale
+
+    // ------------------------
+    // 3) MAPPA GOOGLE
+    // ------------------------
+    let map, marker, geocoder, autocomplete;
+
+    window.initMap = function () {
+      const milano = { lat: 45.4642, lng: 9.19 };
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: milano,
+        zoom: 12,
+      });
+
+      marker = new google.maps.Marker({
+        position: milano,
+        map,
+        draggable: true,
+      });
+
+      geocoder = new google.maps.Geocoder();
+
+      const input = document.getElementById("geo_input");
+      autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.bindTo("bounds", map);
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+          return;
+        }
+
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(16);
+        }
+
+        marker.setPosition(place.geometry.location);
+
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        const address = place.formatted_address || input.value;
+
+        input.value = address + " | Lat: " + lat.toFixed(6) + " , Lng: " + lng.toFixed(6);
+      });
+
+      marker.addListener("dragend", () => {
+        const pos = marker.getPosition();
+        if (!pos) return;
+        geocoder.geocode({ location: pos }, (results, status) => {
+          const input = document.getElementById("geo_input");
+          if (status === "OK" && results && results[0]) {
+            input.value =
+              results[0].formatted_address +
+              " | Lat: " +
+              pos.lat().toFixed(6) +
+              " , Lng: " +
+              pos.lng().toFixed(6);
+          } else {
+            input.value =
+              "Lat: " +
+              pos.lat().toFixed(6) +
+              " , Lng: " +
+              pos.lng().toFixed(6);
+          }
+        });
+      });
+    };
   </script>
+
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaUqeVLCO3p4W3Xsc4a0B6bkKLtK3PytA&libraries=places&callback=initMap"
+    async
+    defer
+  ></script>
 </body>
 </html>
