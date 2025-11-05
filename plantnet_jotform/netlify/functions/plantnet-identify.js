@@ -1,113 +1,158 @@
-// netlify/functions/plantnet-identify.js
-// Chiama PlantNet con immagini in multipart/form-data
-// Preferisce nomi comuni in italiano (lang=it) e ha fallback sicuri.
+const Busboy = require("busboy");
+const FormData = require("form-data");
+const fetch = require("node-fetch");
+const sharp = require("sharp");
 
-export async function handler(event) {
+// ⚙️ Imposta la tua API Key PlantNet come variabile d'ambiente Netlify
+// Esempio: netlify env:set PLANTNET_API_KEY "la-tua-api-key"
+const PLANTNET_API_KEY = process.env.PLANTNET_API_KEY;
+const PLANTNET_ENDPOINT = "https://my.plantnet.org/v2/identify/all"; // Cambia se usi un altro endpoint
+
+// 🔧 Converte HEIC/HEIF in JPEG, altrimenti restituisce il buffer com'è
+async function normalizeImageToJpeg(buffer, mimeType, fileName = "") {
+  const lowerMime = (mimeType || "").toLowerCase();
+  const lowerName = (fileName || "").toLowerCase();
+
+  const isHeic =
+    lowerMime.includes("image/heic") ||
+    lowerMime.includes("image/heif") ||
+    lowerName.endsWith(".heic") ||
+    lowerName.endsWith(".heif");
+
+  if (!isHeic) {
+    return { buffer, mimeType, fileName };
+  }
+
+  console.log("🔁 Conversione HEIC → JPEG...");
+  const jpegBuffer = await sharp(buffer).jpeg({ quality: 90 }).toBuffer();
+
+  const newName = lowerName
+    ? lowerName.replace(/\.heic$|\.heif$/i, ".jpg")
+    : "image.jpg";
+
+  return {
+    buffer: jpegBuffer,
+    mimeType: "image/jpeg",
+    fileName: newName,
+  };
+}
+
+// 🚀 Funzione Netlify principale
+exports.handler = async (event) => {
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: "Method not allowed" }),
+    };
+  }
+
   try {
-    // Solo POST
-    if (event.httpMethod !== "POST") {
-      return {
-        statusCode: 405,
-        body: JSON.stringify({ error: "Metodo non consentito" }),
-      };
-    }
+    const contentType =
+      event.headers["content-type"] || event.headers["Content-Type"];
 
-    // Legge il body JSON inviato dalla pagina
-    const { imageBase64 } = JSON.parse(event.body || "{}");
-
-    if (!imageBase64) {
+    if (!contentType || !contentType.startsWith("multipart/form-data")) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Nessuna immagine ricevuta" }),
+        body: JSON.stringify({ error: "Content-Type non valido" }),
       };
     }
 
-    const apiKey = process.env.PLANTNET_API_KEY;
-    if (!apiKey) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "PLANTNET_API_KEY non configurata" }),
-      };
-    }
+    // 1️⃣ Estrae TUTTI i file dal body (supporto multi-immagine)
+    const files = await new Promise((resolve, reject) => {
+      const bb = Busboy({
+        headers: { "content-type": contentType },
+      });
 
-    // Converte il base64 in buffer binario
-    const imageBuffer = Buffer.from(imageBase64, "base64");
+      const collectedFiles = [];
 
-    // Costruisce il form multipart per PlantNet
+      bb.on("file", (fieldname, file, info) => {
+        const { mimeType, filename } = info;
+
+        let fileBuffer = Buffer.alloc(0);
+
+        file.on("data", (data) => {
+          fileBuffer = Buffer.concat([fileBuffer, data]);
+        });
+
+        file.on("end", () => {
+          if (fileBuffer.length) {
+            collectedFiles.push({
+              buffer: fileBuffer,
+              mimeType,
+              fileName: filename,
+            });
+          }
+        });
+      });
+
+      bb.on("error", reject);
+
+      bb.on("finish", () => {
+        if (!collectedFiles.length) {
+          return reject(new Error("Nessun file ricevuto"));
+        }
+        resolve(collectedFiles);
+      });
+
+      bb.end(Buffer.from(event.body, event.isBase64Encoded ? "base64" : "utf8"));
+    });
+
+    console.log(`📸 Ricevute ${files.length} immagini`);
+
+    // 2️⃣ Converte eventuali HEIC → JPEG
+    const normalizedFiles = await Promise.all(
+      files.map((f) => normalizeImageToJpeg(f.buffer, f.mimeType, f.fileName))
+    );
+
+    // 3️⃣ Prepara la richiesta per PlantNet con più immagini
     const form = new FormData();
-    // Puoi cambiare "leaf" in "flower", "fruit", ecc. se vuoi
+
+    normalizedFiles.forEach((nf, index) => {
+      form.append("images", nf.buffer, {
+        filename: nf.fileName || `image-${index + 1}.jpg`,
+        contentType: nf.mimeType || "image/jpeg",
+      });
+    });
+
+    // Parametri aggiuntivi: adatta alle tue esigenze
+    // Puoi usare organs diversi, es: "leaf,flower,fruit"
     form.append("organs", "leaf");
-    form.append("images", new Blob([imageBuffer]), "photo.jpg");
+    form.append("api-key", PLANTNET_API_KEY);
 
-    // lang=it → PlantNet prova a dare nomi comuni in italiano
-    const apiUrl =
-      `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
-
-    const response = await fetch(apiUrl, {
+    // 4️⃣ Invio a PlantNet
+    const response = await fetch(PLANTNET_ENDPOINT, {
       method: "POST",
       body: form,
     });
 
     if (!response.ok) {
       const text = await response.text();
-      console.error("Errore PlantNet:", response.status, text);
+      console.error("❌ Errore da PlantNet:", response.status, text);
       return {
         statusCode: 500,
         body: JSON.stringify({
-          error: "Errore server PlantNet",
+          error: "Errore da PlantNet",
           status: response.status,
-          detail: text,
+          details: text.slice(0, 300),
         }),
       };
     }
 
-    const data = await response.json();
-    const best = data.results?.[0];
+    const result = await response.json();
 
-    // Nome scientifico (base)
-    const scientificName = best?.species?.scientificNameWithoutAuthor || "";
-
-    // Fallback per i nomi comuni:
-    // 1) se ci sono commonNames li unisce con ", "
-    // 2) se non ci sono, usa comunque il nome scientifico
-    let commonName = "";
-    const commonNamesArr = Array.isArray(best?.species?.commonNames)
-      ? best.species.commonNames
-      : [];
-
-    if (commonNamesArr.length > 0) {
-      commonName = commonNamesArr.join(", ");
-    } else if (scientificName) {
-      commonName = scientificName;
-    } else {
-      commonName = "";
-    }
-
-    // Affidabilità (score 0–1 → due decimali)
-    const reliability =
-      typeof best?.score === "number" ? best.score.toFixed(2) : "";
-
-    // Per ora non abbiamo un vero dato di allergenicità da PlantNet
-    const allergenicity = "N/D";
-
-    // Risposta “pulita” per il frontend
+    // 5️⃣ Risposta al frontend
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        scientificName,
-        commonName,
-        reliability,
-        allergenicity,
-      }),
+      body: JSON.stringify(result),
     };
   } catch (err) {
-    console.error("Errore nella function plantnet-identify:", err);
+    console.error("💥 Errore interno:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: "Errore server",
-        detail: err.message,
+        error: "Internal server error",
+        message: err.message,
       }),
     };
   }
-}
+};
