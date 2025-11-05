@@ -65,7 +65,8 @@
       input[type="text"],
       input[type="email"],
       input[type="date"],
-      input[type="file"] {
+      input[type="file"],
+      .fake-input {
         width: 100%;
         max-width: 310px;
         padding: 8px;
@@ -171,6 +172,15 @@
         box-shadow: none;
       }
 
+      .btn-secondary {
+        background-color: #e5e7eb;
+        color: #111827;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background-color: #d1d5db;
+      }
+
       .btn-full {
         width: 100%;
         max-width: 310px;
@@ -219,24 +229,17 @@
         <h1>Area Metropolitana di Milano</h1>
         <div class="form-subHeader">Modulo di identificazione Piante</div>
 
-        <!--
+        <!-- 
           IMPORTANTE:
-          action = endpoint di submit Jotform
-          method = post
-          enctype = multipart/form-data (serve per l'upload foto)
+          - action="" ora non blocca niente: il form si invia normalmente.
+          - Se hai già un endpoint Netlify/Jotform funzionante, puoi metterlo qui in action.
         -->
         <form
           id="plant-form"
-          class="jotform-form"
-          action="https://eu-submit.jotform.com/submit/253044075525049"
+          action=""
           method="post"
           enctype="multipart/form-data"
-          accept-charset="utf-8"
-          autocomplete="on"
         >
-          <!-- obbligatorio per Jotform -->
-          <input type="hidden" name="formID" value="253044075525049" />
-
           <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
@@ -257,13 +260,11 @@
             <label for="plantImage">
               File Upload <span class="required-star">*</span>
             </label>
-            <!-- nome Jotform: q8_fileUpload[] -->
             <input
               type="file"
               id="plantImage"
-              name="q8_fileUpload[]"
+              name="plantImage"
               accept="image/*"
-              multiple
               required
             />
 
@@ -278,7 +279,7 @@
             </div>
             <div class="help-text">
               Carica almeno una foto chiara e ravvicinata della pianta (foglie,
-              fiori, frutti, ecc.).
+              fiori, frutti, ecc.). Supportati anche file HEIC/HEIF (iPhone).
             </div>
           </div>
 
@@ -295,7 +296,7 @@
                 <input
                   type="text"
                   id="nomeRilevatore"
-                  name="q22_rilevatore[first]"
+                  name="nomeRilevatore"
                   placeholder="Nome"
                   required
                 />
@@ -304,7 +305,7 @@
                 <input
                   type="text"
                   id="cognomeRilevatore"
-                  name="q22_rilevatore[last]"
+                  name="cognomeRilevatore"
                   placeholder="Cognome"
                   required
                 />
@@ -316,11 +317,10 @@
             <label for="email">
               E-mail <span class="required-star">*</span>
             </label>
-            <!-- nome Jotform: q23_email -->
             <input
               type="email"
               id="email"
-              name="q23_email"
+              name="email"
               placeholder="esempio@esempio.com"
               required
             />
@@ -334,7 +334,7 @@
               <label>
                 <input
                   type="radio"
-                  name="q24_chiSei"
+                  name="chiSei"
                   value="Cittadino/Studente"
                   required
                 />
@@ -343,7 +343,7 @@
               <label>
                 <input
                   type="radio"
-                  name="q24_chiSei"
+                  name="chiSei"
                   value="Esperto/Botanico"
                   required
                 />
@@ -357,28 +357,11 @@
             <input
               type="date"
               id="dataAvvistamento"
-              placeholder="AAAA-MM-GG"
+              name="dataAvvistamento"
             />
             <div class="help-text">
               Modifica se l’osservazione è avvenuta in una data diversa da oggi.
             </div>
-
-            <!-- campi nascosti nel formato che si aspetta Jotform -->
-            <input
-              type="hidden"
-              id="jf_day_25"
-              name="q25_dataAvvistamento[day]"
-            />
-            <input
-              type="hidden"
-              id="jf_month_25"
-              name="q25_dataAvvistamento[month]"
-            />
-            <input
-              type="hidden"
-              id="jf_year_25"
-              name="q25_dataAvvistamento[year]"
-            />
           </div>
 
           <!-- GEOLOCALIZZAZIONE -->
@@ -396,8 +379,7 @@
               Coordinate selezionate:
               <span id="geolocDisplay">–</span>
             </div>
-            <!-- questo campo viene inviato a Jotform (q21_scriviUna) -->
-            <input type="hidden" id="geoloc" name="q21_scriviUna" />
+            <input type="hidden" id="geoloc" name="geoloc" />
           </div>
 
           <!-- ESITO IDENTIFICAZIONE -->
@@ -406,11 +388,10 @@
 
           <div class="form-line">
             <label for="affidabilita">Affidabilità</label>
-            <!-- Jotform: q12_affidabilita -->
             <input
               type="text"
               id="affidabilita"
-              name="q12_affidabilita"
+              name="affidabilita"
               placeholder="es. 0.87"
               readonly
             />
@@ -418,11 +399,10 @@
 
           <div class="form-line">
             <label for="nomeComune">Nome comune</label>
-            <!-- Jotform: q7_Nome_comune -->
             <input
               type="text"
               id="nomeComune"
-              name="q7_Nome_comune"
+              name="nomeComune"
               placeholder="Nome comune (IT, se disponibile)"
               readonly
             />
@@ -430,11 +410,10 @@
 
           <div class="form-line">
             <label for="nomeScientifico">Nome scientifico</label>
-            <!-- Jotform: q9_Nome_Scientifico -->
             <input
               type="text"
               id="nomeScientifico"
-              name="q9_Nome_Scientifico"
+              name="nomeScientifico"
               placeholder="Nome scientifico"
               readonly
             />
@@ -442,11 +421,10 @@
 
           <div class="form-line">
             <label for="allergenicita">Allergenicità</label>
-            <!-- Jotform: q13_allergenicita -->
             <input
               type="text"
               id="allergenicita"
-              name="q13_allergenicita"
+              name="allergenicita"
               placeholder="Non disponibile / da compilare"
               readonly
             />
@@ -467,19 +445,11 @@
             </div>
             <div class="radio-inline">
               <label>
-                <input
-                  type="radio"
-                  name="q27_ilSottoscritto"
-                  value="Acconsento"
-                />
+                <input type="radio" name="consenso" value="Acconsento" />
                 Acconsento
               </label>
               <label>
-                <input
-                  type="radio"
-                  name="q27_ilSottoscritto"
-                  value="Non Acconsento"
-                />
+                <input type="radio" name="consenso" value="Non Acconsento" />
                 Non Acconsento
               </label>
             </div>
@@ -507,9 +477,12 @@
       </div>
     </div>
 
+    <!-- Libreria per conversione HEIC/HEIF → JPEG nel browser -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
     <!-- SCRIPT PRINCIPALE -->
     <script>
-      // Chiama la Netlify Function plantnet-identify
+      // Funzione per chiamare la Function Netlify plantnet-identify
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
@@ -526,29 +499,95 @@
         return response.json();
       }
 
+      // Converte qualsiasi file immagine in base64, con supporto HEIC/HEIF
+      function fileToBase64ForPlantNet(file) {
+        return new Promise((resolve, reject) => {
+          const type = (file.type || "").toLowerCase();
+          const name = (file.name || "").toLowerCase();
+
+          const isHeic =
+            type.includes("heic") ||
+            type.includes("heif") ||
+            name.endsWith(".heic") ||
+            name.endsWith(".heif");
+
+          // Caso 1: HEIC/HEIF → convertiamo in JPEG con heic2any
+          if (isHeic) {
+            const reader = new FileReader();
+            reader.onload = async () => {
+              try {
+                const arrayBuffer = reader.result;
+                const heicBlob = new Blob([arrayBuffer]);
+
+                const jpegBlob = await heic2any({
+                  blob: heicBlob,
+                  toType: "image/jpeg",
+                  quality: 0.9,
+                });
+
+                const reader2 = new FileReader();
+                reader2.onload = () => {
+                  const base64 = reader2.result.split(",")[1] || "";
+                  if (!base64) {
+                    return reject(
+                      new Error("Base64 vuoto dopo conversione HEIC → JPEG")
+                    );
+                  }
+                  resolve(base64);
+                };
+                reader2.onerror = () =>
+                  reject(
+                    new Error(
+                      "Errore nella lettura del JPEG dopo la conversione"
+                    )
+                  );
+
+                reader2.readAsDataURL(jpegBlob);
+              } catch (e) {
+                console.error("Errore nella conversione HEIC:", e);
+                reject(e);
+              }
+            };
+            reader.onerror = () =>
+              reject(new Error("Errore nella lettura del file HEIC/HEIF"));
+
+            reader.readAsArrayBuffer(file);
+          } else {
+            // Caso 2: JPEG/PNG/etc → lettura normale
+            const reader = new FileReader();
+            reader.onload = () => {
+              const base64 = reader.result.split(",")[1] || "";
+              if (!base64) {
+                return reject(
+                  new Error("Base64 vuoto nella lettura dell'immagine")
+                );
+              }
+              resolve(base64);
+            };
+            reader.onerror = () =>
+              reject(new Error("Errore nella lettura del file immagine"));
+
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
         const imageInput = document.getElementById("plantImage");
         const identifyButton = document.getElementById("identifyButton");
 
         const nomeComuneInput = document.getElementById("nomeComune");
-        const nomeScientificoInput =
-          document.getElementById("nomeScientifico");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
         const affidabilitaInput = document.getElementById("affidabilita");
         const allergenicitaInput = document.getElementById("allergenicita");
 
         const submitButton = document.getElementById("submitButton");
         const consentWarning = document.getElementById("consentWarning");
         const consentRadios = document.querySelectorAll(
-          'input[name="q27_ilSottoscritto"]'
+          'input[name="consenso"]'
         );
 
-        const dataAvvistamentoInput =
-          document.getElementById("dataAvvistamento");
-        const jfDay = document.getElementById("jf_day_25");
-        const jfMonth = document.getElementById("jf_month_25");
-        const jfYear = document.getElementById("jf_year_25");
-
-        // Gestione consenso (abilita/disabilita INVIA)
+        // Gestione consenso (abilita/disabilita INVIA, ma non blocca il submit con JS)
         consentRadios.forEach((radio) => {
           radio.addEventListener("change", () => {
             if (radio.value === "Acconsento" && radio.checked) {
@@ -561,95 +600,50 @@
           });
         });
 
-        // Gestione invio reale verso Jotform
-        document
-          .getElementById("plant-form")
-          .addEventListener("submit", function (e) {
-            const consentSelected = document.querySelector(
-              'input[name="q27_ilSottoscritto"]:checked'
-            );
+        // NON mettiamo addEventListener("submit") → il submit segue il tuo backend (Jotform/Netlify)
 
-            // Se non ha acconsentito blocchiamo l'invio
-            if (
-              !consentSelected ||
-              consentSelected.value !== "Acconsento" ||
-              submitButton.disabled
-            ) {
-              e.preventDefault();
-              submitButton.disabled = true;
-              consentWarning.style.display = "block";
-              window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth",
-              });
-              return;
-            }
-
-            // Copia la data nel formato che si aspetta Jotform
-            const dateVal = dataAvvistamentoInput.value; // "YYYY-MM-DD"
-            if (dateVal && dateVal.includes("-")) {
-              const [year, month, day] = dateVal.split("-");
-              if (jfDay) jfDay.value = day;
-              if (jfMonth) jfMonth.value = month;
-              if (jfYear) jfYear.value = year;
-            } else {
-              if (jfDay) jfDay.value = "";
-              if (jfMonth) jfMonth.value = "";
-              if (jfYear) jfYear.value = "";
-            }
-            // Nessun preventDefault: il browser invia a Jotform
-          });
-
-        // Gestione clic su "Identifica Specie"
-        identifyButton.addEventListener("click", () => {
+        // Gestione clic su "Identifica Specie" con supporto HEIC
+        identifyButton.addEventListener("click", async () => {
           if (!imageInput.files || !imageInput.files[0]) {
             alert("Per favore carica prima una foto della pianta.");
             return;
           }
 
           const file = imageInput.files[0];
-          const reader = new FileReader();
 
-          reader.onload = async () => {
-            const base64 = reader.result.split(",")[1] || "";
-            if (!base64) {
-              alert("Errore nella lettura dell'immagine.");
-              return;
-            }
+          const originalText = identifyButton.textContent;
+          identifyButton.textContent = "Identificazione in corso...";
+          identifyButton.disabled = true;
 
-            const originalText = identifyButton.textContent;
-            identifyButton.textContent = "Identificazione in corso...";
-            identifyButton.disabled = true;
+          try {
+            // Otteniamo il base64 pronto per PlantNet (con eventuale conversione HEIC → JPEG)
+            const base64 = await fileToBase64ForPlantNet(file);
 
-            try {
-              const result = await callPlantNetIdentify(base64);
+            const result = await callPlantNetIdentify(base64);
 
-              nomeScientificoInput.value = result.scientificName || "";
-              nomeComuneInput.value = result.commonName || "";
-              affidabilitaInput.value = result.reliability || "";
-              allergenicitaInput.value = result.allergenicity || "N/D";
+            // Compiliamo i campi
+            nomeScientificoInput.value = result.scientificName || "";
+            nomeComuneInput.value = result.commonName || "";
+            affidabilitaInput.value = result.reliability || "";
+            allergenicitaInput.value = result.allergenicity || "N/D";
 
-              window.scrollTo({
-                top:
-                  nomeScientificoInput.getBoundingClientRect().top +
-                  window.scrollY -
-                  80,
-                behavior: "smooth",
-              });
-            } catch (err) {
-              console.error(err);
-              alert("Errore imprevisto durante l'identificazione.");
-            } finally {
-              identifyButton.textContent = originalText;
-              identifyButton.disabled = false;
-            }
-          };
-
-          reader.onerror = () => {
-            alert("Errore nella lettura del file immagine.");
-          };
-
-          reader.readAsDataURL(file);
+            // Scroll dolce verso l’esito
+            window.scrollTo({
+              top:
+                nomeScientificoInput.getBoundingClientRect().top +
+                window.scrollY -
+                80,
+              behavior: "smooth",
+            });
+          } catch (err) {
+            console.error(err);
+            alert(
+              "Errore durante l'identificazione. Se stai usando una foto HEIC e il problema persiste, prova a fare uno screenshot o esportarla come JPEG."
+            );
+          } finally {
+            identifyButton.textContent = originalText;
+            identifyButton.disabled = false;
+          }
         });
       });
 
@@ -708,11 +702,10 @@
       }
     </script>
 
-    <!-- QUI METTI LA TUA API KEY DI GOOGLE MAPS -->
+    <!-- 🔑 Metti qui la TUA API KEY di Google Maps -->
     <script
       async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
     ></script>
   </body>
 </html>
-
