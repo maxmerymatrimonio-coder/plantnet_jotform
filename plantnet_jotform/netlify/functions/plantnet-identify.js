@@ -36,16 +36,15 @@ exports.handler = async (event) => {
       };
     }
 
-    // Base64 → Buffer
     const imageBuffer = Buffer.from(imageBase64, "base64");
 
-    // In Node 18+ abbiamo Blob e FormData globali
     const blob = new Blob([imageBuffer], { type: "image/jpeg" });
     const formData = new FormData();
     formData.append("organs", "auto");
     formData.append("images", blob, "upload.jpg");
 
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
+    // lingua italiana per i nomi comuni
+    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -83,7 +82,9 @@ exports.handler = async (event) => {
       "Specie non identificata";
 
     const commonName =
-      (best.species && best.species.commonNames && best.species.commonNames[0]) ||
+      (best.species &&
+        best.species.commonNames &&
+        best.species.commonNames[0]) ||
       "Nome comune non disponibile";
 
     const reliability = typeof best.score === "number" ? best.score : 0;
