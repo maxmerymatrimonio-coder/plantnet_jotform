@@ -347,7 +347,8 @@
               name="dataAvvistamento"
             />
             <div class="help-text">
-              Modifica se l’osservazione è avvenuta in una data diversa da oggi.
+              Se la foto contiene la data di scatto, questo campo può essere
+              compilato automaticamente.
             </div>
           </div>
 
@@ -357,8 +358,10 @@
 
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
-              📍 Controlla che la posizione sulla mappa corrisponda al luogo di
-              avvistamento oppure trascina il marcatore per correggerla.
+              📍 Se la foto contiene dati GPS, la posizione può essere
+              compilata automaticamente. In caso contrario, controlla che la
+              posizione sulla mappa corrisponda al luogo di avvistamento
+              oppure trascina il marcatore per correggerla.
             </div>
             <div id="map"></div>
             <div class="map-coords">
@@ -435,10 +438,18 @@
             <div class="text-block" style="margin-bottom: 6px">
               Il sottoscritto autorizza il trattamento dei dati personali nel
               rispetto della vigente normativa sulla protezione dei dati
-              personali ed, in particolare, il Regolamento Europeo per la
-              protezione dei dati personali 2016/679, il d.lgs. 30/06/2003 n.
-              196 e successive modifiche e integrazioni, come modificato da
-              ultimo dal d.lgs. 10/08/2018 n. 101.
+              personali ed, in particolare, del Regolamento Europeo (UE)
+              2016/679 (GDPR).<br /><br />
+              I dati raccolti tramite questo modulo includono le informazioni
+              inserite manualmente (ad esempio e-mail, data e posizione) e,
+              se presenti, i <strong>metadati delle immagini caricate</strong>
+              (come <strong>data di scatto</strong> e
+              <strong>coordinate GPS</strong>), che possono essere utilizzati
+              <strong>esclusivamente per compilare automaticamente i campi di
+              data e localizzazione del modulo</strong>.<br /><br />
+              Nessun dato aggiuntivo viene conservato o utilizzato per
+              finalità diverse dall’identificazione della specie vegetale e
+              dalla registrazione della segnalazione.
             </div>
             <div class="radio-inline">
               <label>
@@ -484,6 +495,9 @@
         </form>
       </div>
     </div>
+
+    <!-- Libreria per leggere EXIF (data + GPS) dai JPG/PNG -->
+    <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
 
     <!-- SCRIPT PRINCIPALE -->
     <script>
@@ -549,8 +563,8 @@
 
         const form = document.getElementById("plant-form");
 
-        // 🔔 Popup immediato se viene caricato un HEIC
-        imageInput.addEventListener("change", () => {
+        // 🔔 Popup immediato se viene caricato un HEIC + lettura EXIF JPG/PNG
+        imageInput.addEventListener("change", async () => {
           const file = imageInput.files && imageInput.files[0];
           if (!file) return;
 
@@ -571,6 +585,51 @@
             );
             // svuota il campo, così devono scegliere un JPG/PNG
             imageInput.value = "";
+            return;
+          }
+
+          // Se non è HEIC e la libreria exifr è presente, proviamo a leggere EXIF
+          if (window.exifr && typeof exifr.parse === "function") {
+            try {
+              const meta = await exifr.parse(file);
+
+              if (meta) {
+                // Data di scatto → DateTimeOriginal
+                if (meta.DateTimeOriginal instanceof Date && dataAvvistamento) {
+                  const d = meta.DateTimeOriginal;
+                  const yyyy = d.getFullYear();
+                  const mm = String(d.getMonth() + 1).padStart(2, "0");
+                  const dd = String(d.getDate()).padStart(2, "0");
+                  dataAvvistamento.value = `${yyyy}-${mm}-${dd}`;
+                }
+
+                // GPS → latitude / longitude in decimali
+                if (
+                  typeof meta.latitude === "number" &&
+                  typeof meta.longitude === "number" &&
+                  geolocInput &&
+                  geolocDisplay
+                ) {
+                  const coords = {
+                    lat: meta.latitude,
+                    lng: meta.longitude,
+                  };
+
+                  // Aggiorna mappa e marker (se già inizializzati)
+                  if (window.map && window.marker) {
+                    window.map.setCenter(coords);
+                    window.marker.setPosition(coords);
+                  }
+
+                  const val =
+                    coords.lat.toFixed(6) + ", " + coords.lng.toFixed(6);
+                  geolocInput.value = val;
+                  geolocDisplay.textContent = val;
+                }
+              }
+            } catch (ex) {
+              console.warn("Impossibile leggere EXIF dall'immagine:", ex);
+            }
           }
         });
 
