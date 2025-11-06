@@ -1,9 +1,5 @@
 // netlify/functions/plantnet-identify.js
-
-const Busboy = require("busboy");
-const sharp = require("sharp");
-const fetch = require("node-fetch");
-const FormData = require("form-data");
+// Funzione Netlify SENZA dipendenze esterne (usa solo fetch/FormData/Blob di Node 18)
 
 exports.handler = async (event) => {
   try {
@@ -14,8 +10,17 @@ exports.handler = async (event) => {
       };
     }
 
-    // Corpo della richiesta: immagine in base64
-    const { imageBase64 } = JSON.parse(event.body || "{}");
+    let body;
+    try {
+      body = JSON.parse(event.body || "{}");
+    } catch (e) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Corpo richiesta non valido" }),
+      };
+    }
+
+    const imageBase64 = body.imageBase64;
     if (!imageBase64) {
       return {
         statusCode: 400,
@@ -31,19 +36,14 @@ exports.handler = async (event) => {
       };
     }
 
-    // Conversione Base64 → Buffer → JPEG ottimizzato
+    // Base64 → Buffer
     const imageBuffer = Buffer.from(imageBase64, "base64");
-    const jpegBuffer = await sharp(imageBuffer)
-      .jpeg({ quality: 90 })
-      .toBuffer();
 
-    // Preparo form-data per l’upload a PlantNet
+    // In Node 18+ abbiamo Blob e FormData globali
+    const blob = new Blob([imageBuffer], { type: "image/jpeg" });
     const formData = new FormData();
-    formData.append("organs", "auto"); // lascia decidere a PlantNet
-    formData.append("images", jpegBuffer, {
-      filename: "upload.jpg",
-      contentType: "image/jpeg",
-    });
+    formData.append("organs", "auto");
+    formData.append("images", blob, "upload.jpg");
 
     const apiUrl = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
 
@@ -53,8 +53,8 @@ exports.handler = async (event) => {
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      console.error("Errore PlantNet:", text);
+      const text = await response.text().catch(() => "");
+      console.error("Errore PlantNet:", response.status, text);
       return {
         statusCode: response.status,
         body: JSON.stringify({ error: "Errore da PlantNet API" }),
@@ -63,7 +63,6 @@ exports.handler = async (event) => {
 
     const data = await response.json();
 
-    // Estraggo il primo risultato utile
     const best = data.results && data.results[0];
     if (!best) {
       return {
@@ -78,16 +77,17 @@ exports.handler = async (event) => {
     }
 
     const scientificName =
-      best.species?.scientificNameWithoutAuthor ||
-      best.species?.scientificName ||
+      (best.species &&
+        (best.species.scientificNameWithoutAuthor ||
+          best.species.scientificName)) ||
       "Specie non identificata";
 
     const commonName =
-      best.species?.commonNames?.[0] || "Nome comune non disponibile";
+      (best.species && best.species.commonNames && best.species.commonNames[0]) ||
+      "Nome comune non disponibile";
 
-    const reliability = best.score || 0;
+    const reliability = typeof best.score === "number" ? best.score : 0;
 
-    // 🔸 Risposta finale al browser
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -101,7 +101,10 @@ exports.handler = async (event) => {
     console.error("Errore interno funzione:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Errore interno", details: error.message }),
+      body: JSON.stringify({
+        error: "Errore interno",
+        details: error.message,
+      }),
     };
   }
 };
