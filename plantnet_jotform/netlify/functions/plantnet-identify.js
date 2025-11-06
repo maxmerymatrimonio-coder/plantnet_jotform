@@ -1,8 +1,27 @@
 // netlify/functions/plantnet-identify.js
-// Funzione Netlify SENZA dipendenze esterne (usa fetch / FormData / Blob di Node 18)
+// Funzione Netlify senza dipendenze esterne.
+// Usa fetch / FormData / Blob di Node 18 per chiamare PlantNet
+// e traduce il nome comune EN -> IT con Google Translate.
+
+async function translateToItalian(text) {
+  if (!text) return "";
+  try {
+    const res = await fetch(
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=it&dt=t&q=${encodeURIComponent(
+        text
+      )}`
+    );
+    const data = await res.json();
+    // struttura tipica: [[[ "traduzione", "originale", ... ]]]
+    return data[0]?.[0]?.[0] || text;
+  } catch (e) {
+    console.warn("Traduzione non riuscita:", e);
+    return text; // in caso di errore, restituiamo comunque il testo originale
+  }
+}
 
 exports.handler = async (event) => {
-  // Controllo metodo
+  // Consente solo POST
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -39,7 +58,8 @@ exports.handler = async (event) => {
     // Creiamo il form-data per PlantNet
     const formData = new FormData();
     formData.append("images", blob, "photo.jpg");
-    // puoi aggiungere più organi se vuoi, per ora usiamo "leaf"
+    // puoi usare altri organi ("flower","fruit",...) se vuoi;
+    // per ora usiamo "leaf" come default
     formData.append("organs", "leaf");
 
     const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
@@ -64,7 +84,7 @@ exports.handler = async (event) => {
 
     const data = await plantnetResponse.json();
 
-    // Tiriamo fuori il miglior risultato
+    // Miglior risultato
     const best = (data.results && data.results[0]) || null;
     if (!best) {
       console.warn("Nessun risultato utile da PlantNet");
@@ -79,22 +99,25 @@ exports.handler = async (event) => {
       };
     }
 
+    const species = best.species || {};
+
     const scientificName =
-      best.species?.scientificNameWithoutAuthor ||
-      best.species?.scientificName ||
+      species.scientificNameWithoutAuthor ||
+      species.scientificName ||
       "";
 
-    const commonNames = best.species?.commonNames || [];
-    const commonName = commonNames[0] || "";
+    const commonNames = species.commonNames || [];
+    const commonNameEn = commonNames[0] || "";
 
-    const score = best.score || 0;
+    // Traduzione automatica EN -> IT
+    const commonNameIt = await translateToItalian(commonNameEn);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         scientificName,
-        commonName,
-        reliability: score, // es. 0.87
+        commonName: commonNameIt || commonNameEn || "",
+        reliability: best.score || 0,
         allergenicity: "N/D",
       }),
     };
