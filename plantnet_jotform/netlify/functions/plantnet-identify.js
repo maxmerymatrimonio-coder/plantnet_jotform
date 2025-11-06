@@ -1,73 +1,77 @@
 // netlify/functions/plantnet-identify.js
-// Funzione Netlify SENZA dipendenze esterne (usa solo fetch/FormData/Blob di Node 18)
+// Funzione Netlify SENZA dipendenze esterne (usa fetch / FormData / Blob di Node 18)
 
 exports.handler = async (event) => {
+  // Controllo metodo
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: "Method not allowed" }),
+    };
+  }
+
   try {
-    if (event.httpMethod !== "POST") {
-      return {
-        statusCode: 405,
-        body: JSON.stringify({ error: "Metodo non consentito" }),
-      };
-    }
-
-    let body;
-    try {
-      body = JSON.parse(event.body || "{}");
-    } catch (e) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Corpo richiesta non valido" }),
-      };
-    }
-
+    // Parse del body
+    const body = JSON.parse(event.body || "{}");
     const imageBase64 = body.imageBase64;
-    if (!imageBase64) {
+
+    if (!imageBase64 || typeof imageBase64 !== "string") {
+      console.error("Manca imageBase64 o non è una stringa");
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Nessuna immagine fornita" }),
+        body: JSON.stringify({ error: "Missing imageBase64" }),
       };
     }
 
     const apiKey = process.env.PLANTNET_API_KEY;
     if (!apiKey) {
+      console.error("Manca PLANTNET_API_KEY nelle variabili d'ambiente Netlify");
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Chiave API PlantNet mancante" }),
+        body: JSON.stringify({ error: "Missing PLANTNET_API_KEY" }),
       };
     }
 
-    const imageBuffer = Buffer.from(imageBase64, "base64");
+    // Ricostruiamo un JPEG dal base64
+    const buffer = Buffer.from(imageBase64, "base64");
+    const blob = new Blob([buffer], { type: "image/jpeg" });
 
-    const blob = new Blob([imageBuffer], { type: "image/jpeg" });
+    // Creiamo il form-data per PlantNet
     const formData = new FormData();
-    formData.append("organs", "auto");
-    formData.append("images", blob, "upload.jpg");
+    formData.append("images", blob, "photo.jpg");
+    // puoi aggiungere più organi se vuoi, per ora usiamo "leaf"
+    formData.append("organs", "leaf");
 
-    // lingua italiana per i nomi comuni
-    const apiUrl = `https://my-api.plantnet.org/v2/identify/all?lang=it&api-key=${apiKey}`;
+    const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${apiKey}`;
 
-    const response = await fetch(apiUrl, {
+    const plantnetResponse = await fetch(url, {
       method: "POST",
       body: formData,
     });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      console.error("Errore PlantNet:", response.status, text);
+    if (!plantnetResponse.ok) {
+      const text = await plantnetResponse.text();
+      console.error("Errore dalla PlantNet API:", plantnetResponse.status, text);
       return {
-        statusCode: response.status,
-        body: JSON.stringify({ error: "Errore da PlantNet API" }),
+        statusCode: 502,
+        body: JSON.stringify({
+          error: "PlantNet API error",
+          status: plantnetResponse.status,
+          details: text,
+        }),
       };
     }
 
-    const data = await response.json();
+    const data = await plantnetResponse.json();
 
-    const best = data.results && data.results[0];
+    // Tiriamo fuori il miglior risultato
+    const best = (data.results && data.results[0]) || null;
     if (!best) {
+      console.warn("Nessun risultato utile da PlantNet");
       return {
         statusCode: 200,
         body: JSON.stringify({
-          scientificName: "Non riconosciuto",
+          scientificName: "",
           commonName: "",
           reliability: 0,
           allergenicity: "N/D",
@@ -76,35 +80,31 @@ exports.handler = async (event) => {
     }
 
     const scientificName =
-      (best.species &&
-        (best.species.scientificNameWithoutAuthor ||
-          best.species.scientificName)) ||
-      "Specie non identificata";
+      best.species?.scientificNameWithoutAuthor ||
+      best.species?.scientificName ||
+      "";
 
-    const commonName =
-      (best.species &&
-        best.species.commonNames &&
-        best.species.commonNames[0]) ||
-      "Nome comune non disponibile";
+    const commonNames = best.species?.commonNames || [];
+    const commonName = commonNames[0] || "";
 
-    const reliability = typeof best.score === "number" ? best.score : 0;
+    const score = best.score || 0;
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         scientificName,
         commonName,
-        reliability,
+        reliability: score, // es. 0.87
         allergenicity: "N/D",
       }),
     };
-  } catch (error) {
-    console.error("Errore interno funzione:", error);
+  } catch (err) {
+    console.error("Errore interno nella funzione Netlify:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: "Errore interno",
-        details: error.message,
+        error: "Internal server error",
+        details: String(err),
       }),
     };
   }
