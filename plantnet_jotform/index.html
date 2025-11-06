@@ -225,6 +225,11 @@
         color: #166534;
       }
 
+      /* Campo interpretazione affidabilità più largo */
+      #interpretazioneAffidabilita {
+        max-width: 100%;
+      }
+
       @media (max-width: 600px) {
         .form-all {
           padding: 16px 12px 24px 12px;
@@ -510,10 +515,8 @@
 
     <!-- SCRIPT PRINCIPALE -->
     <script>
-      // URL di Jotform (il tuo modulo)
       const JOTFORM_URL = "https://eu-submit.jotform.com/submit/253044075525049";
 
-      // Funzione per chiamare la Function Netlify plantnet-identify
       async function callPlantNetIdentify(imageBase64) {
         const response = await fetch("/.netlify/functions/plantnet-identify", {
           method: "POST",
@@ -530,7 +533,6 @@
         return response.json();
       }
 
-      // Helper: converte un file in base64 (per JPG/PNG ecc.)
       function fileToBase64(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -544,7 +546,6 @@
         });
       }
 
-      // Helper: prova a convertire HEIC in JPEG usando canvas (se il browser lo supporta)
       function heicToJpegBase64(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -600,7 +601,6 @@
 
         const form = document.getElementById("plant-form");
 
-        // Gestione consenso (abilita/disabilita INVIA)
         consentRadios.forEach((radio) => {
           radio.addEventListener("change", () => {
             if (radio.value === "Acconsento" && radio.checked) {
@@ -613,7 +613,6 @@
           });
         });
 
-        // Gestione clic su "Identifica Specie"
         identifyButton.addEventListener("click", async () => {
           if (!imageInput.files || !imageInput.files[0]) {
             alert("Per favore carica prima una foto della pianta.");
@@ -662,7 +661,6 @@
 
             const result = await callPlantNetIdentify(base64);
 
-            // Compila i campi base
             nomeScientificoInput.value = result.scientificName || "";
             nomeComuneInput.value = result.commonName || "";
             affidabilitaInput.value = result.reliability || "";
@@ -674,7 +672,6 @@
               rawReliability = 0;
             }
 
-            // Se il valore è tra 0 e 1 lo porto a 0–100, se è già 0–100 lo lascio così
             let percentuale = 0;
             if (rawReliability <= 1) {
               percentuale = Math.round(rawReliability * 100);
@@ -705,17 +702,14 @@
 
             const info = getAffidabilita(percentuale);
 
-            // Aggiorna il campo percentuale in modo più leggibile
             affidabilitaInput.value = `${percentuale}%`;
 
-            // Aggiorna il campo interpretazione
             if (interpretazioneInput) {
               interpretazioneInput.value = `${info.icona} ${percentuale}% – ${info.testo}`;
               interpretazioneInput.style.color = info.colore;
               interpretazioneInput.style.fontWeight = "bold";
             }
 
-            // Scorri alla sezione esito
             window.scrollTo({
               top:
                 nomeScientificoInput.getBoundingClientRect().top +
@@ -732,12 +726,10 @@
           }
         });
 
-        // Invio a JOTFORM via fetch (no-cors), restando sulla stessa pagina
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
           successMessage.style.display = "none";
 
-          // Controllo consenso per sicurezza
           const consentValue = (
             new FormData(form).get("consenso") || ""
           ).toString();
@@ -763,13 +755,9 @@
           try {
             const formData = new FormData();
 
-            // ID del modulo Jotform
             formData.append("formID", "253044075525049");
-
-            // File (nome campo Jotform: q8_fileUpload[])
             formData.append("q8_fileUpload[]", imageInput.files[0]);
 
-            // Esito identificazione (nomi Jotform)
             formData.append("q7_Nome_comune", nomeComuneInput.value || "");
             formData.append(
               "q9_Nome_Scientifico",
@@ -781,7 +769,6 @@
               allergenicitaInput.value || ""
             );
 
-            // Dati rilevatore (nomi Jotform)
             formData.append(
               "q22_rilevatore[first]",
               nomeRilevatore.value || ""
@@ -800,8 +787,7 @@
               chiSeiRadio ? chiSeiRadio.value : ""
             );
 
-            // Data avvistamento → separata in giorno/mese/anno come Jotform
-            const dateStr = (dataAvvistamento.value || "").trim(); // "YYYY-MM-DD"
+            const dateStr = (dataAvvistamento.value || "").trim();
             if (dateStr) {
               const parts = dateStr.split("-");
               if (parts.length === 3) {
@@ -814,33 +800,25 @@
               }
             }
 
-            // Geolocalizzazione (campo testo Jotform)
             formData.append("q21_scriviUna", geolocInput.value || "");
-
-            // Consenso (Jotform: q27_ilSottoscritto)
             formData.append("q27_ilSottoscritto", consentValue);
 
-            // Invio verso Jotform.
-            // mode: "no-cors" => non vediamo la risposta, ma l'invio viene comunque effettuato.
             await fetch(JOTFORM_URL, {
               method: "POST",
               mode: "no-cors",
               body: formData,
             });
 
-            // Se arriviamo qui, assumiamo invio ok
             successMessage.style.display = "block";
             alert(
               "Modulo inviato con successo! Riceverai la conferma da Jotform. Puoi inserire una nuova segnalazione."
             );
 
-            // Reset form per una nuova segnalazione
             form.reset();
             submitButton.disabled = true;
             consentWarning.style.display = "none";
             submitButton.textContent = originalText;
 
-            // Reset esito identificazione
             nomeComuneInput.value = "";
             nomeScientificoInput.value = "";
             affidabilitaInput.value = "";
@@ -851,7 +829,6 @@
               interpretazioneInput.style.fontWeight = "";
             }
 
-            // Reset geolocalizzazione (torna a Milano di default)
             if (window.marker && window.map && window.defaultLatLng) {
               window.marker.setPosition(window.defaultLatLng);
               window.map.setCenter(window.defaultLatLng);
@@ -863,7 +840,6 @@
               geolocDisplay.textContent = val;
             }
 
-            // Torna in alto al modulo
             window.scrollTo({ top: 0, behavior: "smooth" });
           } catch (err) {
             console.error(err);
@@ -876,7 +852,6 @@
         });
       });
 
-      // --- GOOGLE MAPS ---
       window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
       let map, marker;
 
@@ -933,7 +908,6 @@
       }
     </script>
 
-    <!-- 🔑 METTI QUI LA TUA API KEY DI GOOGLE MAPS -->
     <script
       async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
