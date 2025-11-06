@@ -401,7 +401,18 @@
               type="text"
               id="affidabilita"
               name="affidabilita"
-              placeholder="es. 0.87"
+              placeholder="es. 87%"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="interpretazioneAffidabilita">Interpretazione affidabilità</label>
+            <input
+              type="text"
+              id="interpretazioneAffidabilita"
+              name="interpretazioneAffidabilita"
+              placeholder="Analisi automatica del livello di affidabilità"
               readonly
             />
           </div>
@@ -571,6 +582,7 @@
         const nomeComuneInput = document.getElementById("nomeComune");
         const nomeScientificoInput = document.getElementById("nomeScientifico");
         const affidabilitaInput = document.getElementById("affidabilita");
+        const interpretazioneInput = document.getElementById("interpretazioneAffidabilita");
         const allergenicitaInput = document.getElementById("allergenicita");
 
         const submitButton = document.getElementById("submitButton");
@@ -650,10 +662,58 @@
 
             const result = await callPlantNetIdentify(base64);
 
+            // Compila i campi base
             nomeScientificoInput.value = result.scientificName || "";
             nomeComuneInput.value = result.commonName || "";
             affidabilitaInput.value = result.reliability || "";
             allergenicitaInput.value = result.allergenicity || "N/D";
+
+            // --- Calcolo interpretazione affidabilità colorata ---
+            let rawReliability = parseFloat(result.reliability);
+            if (isNaN(rawReliability)) {
+              rawReliability = 0;
+            }
+
+            // Se il valore è tra 0 e 1 lo porto a 0–100, se è già 0–100 lo lascio così
+            let percentuale = 0;
+            if (rawReliability <= 1) {
+              percentuale = Math.round(rawReliability * 100);
+            } else {
+              percentuale = Math.round(rawReliability);
+            }
+
+            function getAffidabilita(percentuale) {
+              let testo = "", colore = "", icona = "";
+              if (percentuale >= 90) {
+                testo = "Altamente probabile che la specie sia corretta.";
+                colore = "#00b050"; icona = "✅";
+              } else if (percentuale >= 70) {
+                testo = "Buona probabilità che il genere sia corretto, ma la specie potrebbe essere confusa con altre simili.";
+                colore = "#92d050"; icona = "🔎";
+              } else if (percentuale >= 50) {
+                testo = "Riconoscimento plausibile: probabile che il genere sia corretto, ma la specie è solo una delle possibili.";
+                colore = "#ffc000"; icona = "⚠️";
+              } else if (percentuale >= 30) {
+                testo = "Bassa affidabilità: può aver confuso la pianta con specie simili.";
+                colore = "#ff6600"; icona = "❌";
+              } else {
+                testo = "Risultato poco significativo: ripeti la foto o prova un’altra angolazione.";
+                colore = "#ff0000"; icona = "🚫";
+              }
+              return { testo, colore, icona };
+            }
+
+            const info = getAffidabilita(percentuale);
+
+            // Aggiorna il campo percentuale in modo più leggibile
+            affidabilitaInput.value = `${percentuale}%`;
+
+            // Aggiorna il campo interpretazione
+            if (interpretazioneInput) {
+              interpretazioneInput.value = `${info.icona} ${percentuale}% – ${info.testo}`;
+              interpretazioneInput.style.color = info.colore;
+              interpretazioneInput.style.fontWeight = "bold";
+            }
 
             // Scorri alla sezione esito
             window.scrollTo({
@@ -785,6 +845,11 @@
             nomeScientificoInput.value = "";
             affidabilitaInput.value = "";
             allergenicitaInput.value = "";
+            if (interpretazioneInput) {
+              interpretazioneInput.value = "";
+              interpretazioneInput.style.color = "";
+              interpretazioneInput.style.fontWeight = "";
+            }
 
             // Reset geolocalizzazione (torna a Milano di default)
             if (window.marker && window.map && window.defaultLatLng) {
