@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
   <head>
@@ -81,17 +82,6 @@
       input[readonly],
       textarea[readonly] {
         background-color: #f3f4ff;
-      }
-
-      .two-columns {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .two-columns > div {
-        flex: 1 1 160px;
-        min-width: 0;
       }
 
       .radio-inline {
@@ -217,15 +207,6 @@
           padding: 16px 12px 24px 12px;
         }
 
-        .two-columns {
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .two-columns > div {
-          width: 100%;
-        }
-
         .form-line {
           margin-top: 6px;
           margin-bottom: 6px;
@@ -249,8 +230,7 @@
           GuardaMI Plant-ID · Modulo di identificazione piante
         </div>
 
-        <!-- ATTENZIONE: questo form NON va direttamente a Jotform.
-             L'invio a Jotform viene fatto via fetch nel JavaScript. -->
+        <!-- L'invio a Jotform viene fatto via fetch nel JavaScript. -->
         <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
           <!-- ISTRUZIONI -->
           <div class="form-line">
@@ -292,9 +272,9 @@
             </div>
             <div class="help-text">
               Puoi caricare una o due foto chiare e ravvicinate della pianta
-              (foglie, fiori, frutti, ecc.). I formati HEIC verranno convertiti
-              automaticamente quando possibile. Se la conversione non riesce,
-              esporta le foto come JPG/PNG (es. “Salva come immagine”) e riprova.
+              (foglie, fiori, frutti, ecc.) in formato <strong>JPG</strong> o
+              <strong>PNG</strong>. 📱 Le foto in formato
+              <strong>HEIC</strong> (tipiche di iPhone) non sono compatibili.
             </div>
           </div>
 
@@ -311,7 +291,8 @@
               placeholder="Es. Maria, Maria R., volontario..."
             />
             <div class="help-text">
-              Se sei minorenne, non inserire il tuo nome e cognome completo. Puoi lasciare vuoto questo campo.
+              Se sei minorenne, non inserire il tuo nome e cognome completo.
+              Puoi lasciare vuoto questo campo.
             </div>
           </div>
 
@@ -327,7 +308,8 @@
               required
             />
             <div class="help-text">
-              Può essere la tua e-mail scolastica o di progetto. Verrà usata solo per eventuali comunicazioni scientifiche.
+              Può essere la tua e-mail scolastica o di progetto. Verrà usata
+              solo per eventuali comunicazioni scientifiche.
             </div>
           </div>
 
@@ -539,37 +521,6 @@
         });
       }
 
-      // HEIC → JPEG Base64 (se il browser ci riesce)
-      function heicToJpegBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const dataUrl = reader.result;
-            const img = new Image();
-            img.onload = () => {
-              try {
-                const canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0);
-                const jpegDataUrl = canvas.toDataURL("image/jpeg", 0.9);
-                const base64 = jpegDataUrl.split(",")[1] || "";
-                resolve(base64);
-              } catch (e) {
-                reject(e);
-              }
-            };
-            img.onerror = () =>
-              reject(new Error("Il browser non riesce a leggere correttamente il formato HEIC"));
-            img.src = dataUrl;
-          };
-          reader.onerror = () =>
-            reject(new Error("Errore nella lettura del file HEIC"));
-          reader.readAsDataURL(file);
-        });
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
         const imageInput = document.getElementById("plantImage");
         const identifyButton = document.getElementById("identifyButton");
@@ -597,6 +548,31 @@
         const geolocDisplay = document.getElementById("geolocDisplay");
 
         const form = document.getElementById("plant-form");
+
+        // 🔔 Popup immediato se viene caricato un HEIC
+        imageInput.addEventListener("change", () => {
+          const file = imageInput.files && imageInput.files[0];
+          if (!file) return;
+
+          const fileName = (file.name || "").toLowerCase();
+          const fileType = (file.type || "").toLowerCase();
+
+          const isHeic =
+            fileType.includes("heic") ||
+            fileName.endsWith(".heic") ||
+            fileName.endsWith(".heif");
+
+          if (isHeic) {
+            alert(
+              "📸 Suggerimento per utenti iPhone:\n\n" +
+                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
+                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
+                "e poi caricala qui in formato JPG."
+            );
+            // svuota il campo, così devono scegliere un JPG/PNG
+            imageInput.value = "";
+          }
+        });
 
         // Gestione consenso (abilita/disabilita INVIA)
         consentRadios.forEach((radio) => {
@@ -632,32 +608,23 @@
             fileName.endsWith(".heic") ||
             fileName.endsWith(".heif");
 
+          if (isHeic) {
+            // difesa ulteriore se per qualche motivo passa dal change
+            alert(
+              "📸 Suggerimento per utenti iPhone:\n\n" +
+                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
+                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
+                "e poi caricala qui in formato JPG."
+            );
+            return;
+          }
+
           const originalText = identifyButton.textContent;
           identifyButton.textContent = "Identificazione in corso...";
           identifyButton.disabled = true;
 
           try {
-            let base64 = "";
-
-            if (isHeic) {
-              try {
-                base64 = await heicToJpegBase64(file);
-              } catch (convErr) {
-                console.error(convErr);
-                alert(
-                  "Non siamo riusciti a convertire la foto HEIC.\n\n" +
-                    "Suggerimenti:\n" +
-                    "• Su iPhone, apri la foto e usa 'Condividi' → 'Salva come immagine' per ottenere un JPG;\n" +
-                    "• Oppure scatta direttamente in formato JPEG (disattivando 'Alta efficienza' nelle impostazioni Fotocamera);\n" +
-                    "• Poi ricarica la foto nel modulo."
-                );
-                identifyButton.textContent = originalText;
-                identifyButton.disabled = false;
-                return;
-              }
-            } else {
-              base64 = await fileToBase64(file);
-            }
+            const base64 = await fileToBase64(file);
 
             if (!base64) {
               alert("Errore nella lettura dell'immagine.");
@@ -667,6 +634,18 @@
             }
 
             const result = await callPlantNetIdentify(base64);
+
+            // se PlantNet non trova specie
+            if (!result || !result.scientificName) {
+              alert(
+                "Nessuna specie trovata.\n\n" +
+                  "Prova a caricare una foto più chiara e ravvicinata " +
+                  "della pianta (foglie, fiori o frutti ben visibili)."
+              );
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
+              return;
+            }
 
             nomeScientificoInput.value = result.scientificName || "";
             nomeComuneInput.value = result.commonName || "";
@@ -783,7 +762,7 @@
               allergenicitaInput.value || ""
             );
 
-            // Nome facoltativo → mettiamo tutto in "first", vuoto "last"
+            // Nome facoltativo → tutto in "first"
             formData.append(
               "q22_rilevatore[first]",
               nomeRilevatore.value || ""
@@ -816,7 +795,7 @@
             formData.append("q21_scriviUna", geolocInput.value || "");
             formData.append("q27_ilSottoscritto", consentValue);
 
-            // Proviamo a mandare anche l'interpretazione (campo Jotform q30_*)
+            // Interpretazione affidabilità → campo Jotform q30
             if (interpretazioneInput && interpretazioneInput.value) {
               formData.append(
                 "q30_interpretazioneAffidabilita",
@@ -930,7 +909,7 @@
       }
     </script>
 
-    <!-- 🔑 GOOGLE MAPS -->
+    <!-- GOOGLE MAPS -->
     <script
       async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
