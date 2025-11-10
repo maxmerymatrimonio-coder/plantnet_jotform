@@ -568,14 +568,12 @@
             center: window.defaultLatLng,
             zoom: 11,
           });
-          window.map = map;
 
           marker = new google.maps.Marker({
             position: window.defaultLatLng,
             map,
             draggable: true,
           });
-          window.marker = marker;
 
           const geolocInput = document.getElementById("geoloc");
           const geolocDisplay = document.getElementById("geolocDisplay");
