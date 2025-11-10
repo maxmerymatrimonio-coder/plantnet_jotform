@@ -159,17 +159,17 @@
         justify-content: center;
       }
 
-      /* Nuovo bottone secondario per cancellare dati salvati */
+      /* Bottone "Dimentica dati salvati" con stessi colori del primario */
       .btn-secondary {
-        background-color: #e5e7eb;
-        color: #111827;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.15);
+        background-color: #1d4ed8;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
       }
 
-      .btn-secondary:hover {
-        background-color: #d1d5db;
+      .btn-secondary:hover:not(:disabled) {
+        background-color: #1e40af;
         transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
       }
 
       /* Mappa */
@@ -207,23 +207,19 @@
         color: #166534;
       }
 
-      /* Campo interpretazione affidabilità più largo */
       #interpretazioneAffidabilita {
         max-width: 100%;
         min-height: 60px;
       }
 
-      /* --- MOBILE --- */
       @media (max-width: 600px) {
         .form-all {
           padding: 16px 12px 24px 12px;
         }
-
         .form-line {
           margin-top: 6px;
           margin-bottom: 6px;
         }
-
         #interpretazioneAffidabilita {
           width: 100%;
           min-height: 70px;
@@ -233,7 +229,6 @@
       }
     </style>
   </head>
-
   <body>
     <div class="page-wrapper">
       <div class="form-all">
@@ -1097,6 +1092,5 @@
     ></script>
   </body>
 </html>
-
 
 
