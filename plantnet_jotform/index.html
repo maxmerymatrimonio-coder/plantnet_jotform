@@ -242,15 +242,9 @@
           <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
-              🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
-              <strong>1 – Fai upload foto:</strong> Per ottenere un
-              riconoscimento accurato, la segnalazione deve contenere almeno
-              una <strong>foto chiara e ravvicinata</strong> della pianta. Se
-              possibile, includi più immagini che mostrino
-              <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
-              (max 2 foto)<br /><br />
-              <strong>2 – Clicca “Identifica Specie”</strong> per compilare
-              automaticamente i campi di identificazione.
+              🌱 <strong>Come compilare:</strong><br /><br />
+              1. Carica <strong>una o due foto nitide</strong> della pianta (foglie, fiori o frutti ben visibili).<br />
+              2. Clicca su <strong>“Identifica specie”</strong> per il riconoscimento automatico.
             </div>
           </div>
 
@@ -278,10 +272,7 @@
               </button>
             </div>
             <div class="help-text">
-              Puoi caricare una o due foto chiare e ravvicinate della pianta
-              (foglie, fiori, frutti, ecc.) in formato <strong>JPG</strong> o
-              <strong>PNG</strong>. 📱 Le foto in formato
-              <strong>HEIC</strong> (tipiche di iPhone) non sono compatibili.
+              Carica fino a <strong>2 foto</strong> in formato <strong>JPG</strong> o <strong>PNG</strong> (no HEIC), con dettagli chiari della pianta.
             </div>
           </div>
 
@@ -298,8 +289,7 @@
               placeholder="Es. Maria, Maria R., volontario..."
             />
             <div class="help-text">
-              Se sei minorenne, non inserire il tuo nome e cognome completo.
-              Puoi lasciare vuoto questo campo.
+              Se sei minorenne, non inserire nome e cognome completi. Campo facoltativo.
             </div>
           </div>
 
@@ -315,8 +305,7 @@
               required
             />
             <div class="help-text">
-              Può essere la tua e-mail scolastica o di progetto. Verrà usata
-              solo per eventuali comunicazioni scientifiche.
+              Usa un’e-mail scolastica o di progetto. Verrà utilizzata solo per comunicazioni scientifiche.
             </div>
           </div>
 
@@ -358,9 +347,7 @@
               </button>
             </div>
             <div class="help-text">
-              Nome, e-mail e ruolo (“Chi sei?”) vengono salvati solo in questo
-              browser per riempire automaticamente le segnalazioni future.
-              Puoi cancellarli in qualsiasi momento con il pulsante qui sopra.
+              Nome, e-mail e ruolo vengono salvati <strong>solo su questo dispositivo</strong> per facilitare le segnalazioni future. Puoi cancellarli in qualsiasi momento.
             </div>
           </div>
 
@@ -372,8 +359,7 @@
               name="dataAvvistamento"
             />
             <div class="help-text">
-              Se la foto contiene la data di scatto, questo campo può essere
-              compilato automaticamente.
+              Se la foto contiene la data di scatto, questo campo può compilarsi automaticamente.
             </div>
           </div>
 
@@ -383,10 +369,7 @@
 
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
-              📍 Se la foto contiene dati GPS, la posizione può essere
-              compilata automaticamente. In caso contrario, controlla che la
-              posizione sulla mappa corrisponda al luogo di avvistamento
-              oppure trascina il marcatore per correggerla.
+              📍 Se la foto include dati GPS, la posizione si compila automaticamente. In caso contrario verifica la mappa e, se necessario, trascina il marcatore sul punto corretto.
             </div>
             <div id="map"></div>
             <div class="map-coords">
@@ -398,7 +381,7 @@
 
           <!-- ESITO IDENTIFICAZIONE -->
           <hr />
-          <div class="section-title">🌱 Esito identificazione</div>
+          <div class="section-title">🌱 Risultato identificazione</div>
 
           <div class="form-line">
             <label for="affidabilita">Affidabilità</label>
@@ -412,7 +395,7 @@
           </div>
 
           <div class="form-line">
-            <label for="interpretazioneAffidabilita">Interpretazione affidabilità</label>
+            <label for="interpretazioneAffidabilita">Commento affidabilità</label>
             <textarea
               id="interpretazioneAffidabilita"
               name="interpretazioneAffidabilita"
@@ -461,20 +444,9 @@
 
           <div class="form-line">
             <div class="text-block" style="margin-bottom: 6px">
-              Il sottoscritto autorizza il trattamento dei dati personali nel
-              rispetto della vigente normativa sulla protezione dei dati
-              personali ed, in particolare, del Regolamento Europeo (UE)
-              2016/679 (GDPR).<br /><br />
-              I dati raccolti tramite questo modulo includono le informazioni
-              inserite manualmente (ad esempio e-mail, data e posizione) e,
-              se presenti, i <strong>metadati delle immagini caricate</strong>
-              (come <strong>data di scatto</strong> e
-              <strong>coordinate GPS</strong>), che possono essere utilizzati
-              <strong>esclusivamente per compilare automaticamente i campi di
-              data e localizzazione del modulo</strong>.<br /><br />
-              Nessun dato aggiuntivo viene conservato o utilizzato per
-              finalità diverse dall’identificazione della specie vegetale e
-              dalla registrazione della segnalazione.
+              Autorizzo il trattamento dei dati personali ai sensi del Regolamento (UE) 2016/679 (GDPR).<br /><br />
+              Le informazioni inserite nel modulo e i <strong>metadati delle immagini</strong> (es. data di scatto e coordinate GPS) sono utilizzati <strong>solo per l’identificazione della specie vegetale e per registrare la segnalazione</strong>.<br /><br />
+              Nessun dato viene utilizzato per finalità diverse da quelle indicate.
             </div>
             <div class="radio-inline">
               <label>
@@ -513,8 +485,7 @@
               ✅ Modulo inviato con successo! Puoi inserire una nuova segnalazione.
             </div>
             <div class="help-text" style="margin-top: 4px">
-              Questo modulo è potenziato dal servizio di riconoscimento
-              automatico PlantNet.
+              Il riconoscimento è generato automaticamente da PlantNet e fornisce un’indicazione preliminare, da confermare se necessario con verifica botanica.
             </div>
           </div>
         </form>
@@ -1092,5 +1063,3 @@
     ></script>
   </body>
 </html>
-
-
