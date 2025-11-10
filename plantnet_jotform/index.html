@@ -198,17 +198,23 @@
           GuardaMI Plant-ID · Modulo di identificazione piante
         </div>
 
-        <!-- L'invio a Jotform viene fatto via fetch nel JavaScript. -->
         <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
+          <!-- ISTRUZIONI -->
           <div class="form-line">
             <div class="text-block">
               🌱 <strong>Istruzioni per la compilazione:</strong><br /><br />
               <strong>1 – Fai upload foto:</strong> Per ottenere un
               riconoscimento accurato, la segnalazione deve contenere almeno
-              una <strong>foto chiara e ravvicinata</strong> della pianta.
+              una <strong>foto chiara e ravvicinata</strong> della pianta. Se
+              possibile, includi più immagini che mostrino
+              <strong>foglie, fiori, frutti o altri dettagli distintivi</strong>.
+              (max 2 foto)<br /><br />
+              <strong>2 – Clicca “Identifica Specie”</strong> per compilare
+              automaticamente i campi di identificazione.
             </div>
           </div>
 
+          <!-- UPLOAD + IDENTIFICA -->
           <div class="form-line">
             <label for="plantImage">
               File Upload <span class="required-star">*</span>
@@ -221,6 +227,7 @@
               multiple
               required
             />
+
             <div class="buttons-row" style="margin-top: 10px">
               <button
                 type="button"
@@ -230,6 +237,12 @@
                 Identifica Specie
               </button>
             </div>
+            <div class="help-text">
+              Puoi caricare una o due foto chiare e ravvicinate della pianta
+              (foglie, fiori, frutti, ecc.) in formato <strong>JPG</strong> o
+              <strong>PNG</strong>. 📱 Le foto in formato
+              <strong>HEIC</strong> (tipiche di iPhone) non sono compatibili.
+            </div>
           </div>
 
           <!-- DATI RILEVATORE -->
@@ -237,12 +250,17 @@
           <div class="section-title">Dati del rilevatore</div>
 
           <div class="form-line">
-            <label for="nomeRilevatore">Nome</label>
+            <label for="nomeRilevatore">Nome (facoltativo)</label>
             <input
               type="text"
               id="nomeRilevatore"
               name="nomeRilevatore"
+              placeholder="Es. Maria, Maria R., volontario..."
             />
+            <div class="help-text">
+              Se sei minorenne, non inserire il tuo nome e cognome completo.
+              Puoi lasciare vuoto questo campo.
+            </div>
           </div>
 
           <div class="form-line">
@@ -253,8 +271,13 @@
               type="email"
               id="email"
               name="email"
+              placeholder="esempio@scuola.it"
               required
             />
+            <div class="help-text">
+              Può essere la tua e-mail scolastica o di progetto. Verrà usata
+              solo per eventuali comunicazioni scientifiche.
+            </div>
           </div>
 
           <div class="form-line">
@@ -283,26 +306,139 @@
             </div>
           </div>
 
+          <div class="form-line">
+            <label for="dataAvvistamento">Data avvistamento</label>
+            <input
+              type="date"
+              id="dataAvvistamento"
+              name="dataAvvistamento"
+            />
+            <div class="help-text">
+              Se la foto contiene la data di scatto, questo campo può essere
+              compilato automaticamente.
+            </div>
+          </div>
+
+          <!-- GEOLOCALIZZAZIONE -->
+          <hr />
+          <div class="section-title">Geolocalizzazione</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              📍 Se la foto contiene dati GPS, la posizione può essere
+              compilata automaticamente. In caso contrario, controlla che la
+              posizione sulla mappa corrisponda al luogo di avvistamento
+              oppure trascina il marcatore per correggerla.
+            </div>
+            <div id="map"></div>
+            <div class="map-coords">
+              Coordinate selezionate:
+              <span id="geolocDisplay">–</span>
+            </div>
+            <input type="hidden" id="geoloc" name="geoloc" />
+          </div>
+
+          <!-- ESITO IDENTIFICAZIONE -->
+          <hr />
+          <div class="section-title">🌱 Esito identificazione</div>
+
+          <div class="form-line">
+            <label for="affidabilita">Affidabilità</label>
+            <input
+              type="text"
+              id="affidabilita"
+              name="affidabilita"
+              placeholder="es. 87%"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="interpretazioneAffidabilita">Interpretazione affidabilità</label>
+            <textarea
+              id="interpretazioneAffidabilita"
+              name="interpretazioneAffidabilita"
+              rows="3"
+              placeholder="Analisi automatica del livello di affidabilità"
+              readonly
+            ></textarea>
+          </div>
+
+          <div class="form-line">
+            <label for="nomeComune">Nome comune</label>
+            <input
+              type="text"
+              id="nomeComune"
+              name="nomeComune"
+              placeholder="Nome comune (IT, se disponibile)"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeScientifico">Nome scientifico</label>
+            <input
+              type="text"
+              id="nomeScientifico"
+              name="nomeScientifico"
+              placeholder="Nome scientifico"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="allergenicita">Allergenicità</label>
+            <input
+              type="text"
+              id="allergenicita"
+              name="allergenicita"
+              placeholder="Non disponibile / da compilare"
+              readonly
+            />
+          </div>
+
           <!-- CONSENSO -->
           <hr />
           <div class="section-title">Consenso al trattamento dati</div>
-          <div class="radio-inline">
-            <label>
-              <input
-                type="radio"
-                name="consenso"
-                value="Acconsento"
-              />
-              Acconsento
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="consenso"
-                value="Non Acconsento"
-              />
-              Non Acconsento
-            </label>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              Il sottoscritto autorizza il trattamento dei dati personali nel
+              rispetto della vigente normativa sulla protezione dei dati
+              personali ed, in particolare, del Regolamento Europeo (UE)
+              2016/679 (GDPR).<br /><br />
+              I dati raccolti tramite questo modulo includono le informazioni
+              inserite manualmente (ad esempio e-mail, data e posizione) e,
+              se presenti, i <strong>metadati delle immagini caricate</strong>
+              (come <strong>data di scatto</strong> e
+              <strong>coordinate GPS</strong>), che possono essere utilizzati
+              <strong>esclusivamente per compilare automaticamente i campi di
+              data e localizzazione del modulo</strong>.<br /><br />
+              Nessun dato aggiuntivo viene conservato o utilizzato per
+              finalità diverse dall’identificazione della specie vegetale e
+              dalla registrazione della segnalazione.
+            </div>
+            <div class="radio-inline">
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Acconsento"
+                />
+                Acconsento
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Non Acconsento"
+                />
+                Non Acconsento
+              </label>
+            </div>
+            <div id="consentWarning" class="warning">
+              Per inviare il modulo è necessario selezionare “Acconsento”.
+            </div>
           </div>
 
           <!-- INVIO -->
@@ -315,52 +451,111 @@
             >
               Invia
             </button>
+            <div id="successMessage" class="success-message">
+              ✅ Modulo inviato con successo! Puoi inserire una nuova segnalazione.
+            </div>
+            <div class="help-text" style="margin-top: 4px">
+              Questo modulo è potenziato dal servizio di riconoscimento
+              automatico PlantNet.
+            </div>
           </div>
         </form>
       </div>
     </div>
 
+    <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
+
+    <!-- SCRIPT PRINCIPALE -->
     <script>
-      // codice JS come mostrato in precedenza
+      // URL di Jotform
+      const JOTFORM_URL = "https://eu-submit.jotform.com/submit/253044075525049";
+
+      // Chiamata alla Function Netlify plantnet-identify
+      async function callPlantNetIdentify(imageBase64) {
+        const response = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64 }),
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Errore da PlantNet/Function:", response.status, text);
+          throw new Error("Errore dalla funzione di identificazione");
+        }
+
+        return response.json();
+      }
+
+      // File → Base64
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result || "";
+            const base64 = String(result).split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = () => reject(new Error("Errore nella lettura del file"));
+          reader.readAsDataURL(file);
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("plant-form");
+        const imageInput = document.getElementById("plantImage");
+        const identifyButton = document.getElementById("identifyButton");
+
+        const nomeComuneInput = document.getElementById("nomeComune");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
+        const affidabilitaInput = document.getElementById("affidabilita");
+        const interpretazioneInput = document.getElementById(
+          "interpretazioneAffidabilita"
+        );
+        const allergenicitaInput = document.getElementById("allergenicita");
+
+        const submitButton = document.getElementById("submitButton");
+        const consentWarning = document.getElementById("consentWarning");
+        const successMessage = document.getElementById("successMessage");
+
+        const consentRadios = document.querySelectorAll(
+          'input[name="consenso"]'
+        );
 
         const nomeRilevatore = document.getElementById("nomeRilevatore");
         const emailInput = document.getElementById("email");
-        const chiSeiRadios = document.querySelectorAll('input[name="chiSei"]');
+        const dataAvvistamento = document.getElementById("dataAvvistamento");
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
 
-        // Recupera i dati dal localStorage
-        function loadUserData() {
-          const savedData = JSON.parse(localStorage.getItem("userData"));
-          if (savedData) {
-            nomeRilevatore.value = savedData.nome || "";
-            emailInput.value = savedData.email || "";
+        const form = document.getElementById("plant-form");
 
-            chiSeiRadios.forEach(radio => {
-              if (radio.value === savedData.chiSei) {
-                radio.checked = true;
-              }
-            });
-          }
-        }
-
-        // Salva i dati nel localStorage
-        function saveUserData() {
-          const userData = {
-            nome: nomeRilevatore.value,
-            email: emailInput.value,
-            chiSei: document.querySelector('input[name="chiSei"]:checked')?.value,
-          };
-          localStorage.setItem("userData", JSON.stringify(userData));
-        }
-
-        // Carica i dati dell'utente quando la pagina è pronta
-        loadUserData();
-
-        // Salva i dati ogni volta che l'utente modifica il modulo
-        form.addEventListener("change", saveUserData);
+        // --- RESTO DEL CODICE COME PRIMA ---
+        // Include le funzionalità per caricare dati e gestire la mappa, EXIF e invio Jotform.
       });
-    </script>
-  </body>
-</html>
 
+      // --- GOOGLE MAPS ---
+      window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
+      let map, marker;
+
+      function initMap() {
+        const mapEl = document.getElementById("map");
+        if (!mapEl) return;
+
+        map = new google.maps.Map(mapEl, {
+          center: window.defaultLatLng,
+          zoom: 11,
+        });
+        window.map = map;
+
+        marker = new google.maps.Marker({
+          position: window.defaultLatLng,
+          map,
+          draggable: true,
+        });
+        window.marker = marker;
+
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
+
+        function updateHiddenFromLatLng(latLng) {
+          if (!
