@@ -1,0 +1,11 @@
+{
+  "name": "plantnet_jotform",
+  "version": "1.0.0",
+  "description": "WebApp GuardaMI Plant-ID - integrazione PlantNet + Jotform + Netlify",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo \"Static site\"",
+    "start": "npx netlify dev"
+  },
+  "license": "MIT"
+}
