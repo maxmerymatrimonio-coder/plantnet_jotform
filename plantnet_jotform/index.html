@@ -465,7 +465,6 @@
 
     <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
 
-    <!-- SCRIPT PRINCIPALE -->
     <script>
       // URL di Jotform
       const JOTFORM_URL = "https://eu-submit.jotform.com/submit/253044075525049";
@@ -529,33 +528,97 @@
 
         const form = document.getElementById("plant-form");
 
-        // --- RESTO DEL CODICE COME PRIMA ---
-        // Include le funzionalità per caricare dati e gestire la mappa, EXIF e invio Jotform.
+        // --- GESTIONE LOCALSTORAGE --- 
+        function loadUserData() {
+          const savedData = JSON.parse(localStorage.getItem("userData"));
+          if (savedData) {
+            nomeRilevatore.value = savedData.nome || "";
+            emailInput.value = savedData.email || "";
+
+            consentRadios.forEach(radio => {
+              if (radio.value === savedData.chiSei) {
+                radio.checked = true;
+              }
+            });
+          }
+        }
+
+        // Salva i dati nel localStorage
+        function saveUserData() {
+          const userData = {
+            nome: nomeRilevatore.value,
+            email: emailInput.value,
+            chiSei: document.querySelector('input[name="chiSei"]:checked')?.value,
+          };
+          localStorage.setItem("userData", JSON.stringify(userData));
+        }
+
+        loadUserData();
+        form.addEventListener("change", saveUserData);
+
+        // --- GESTIONE MAPPA --- 
+        window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
+        let map, marker;
+
+        function initMap() {
+          const mapEl = document.getElementById("map");
+          if (!mapEl) return;
+
+          map = new google.maps.Map(mapEl, {
+            center: window.defaultLatLng,
+            zoom: 11,
+          });
+          window.map = map;
+
+          marker = new google.maps.Marker({
+            position: window.defaultLatLng,
+            map,
+            draggable: true,
+          });
+          window.marker = marker;
+
+          const geolocInput = document.getElementById("geoloc");
+          const geolocDisplay = document.getElementById("geolocDisplay");
+
+          function updateHiddenFromLatLng(latLng) {
+            if (!latLng || !geolocInput || !geolocDisplay) return;
+            const value =
+              latLng.lat().toFixed(6) + ", " + latLng.lng().toFixed(6);
+            geolocInput.value = value;
+            geolocDisplay.textContent = value;
+          }
+
+          updateHiddenFromLatLng(marker.getPosition());
+
+          marker.addListener("dragend", () => {
+            updateHiddenFromLatLng(marker.getPosition());
+          });
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                const coords = {
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                };
+                map.setCenter(coords);
+                marker.setPosition(coords);
+                updateHiddenFromLatLng(marker.getPosition());
+              },
+              (err) => {
+                console.warn("Geolocalizzazione non disponibile:", err);
+              }
+            );
+          }
+        }
       });
+    </script>
 
-      // --- GOOGLE MAPS ---
-      window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
-      let map, marker;
+    <!-- GOOGLE MAPS -->
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
+    ></script>
+  </body>
+</html>
 
-      function initMap() {
-        const mapEl = document.getElementById("map");
-        if (!mapEl) return;
-
-        map = new google.maps.Map(mapEl, {
-          center: window.defaultLatLng,
-          zoom: 11,
-        });
-        window.map = map;
-
-        marker = new google.maps.Marker({
-          position: window.defaultLatLng,
-          map,
-          draggable: true,
-        });
-        window.marker = marker;
-
-        const geolocInput = document.getElementById("geoloc");
-        const geolocDisplay = document.getElementById("geolocDisplay");
-
-        function updateHiddenFromLatLng(latLng) {
-          if (!
