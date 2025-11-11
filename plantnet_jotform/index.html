@@ -578,11 +578,12 @@
             if (data.email && emailInput) {
               emailInput.value = data.email;
             }
-            } catch (e) {
+} catch (e) {
             console.warn("Impossibile caricare i dati utente da localStorage:", e);
           }
         }
 
+        
         function saveUserDataToStorage() {
           try {
             const data = {
@@ -604,6 +605,7 @@
           }
         }
 
+        
         function clearUserDataFromStorageAndForm() {
           try {
             window.localStorage.removeItem(USER_DATA_STORAGE_KEY);
@@ -615,7 +617,7 @@
           } catch (e) {
             console.warn("Impossibile rimuovere i dati condivisi con la home da localStorage:", e);
           }
-if (nomeRilevatore) nomeRilevatore.value = "";
+          if (nomeRilevatore) nomeRilevatore.value = "";
           if (emailInput) emailInput.value = "";
           chiSeiRadios.forEach((r) => {
             r.checked = false;
