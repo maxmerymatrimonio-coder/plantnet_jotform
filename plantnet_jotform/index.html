@@ -578,31 +578,27 @@
             if (data.email && emailInput) {
               emailInput.value = data.email;
             }
-            if (data.chiSei) {
-              const r = document.querySelector(
-                'input[name="chiSei"][value="' + data.chiSei + '"]'
-              );
-              if (r) r.checked = true;
-            }
-          } catch (e) {
+            } catch (e) {
             console.warn("Impossibile caricare i dati utente da localStorage:", e);
           }
         }
 
         function saveUserDataToStorage() {
           try {
-            const chiSeiChecked = document.querySelector(
-              'input[name="chiSei"]:checked'
-            );
             const data = {
               nomeRilevatore: nomeRilevatore ? nomeRilevatore.value || "" : "",
               email: emailInput ? emailInput.value || "" : "",
-              chiSei: chiSeiChecked ? chiSeiChecked.value : "",
             };
             window.localStorage.setItem(
               USER_DATA_STORAGE_KEY,
               JSON.stringify(data)
             );
+            // Dati condivisi con la home (solo nome + mail)
+            const homeData = {
+              nome: nomeRilevatore ? nomeRilevatore.value || "" : "",
+              mail: emailInput ? emailInput.value || "" : "",
+            };
+            window.localStorage.setItem("userData", JSON.stringify(homeData));
           } catch (e) {
             console.warn("Impossibile salvare i dati utente in localStorage:", e);
           }
@@ -614,7 +610,12 @@
           } catch (e) {
             console.warn("Impossibile rimuovere i dati utente da localStorage:", e);
           }
-          if (nomeRilevatore) nomeRilevatore.value = "";
+          try {
+            window.localStorage.removeItem("userData");
+          } catch (e) {
+            console.warn("Impossibile rimuovere i dati condivisi con la home da localStorage:", e);
+          }
+if (nomeRilevatore) nomeRilevatore.value = "";
           if (emailInput) emailInput.value = "";
           chiSeiRadios.forEach((r) => {
             r.checked = false;
@@ -640,7 +641,7 @@
           clearSavedUserDataButton.addEventListener("click", () => {
             clearUserDataFromStorageAndForm();
             alert(
-              "I dati di nome, e-mail e ruolo salvati su questo dispositivo sono stati cancellati."
+              "I dati di nome ed e-mail salvati su questo dispositivo sono stati cancellati."
             );
           });
         }
@@ -1063,3 +1064,4 @@
     ></script>
   </body>
 </html>
+
