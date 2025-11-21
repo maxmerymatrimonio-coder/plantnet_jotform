@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>GuardaMI Plant-ID - Area Metropolitana di Milano</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      /* --- STILE GENERALE --- */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #2461b7;
+        color: #12458c;
+      }
+
+      .page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 24px 12px;
+      }
+
+      .form-all {
+        background-color: #d6e7ff;
+        max-width: 752px;
+        width: 100%;
+        border-radius: 8px;
+        padding: 24px 20px 32px 20px;
+        box-sizing: border-box;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+
+      h1 {
+        margin: 0 0 4px 0;
+        font-size: 24px;
+        text-align: center;
+      }
+
+      .form-subHeader {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+
+      .form-line {
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      .required-star {
+        color: #dc2626;
+        margin-left: 3px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="date"],
+      input[type="file"],
+      textarea,
+      .fake-input {
+        width: 100%;
+        max-width: 310px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #9cb5dd;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        font-size: 14px;
+      }
+
+      input[readonly],
+      textarea[readonly] {
+        background-color: #f3f4ff;
+      }
+
+      .radio-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .radio-inline label {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 400;
+      }
+
+      .help-text {
+        font-size: 13px;
+        color: #2c5fa6;
+      }
+
+      .section-title {
+        font-weight: 600;
+        margin-top: 18px;
+        margin-bottom: 6px;
+      }
+
+      .text-block {
+        font-size: 14px;
+        text-align: justify;
+      }
+
+      .buttons-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background-color 0.15s ease, transform 0.05s ease,
+          box-shadow 0.15s ease;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background-color: #1d4ed8;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background-color: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+      }
+
+      .btn-primary:disabled {
+        background-color: #9ca3af;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .btn-full {
+        width: 100%;
+        max-width: 310px;
+        justify-content: center;
+      }
+
+      /* Bottone "Dimentica dati salvati" con stessi colori del primario */
+      .btn-secondary {
+        background-color: #1d4ed8;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background-color: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+      }
+
+      /* Mappa */
+      #map {
+        width: 100%;
+        height: 300px;
+        border-radius: 6px;
+        border: 1px solid #9cb5dd;
+        overflow: hidden;
+      }
+
+      .map-coords {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #2c5fa6;
+      }
+
+      .warning {
+        font-size: 13px;
+        color: #b91c1c;
+        margin-top: 4px;
+        display: none;
+      }
+
+      hr {
+        border: none;
+        border-bottom: 1px solid #9cb5dd;
+        margin: 16px 0;
+      }
+
+      .success-message {
+        display: none;
+        margin-top: 8px;
+        font-size: 14px;
+        color: #166534;
+      }
+
+      #interpretazioneAffidabilita {
+        max-width: 100%;
+        min-height: 60px;
+      }
+
+      @media (max-width: 600px) {
+        .form-all {
+          padding: 16px 12px 24px 12px;
+        }
+        .form-line {
+          margin-top: 6px;
+          margin-bottom: 6px;
+        }
+        #interpretazioneAffidabilita {
+          width: 100%;
+          min-height: 70px;
+          line-height: 1.4;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="form-all">
+        <h1>Area Metropolitana di Milano</h1>
+        <div class="form-subHeader">
+          GuardaMI Plant-ID · Modulo di identificazione piante
+        </div>
+
+        <!-- L'invio a Jotform viene fatto via fetch nel JavaScript. -->
+        <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
+          <!-- ISTRUZIONI -->
+          <div class="form-line">
+            <div class="text-block">
+              🌱 <strong>Come compilare:</strong><br /><br />
+              1. Carica <strong>una o due foto nitide</strong> della pianta (foglie, fiori o frutti ben visibili).<br />
+              2. Clicca su <strong>“Identifica specie”</strong> per il riconoscimento automatico.
+            </div>
+          </div>
+
+          <!-- UPLOAD + IDENTIFICA -->
+          <div class="form-line">
+            <label for="plantImage">
+              File Upload <span class="required-star">*</span>
+            </label>
+            <input
+              type="file"
+              id="plantImage"
+              name="plantImage"
+              accept="image/*"
+              multiple
+              required
+            />
+
+            <div class="buttons-row" style="margin-top: 10px">
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="identifyButton"
+              >
+                Identifica Specie
+              </button>
+            </div>
+            <div class="help-text">
+              Carica fino a <strong>2 foto</strong> in formato <strong>JPG</strong> o <strong>PNG</strong> (no HEIC), con dettagli chiari della pianta.
+            </div>
+          </div>
+
+          <!-- DATI RILEVATORE -->
+          <hr />
+          <div class="section-title">Dati del rilevatore</div>
+
+          <div class="form-line">
+            <label for="nomeRilevatore">Nome (facoltativo)</label>
+            <input
+              type="text"
+              id="nomeRilevatore"
+              name="nomeRilevatore"
+              placeholder="Es. Maria, Maria R., volontario..."
+            />
+            <div class="help-text">
+              Se sei minorenne, non inserire nome e cognome completi. Campo facoltativo.
+            </div>
+          </div>
+
+          <div class="form-line">
+            <label for="email">
+              E-mail di riferimento <span class="required-star">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="esempio@scuola.it"
+              required
+            />
+            <div class="help-text">
+              Usa un’e-mail scolastica o di progetto. Verrà utilizzata solo per comunicazioni scientifiche.
+            </div>
+          </div>
+
+          <div class="form-line">
+            <label>
+              Chi sei? <span class="required-star">*</span>
+            </label>
+            <div class="radio-inline">
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Cittadino/Studente"
+                  required
+                />
+                Cittadino/Studente
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="chiSei"
+                  value="Esperto/Botanico"
+                  required
+                />
+                Esperto/Botanico
+              </label>
+            </div>
+          </div>
+
+          <!-- NUOVA SEZIONE: gestione dati salvati su dispositivo -->
+          <div class="form-line">
+            <div class="buttons-row">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="clearSavedUserData"
+              >
+                Dimentica dati salvati su questo dispositivo
+              </button>
+            </div>
+            <div class="help-text">
+              Nome, e-mail e ruolo vengono salvati <strong>solo su questo dispositivo</strong> per facilitare le segnalazioni future. Puoi cancellarli in qualsiasi momento.
+            </div>
+          </div>
+
+          <div class="form-line">
+            <label for="dataAvvistamento">Data avvistamento</label>
+            <input
+              type="date"
+              id="dataAvvistamento"
+              name="dataAvvistamento"
+            />
+            <div class="help-text">
+              Se la foto contiene la data di scatto, questo campo può compilarsi automaticamente.
+            </div>
+          </div>
+
+          <!-- GEOLOCALIZZAZIONE -->
+          <hr />
+          <div class="section-title">Geolocalizzazione</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              📍 Se la foto include dati GPS, la posizione si compila automaticamente. In caso contrario verifica la mappa e, se necessario, trascina il marcatore sul punto corretto.
+            </div>
+            <div id="map"></div>
+            <div class="map-coords">
+              Coordinate selezionate:
+              <span id="geolocDisplay">–</span>
+            </div>
+            <input type="hidden" id="geoloc" name="geoloc" />
+          </div>
+
+          <!-- ESITO IDENTIFICAZIONE -->
+          <hr />
+          <div class="section-title">🌱 Risultato identificazione</div>
+
+          <div class="form-line">
+            <label for="affidabilita">Affidabilità</label>
+            <input
+              type="text"
+              id="affidabilita"
+              name="affidabilita"
+              placeholder="es. 87%"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="interpretazioneAffidabilita">Commento affidabilità</label>
+            <textarea
+              id="interpretazioneAffidabilita"
+              name="interpretazioneAffidabilita"
+              rows="3"
+              placeholder="Analisi automatica del livello di affidabilità"
+              readonly
+            ></textarea>
+          </div>
+
+          <div class="form-line">
+            <label for="nomeComune">Nome comune</label>
+            <input
+              type="text"
+              id="nomeComune"
+              name="nomeComune"
+              placeholder="Nome comune (IT, se disponibile)"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="nomeScientifico">Nome scientifico</label>
+            <input
+              type="text"
+              id="nomeScientifico"
+              name="nomeScientifico"
+              placeholder="Nome scientifico"
+              readonly
+            />
+          </div>
+
+          <div class="form-line">
+            <label for="allergenicita">Allergenicità</label>
+            <input
+              type="text"
+              id="allergenicita"
+              name="allergenicita"
+              placeholder="Non disponibile / da compilare"
+              readonly
+            />
+          </div>
+
+          <!-- CONSENSO -->
+          <hr />
+          <div class="section-title">Consenso al trattamento dati</div>
+
+          <div class="form-line">
+            <div class="text-block" style="margin-bottom: 6px">
+              Autorizzo il trattamento dei dati personali ai sensi del Regolamento (UE) 2016/679 (GDPR).<br /><br />
+              Le informazioni inserite nel modulo e i <strong>metadati delle immagini</strong> (es. data di scatto e coordinate GPS) sono utilizzati <strong>solo per l’identificazione della specie vegetale e per registrare la segnalazione</strong>.<br /><br />
+              Nessun dato viene utilizzato per finalità diverse da quelle indicate.
+            </div>
+            <div class="radio-inline">
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Acconsento"
+                />
+                Acconsento
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="consenso"
+                  value="Non Acconsento"
+                />
+                Non Acconsento
+              </label>
+            </div>
+            <div id="consentWarning" class="warning">
+              Per inviare il modulo è necessario selezionare “Acconsento”.
+            </div>
+          </div>
+
+          <!-- INVIO -->
+          <div class="form-line" style="margin-top: 20px">
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="submitButton"
+              disabled
+            >
+              Invia
+            </button>
+            <div id="successMessage" class="success-message">
+              ✅ Modulo inviato con successo! Puoi inserire una nuova segnalazione.
+            </div>
+            <div class="help-text" style="margin-top: 4px">
+              Il riconoscimento è generato automaticamente da PlantNet e fornisce un’indicazione preliminare, da confermare se necessario con verifica botanica.
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Libreria per leggere EXIF (data + GPS) dai JPG/PNG -->
+    <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
+
+    <!-- SCRIPT PRINCIPALE -->
+    <script>
+      // URL di Jotform
+      const JOTFORM_URL = "https://eu-submit.jotform.com/submit/253044075525049";
+
+      // Chiave per localStorage: dati utente (nome, email, chiSei)
+      const USER_DATA_STORAGE_KEY = "guardaMI_plantid_userdata";
+
+      // Chiamata alla Function Netlify plantnet-identify
+      async function callPlantNetIdentify(imageBase64) {
+        const response = await fetch("/.netlify/functions/plantnet-identify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64 }),
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("Errore da PlantNet/Function:", response.status, text);
+          throw new Error("Errore dalla funzione di identificazione");
+        }
+
+        return response.json();
+      }
+
+      // File → Base64
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result || "";
+            const base64 = String(result).split(",")[1] || "";
+            resolve(base64);
+          };
+          reader.onerror = () => reject(new Error("Errore nella lettura del file"));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const imageInput = document.getElementById("plantImage");
+        const identifyButton = document.getElementById("identifyButton");
+
+        const nomeComuneInput = document.getElementById("nomeComune");
+        const nomeScientificoInput = document.getElementById("nomeScientifico");
+        const affidabilitaInput = document.getElementById("affidabilita");
+        const interpretazioneInput = document.getElementById(
+          "interpretazioneAffidabilita"
+        );
+        const allergenicitaInput = document.getElementById("allergenicita");
+
+        const submitButton = document.getElementById("submitButton");
+        const consentWarning = document.getElementById("consentWarning");
+        const successMessage = document.getElementById("successMessage");
+
+        const consentRadios = document.querySelectorAll(
+          'input[name="consenso"]'
+        );
+
+        const nomeRilevatore = document.getElementById("nomeRilevatore");
+        const emailInput = document.getElementById("email");
+        const dataAvvistamento = document.getElementById("dataAvvistamento");
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
+        const clearSavedUserDataButton = document.getElementById("clearSavedUserData");
+        const chiSeiRadios = document.querySelectorAll('input[name="chiSei"]');
+
+        const form = document.getElementById("plant-form");
+
+        // --- FUNZIONI PER SALVATAGGIO DATI UTENTE SU DISPOSITIVO ---
+
+        function loadUserDataFromStorage() {
+          try {
+            const raw = window.localStorage.getItem(USER_DATA_STORAGE_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.nomeRilevatore && nomeRilevatore) {
+              nomeRilevatore.value = data.nomeRilevatore;
+            }
+            if (data.email && emailInput) {
+              emailInput.value = data.email;
+            }
+} catch (e) {
+            console.warn("Impossibile caricare i dati utente da localStorage:", e);
+          }
+        }
+
+        
+        function saveUserDataToStorage() {
+          try {
+            const data = {
+              nomeRilevatore: nomeRilevatore ? nomeRilevatore.value || "" : "",
+              email: emailInput ? emailInput.value || "" : "",
+            };
+            window.localStorage.setItem(
+              USER_DATA_STORAGE_KEY,
+              JSON.stringify(data)
+            );
+            // Dati condivisi con la home (solo nome + mail)
+            const homeData = {
+              nome: nomeRilevatore ? nomeRilevatore.value || "" : "",
+              mail: emailInput ? emailInput.value || "" : "",
+            };
+            window.localStorage.setItem("userData", JSON.stringify(homeData));
+          } catch (e) {
+            console.warn("Impossibile salvare i dati utente in localStorage:", e);
+          }
+        }
+
+        
+        function clearUserDataFromStorageAndForm() {
+          try {
+            window.localStorage.removeItem(USER_DATA_STORAGE_KEY);
+          } catch (e) {
+            console.warn("Impossibile rimuovere i dati utente da localStorage:", e);
+          }
+          try {
+            window.localStorage.removeItem("userData");
+          } catch (e) {
+            console.warn("Impossibile rimuovere i dati condivisi con la home da localStorage:", e);
+          }
+          if (nomeRilevatore) nomeRilevatore.value = "";
+          if (emailInput) emailInput.value = "";
+          chiSeiRadios.forEach((r) => {
+            r.checked = false;
+          });
+        }
+
+        // Carica eventuali dati salvati al primo caricamento pagina
+        loadUserDataFromStorage();
+
+        // Salva automaticamente quando questi campi cambiano
+        if (nomeRilevatore) {
+          nomeRilevatore.addEventListener("change", saveUserDataToStorage);
+        }
+        if (emailInput) {
+          emailInput.addEventListener("change", saveUserDataToStorage);
+        }
+        chiSeiRadios.forEach((r) => {
+          r.addEventListener("change", saveUserDataToStorage);
+        });
+
+        // Bottone "Dimentica dati salvati su questo dispositivo"
+        if (clearSavedUserDataButton) {
+          clearSavedUserDataButton.addEventListener("click", () => {
+            clearUserDataFromStorageAndForm();
+            alert(
+              "I dati di nome ed e-mail salvati su questo dispositivo sono stati cancellati."
+            );
+          });
+        }
+
+        // 🔔 Popup immediato se viene caricato un HEIC + lettura EXIF JPG/PNG
+        imageInput.addEventListener("change", async () => {
+          const file = imageInput.files && imageInput.files[0];
+          if (!file) return;
+
+          const fileName = (file.name || "").toLowerCase();
+          const fileType = (file.type || "").toLowerCase();
+
+          const isHeic =
+            fileType.includes("heic") ||
+            fileName.endsWith(".heic") ||
+            fileName.endsWith(".heif");
+
+          if (isHeic) {
+            alert(
+              "📸 Suggerimento per utenti iPhone:\n\n" +
+                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
+                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
+                "e poi caricala qui in formato JPG."
+            );
+            // svuota il campo, così devono scegliere un JPG/PNG
+            imageInput.value = "";
+            return;
+          }
+
+          // Se non è HEIC e la libreria exifr è presente, proviamo a leggere EXIF
+          if (window.exifr && typeof exifr.parse === "function") {
+            try {
+              const meta = await exifr.parse(file);
+
+              if (meta) {
+                // Data di scatto → DateTimeOriginal
+                if (meta.DateTimeOriginal instanceof Date && dataAvvistamento) {
+                  const d = meta.DateTimeOriginal;
+                  const yyyy = d.getFullYear();
+                  const mm = String(d.getMonth() + 1).padStart(2, "0");
+                  const dd = String(d.getDate()).padStart(2, "0");
+                  dataAvvistamento.value = `${yyyy}-${mm}-${dd}`;
+                }
+
+                // GPS → latitude / longitude in decimali
+                if (
+                  typeof meta.latitude === "number" &&
+                  typeof meta.longitude === "number" &&
+                  geolocInput &&
+                  geolocDisplay
+                ) {
+                  const coords = {
+                    lat: meta.latitude,
+                    lng: meta.longitude,
+                  };
+
+                  // Aggiorna mappa e marker (se già inizializzati)
+                  if (window.map && window.marker) {
+                    window.map.setCenter(coords);
+                    window.marker.setPosition(coords);
+                  }
+
+                  const val =
+                    coords.lat.toFixed(6) + ", " + coords.lng.toFixed(6);
+                  geolocInput.value = val;
+                  geolocDisplay.textContent = val;
+                }
+              }
+            } catch (ex) {
+              console.warn("Impossibile leggere EXIF dall'immagine:", ex);
+            }
+          }
+        });
+
+        // Gestione consenso (abilita/disabilita INVIA)
+        consentRadios.forEach((radio) => {
+          radio.addEventListener("change", () => {
+            if (radio.value === "Acconsento" && radio.checked) {
+              submitButton.disabled = false;
+              consentWarning.style.display = "none";
+            } else if (radio.value === "Non Acconsento" && radio.checked) {
+              submitButton.disabled = true;
+              consentWarning.style.display = "block";
+            }
+          });
+        });
+
+        // IDENTIFICA SPECIE
+        identifyButton.addEventListener("click", async () => {
+          if (!imageInput.files || !imageInput.files[0]) {
+            alert("Per favore carica prima almeno una foto della pianta.");
+            return;
+          }
+
+          if (imageInput.files.length > 2) {
+            alert("Puoi caricare al massimo 2 foto.");
+            return;
+          }
+
+          const file = imageInput.files[0]; // prima foto per PlantNet
+          const fileName = (file.name || "").toLowerCase();
+          const fileType = (file.type || "").toLowerCase();
+
+          const isHeic =
+            fileType.includes("heic") ||
+            fileName.endsWith(".heic") ||
+            fileName.endsWith(".heif");
+
+          if (isHeic) {
+            // difesa ulteriore se per qualche motivo passa dal change
+            alert(
+              "📸 Suggerimento per utenti iPhone:\n\n" +
+                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
+                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
+                "e poi caricala qui in formato JPG."
+            );
+            return;
+          }
+
+          const originalText = identifyButton.textContent;
+          identifyButton.textContent = "Identificazione in corso...";
+          identifyButton.disabled = true;
+
+          try {
+            const base64 = await fileToBase64(file);
+
+            if (!base64) {
+              alert("Errore nella lettura dell'immagine.");
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
+              return;
+            }
+
+            const result = await callPlantNetIdentify(base64);
+
+            // se PlantNet non trova specie
+            if (!result || !result.scientificName) {
+              alert(
+                "Nessuna specie trovata.\n\n" +
+                  "Prova a caricare una foto più chiara e ravvicinata " +
+                  "della pianta (foglie, fiori o frutti ben visibili)."
+              );
+              identifyButton.textContent = originalText;
+              identifyButton.disabled = false;
+              return;
+            }
+
+            nomeScientificoInput.value = result.scientificName || "";
+            nomeComuneInput.value = result.commonName || "";
+            allergenicitaInput.value = result.allergenicity || "N/D";
+
+            // Interpretazione affidabilità
+            let rawReliability = parseFloat(result.reliability);
+            if (isNaN(rawReliability)) rawReliability = 0;
+
+            let percentuale = 0;
+            if (rawReliability <= 1) {
+              percentuale = Math.round(rawReliability * 100);
+            } else {
+              percentuale = Math.round(rawReliability);
+            }
+
+            function getAffidabilita(percentuale) {
+              let testo = "", colore = "", icona = "";
+              if (percentuale >= 90) {
+                testo = "Altamente probabile che la specie sia corretta.";
+                colore = "#00b050"; icona = "✅";
+              } else if (percentuale >= 70) {
+                testo = "Buona probabilità che il genere sia corretto, ma la specie potrebbe essere confusa con altre simili.";
+                colore = "#92d050"; icona = "🔎";
+              } else if (percentuale >= 50) {
+                testo = "Riconoscimento plausibile: probabile che il genere sia corretto, ma la specie è solo una delle possibili.";
+                colore = "#ffc000"; icona = "⚠️";
+              } else if (percentuale >= 30) {
+                testo = "Bassa affidabilità: può aver confuso la pianta con specie simili.";
+                colore = "#ff6600"; icona = "❌";
+              } else {
+                testo = "Risultato poco significativo: ripeti la foto o prova un’altra angolazione.";
+                colore = "#ff0000"; icona = "🚫";
+              }
+              return { testo, colore, icona };
+            }
+
+            const info = getAffidabilita(percentuale);
+
+            affidabilitaInput.value = `${percentuale}%`;
+
+            if (interpretazioneInput) {
+              interpretazioneInput.value = `${info.icona} ${percentuale}% – ${info.testo}`;
+              interpretazioneInput.style.color = info.colore;
+              interpretazioneInput.style.fontWeight = "bold";
+            }
+
+            window.scrollTo({
+              top:
+                nomeScientificoInput.getBoundingClientRect().top +
+                window.scrollY -
+                80,
+              behavior: "smooth",
+            });
+          } catch (err) {
+            console.error(err);
+            alert("Errore imprevisto durante l'identificazione.");
+          } finally {
+            identifyButton.textContent = originalText;
+            identifyButton.disabled = false;
+          }
+        });
+
+        // INVIO A JOTFORM
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          successMessage.style.display = "none";
+
+          const consentValue = (
+            new FormData(form).get("consenso") || ""
+          ).toString();
+          if (consentValue !== "Acconsento") {
+            submitButton.disabled = true;
+            consentWarning.style.display = "block";
+            window.scrollTo({
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+            return;
+          }
+
+          if (!imageInput.files || !imageInput.files[0]) {
+            alert("Per inviare il modulo devi caricare almeno una foto.");
+            return;
+          }
+
+          if (imageInput.files.length > 2) {
+            alert("Puoi caricare al massimo 2 foto.");
+            return;
+          }
+
+          const originalText = submitButton.textContent;
+          submitButton.disabled = true;
+          submitButton.textContent = "Invio in corso...";
+
+          // 🔐 Prima dell'invio, salviamo/aggiorniamo i dati utente in localStorage
+          saveUserDataToStorage();
+
+          try {
+            const formData = new FormData();
+
+            formData.append("formID", "253044075525049");
+
+            // tutte le foto caricate (max 2)
+            for (let i = 0; i < imageInput.files.length; i++) {
+              formData.append("q8_fileUpload[]", imageInput.files[i]);
+            }
+
+            formData.append("q7_Nome_comune", nomeComuneInput.value || "");
+            formData.append(
+              "q9_Nome_Scientifico",
+              nomeScientificoInput.value || ""
+            );
+            formData.append("q12_affidabilita", affidabilitaInput.value || "");
+            formData.append(
+              "q13_allergenicita",
+              allergenicitaInput.value || ""
+            );
+
+            // Nome facoltativo → tutto in "first"
+            formData.append(
+              "q22_rilevatore[first]",
+              nomeRilevatore.value || ""
+            );
+            formData.append("q22_rilevatore[last]", "");
+
+            formData.append("q23_email", emailInput.value || "");
+
+            const chiSeiRadio = document.querySelector(
+              'input[name="chiSei"]:checked'
+            );
+            formData.append(
+              "q24_chiSei",
+              chiSeiRadio ? chiSeiRadio.value : ""
+            );
+
+            const dateStr = (dataAvvistamento.value || "").trim();
+            if (dateStr) {
+              const parts = dateStr.split("-");
+              if (parts.length === 3) {
+                const year = parts[0];
+                const month = parts[1];
+                const day = parts[2];
+                formData.append("q25_dataAvvistamento[day]", day);
+                formData.append("q25_dataAvvistamento[month]", month);
+                formData.append("q25_dataAvvistamento[year]", year);
+              }
+            }
+
+            formData.append("q21_scriviUna", geolocInput.value || "");
+            formData.append("q27_ilSottoscritto", consentValue);
+
+            // Interpretazione affidabilità → campo Jotform q30
+            if (interpretazioneInput && interpretazioneInput.value) {
+              formData.append(
+                "q30_interpretazioneAffidabilita",
+                interpretazioneInput.value
+              );
+            }
+
+            await fetch(JOTFORM_URL, {
+              method: "POST",
+              mode: "no-cors",
+              body: formData,
+            });
+
+            successMessage.style.display = "block";
+            alert(
+              "Modulo inviato con successo! Riceverai la conferma da Jotform. Puoi inserire una nuova segnalazione."
+            );
+
+            form.reset();
+            submitButton.disabled = true;
+            consentWarning.style.display = "none";
+            submitButton.textContent = originalText;
+
+            nomeComuneInput.value = "";
+            nomeScientificoInput.value = "";
+            affidabilitaInput.value = "";
+            allergenicitaInput.value = "";
+            if (interpretazioneInput) {
+              interpretazioneInput.value = "";
+              interpretazioneInput.style.color = "";
+              interpretazioneInput.style.fontWeight = "";
+            }
+
+            if (window.marker && window.map && window.defaultLatLng) {
+              window.marker.setPosition(window.defaultLatLng);
+              window.map.setCenter(window.defaultLatLng);
+              const val =
+                window.defaultLatLng.lat.toFixed(6) +
+                ", " +
+                window.defaultLatLng.lng.toFixed(6);
+              geolocInput.value = val;
+              geolocDisplay.textContent = val;
+            }
+
+            // Dopo reset del form, ricarichiamo i dati salvati su dispositivo
+            loadUserDataFromStorage();
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } catch (err) {
+            console.error(err);
+            alert(
+              "Si è verificato un errore durante l'invio. Per favore riprova tra poco."
+            );
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          }
+        });
+      });
+
+      // --- GOOGLE MAPS ---
+      window.defaultLatLng = { lat: 45.4642, lng: 9.19 }; // Milano
+      let map, marker;
+
+      function initMap() {
+        const mapEl = document.getElementById("map");
+        if (!mapEl) return;
+
+        map = new google.maps.Map(mapEl, {
+          center: window.defaultLatLng,
+          zoom: 11,
+        });
+        window.map = map;
+
+        marker = new google.maps.Marker({
+          position: window.defaultLatLng,
+          map,
+          draggable: true,
+        });
+        window.marker = marker;
+
+        const geolocInput = document.getElementById("geoloc");
+        const geolocDisplay = document.getElementById("geolocDisplay");
+
+        function updateHiddenFromLatLng(latLng) {
+          if (!latLng || !geolocInput || !geolocDisplay) return;
+          const value =
+            latLng.lat().toFixed(6) + ", " + latLng.lng().toFixed(6);
+          geolocInput.value = value;
+          geolocDisplay.textContent = value;
+        }
+
+        updateHiddenFromLatLng(marker.getPosition());
+
+        marker.addListener("dragend", () => {
+          updateHiddenFromLatLng(marker.getPosition());
+        });
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const coords = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+              };
+              map.setCenter(coords);
+              marker.setPosition(coords);
+              updateHiddenFromLatLng(marker.getPosition());
+            },
+            (err) => {
+              console.warn("Geolocalizzazione non disponibile:", err);
+            }
+          );
+        }
+      }
+    </script>
+
+    <!-- GOOGLE MAPS -->
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4l9n-f6M3LfIw6Qxh9e6e84jgTfMAyGU&callback=initMap"
+    ></script>
+  </body>
+</html>
