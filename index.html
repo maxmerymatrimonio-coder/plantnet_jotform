@@ -308,34 +308,7 @@
               Usa un’e-mail scolastica o di progetto. Verrà utilizzata solo per comunicazioni scientifiche.
             </div>
           </div>
-
-          <div class="form-line">
-            <label>
-              Chi sei? <span class="required-star">*</span>
-            </label>
-            <div class="radio-inline">
-              <label>
-                <input
-                  type="radio"
-                  name="chiSei"
-                  value="Cittadino/Studente"
-                  required
-                />
-                Cittadino/Studente
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="chiSei"
-                  value="Esperto/Botanico"
-                  required
-                />
-                Esperto/Botanico
-              </label>
-            </div>
-          </div>
-
-          <!-- NUOVA SEZIONE: gestione dati salvati su dispositivo -->
+<!-- NUOVA SEZIONE: gestione dati salvati su dispositivo -->
           <div class="form-line">
             <div class="buttons-row">
               <button
@@ -560,7 +533,6 @@
         const geolocInput = document.getElementById("geoloc");
         const geolocDisplay = document.getElementById("geolocDisplay");
         const clearSavedUserDataButton = document.getElementById("clearSavedUserData");
-        const chiSeiRadios = document.querySelectorAll('input[name="chiSei"]');
 
         const form = document.getElementById("plant-form");
 
@@ -619,9 +591,6 @@
           }
           if (nomeRilevatore) nomeRilevatore.value = "";
           if (emailInput) emailInput.value = "";
-          chiSeiRadios.forEach((r) => {
-            r.checked = false;
-          });
         }
 
         // Carica eventuali dati salvati al primo caricamento pagina
@@ -634,10 +603,6 @@
         if (emailInput) {
           emailInput.addEventListener("change", saveUserDataToStorage);
         }
-        chiSeiRadios.forEach((r) => {
-          r.addEventListener("change", saveUserDataToStorage);
-        });
-
         // Bottone "Dimentica dati salvati su questo dispositivo"
         if (clearSavedUserDataButton) {
           clearSavedUserDataButton.addEventListener("click", () => {
@@ -917,14 +882,6 @@
             formData.append("q22_rilevatore[last]", "");
 
             formData.append("q23_email", emailInput.value || "");
-
-            const chiSeiRadio = document.querySelector(
-              'input[name="chiSei"]:checked'
-            );
-            formData.append(
-              "q24_chiSei",
-              chiSeiRadio ? chiSeiRadio.value : ""
-            );
 
             const dateStr = (dataAvvistamento.value || "").trim();
             if (dateStr) {
