@@ -464,6 +464,7 @@
     </div>
 
     <!-- Libreria per leggere EXIF (data + GPS) dai JPG/PNG -->
+    <script src="https://unpkg.com/heic2any/dist/heic2any.min.js"></script>
     <script src="https://unpkg.com/exifr/dist/full.umd.js"></script>
 
     <!-- SCRIPT PRINCIPALE -->
@@ -491,8 +492,33 @@
         return response.json();
       }
 
-      // File → Base64
-      function fileToBase64(file) {
+      
+      // File → Base64 con supporto HEIC/HEIF → JPG
+      async function fileToBase64(file) {
+        const fileName = (file.name || "").toLowerCase();
+        const fileType = (file.type || "").toLowerCase();
+
+        const isHeic =
+          fileType.includes("heic") ||
+          fileName.endsWith(".heic") ||
+          fileName.endsWith(".heif");
+
+        let fileToProcess = file;
+
+        if (isHeic) {
+          try {
+            const convertedBlob = await heic2any({
+              blob: file,
+              toType: "image/jpeg",
+              quality: 0.9,
+            });
+            fileToProcess = convertedBlob;
+          } catch (err) {
+            console.error("Errore nella conversione HEIC:", err);
+            throw new Error("Impossibile convertire il file HEIC → JPG");
+          }
+        }
+
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => {
@@ -501,11 +527,10 @@
             resolve(base64);
           };
           reader.onerror = () => reject(new Error("Errore nella lettura del file"));
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(fileToProcess);
         });
       }
-
-      document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
         const imageInput = document.getElementById("plantImage");
         const identifyButton = document.getElementById("identifyButton");
 
@@ -624,18 +649,6 @@
             fileName.endsWith(".heic") ||
             fileName.endsWith(".heif");
 
-          if (isHeic) {
-            alert(
-              "📸 Suggerimento per utenti iPhone:\n\n" +
-                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
-                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
-                "e poi caricala qui in formato JPG."
-            );
-            // svuota il campo, così devono scegliere un JPG/PNG
-            imageInput.value = "";
-            return;
-          }
-
           // Se non è HEIC e la libreria exifr è presente, proviamo a leggere EXIF
           if (window.exifr && typeof exifr.parse === "function") {
             try {
@@ -714,17 +727,6 @@
             fileType.includes("heic") ||
             fileName.endsWith(".heic") ||
             fileName.endsWith(".heif");
-
-          if (isHeic) {
-            // difesa ulteriore se per qualche motivo passa dal change
-            alert(
-              "📸 Suggerimento per utenti iPhone:\n\n" +
-                "Le foto scattate in formato HEIC non sono compatibili.\n\n" +
-                "Apri la foto, scegli “Condividi → Salva come immagine”,\n" +
-                "e poi caricala qui in formato JPG."
-            );
-            return;
-          }
 
           const originalText = identifyButton.textContent;
           identifyButton.textContent = "Identificazione in corso...";
