@@ -236,7 +236,47 @@
         <div class="form-subHeader">
           GuardaMI Plant-ID · Modulo di identificazione piante
         </div>
-  <!-- DATI RILEVATORE -->
+
+        <!-- L'invio a Jotform viene fatto via fetch nel JavaScript. -->
+        <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
+          <!-- ISTRUZIONI -->
+          <div class="form-line">
+            <div class="text-block">
+              🌱 <strong>Come compilare:</strong><br /><br />
+              1. Carica <strong>una o due foto nitide</strong> della pianta (foglie, fiori o frutti ben visibili).<br />
+              2. Clicca su <strong>“Identifica specie”</strong> per il riconoscimento automatico.
+            </div>
+          </div>
+
+          <!-- UPLOAD + IDENTIFICA -->
+          <div class="form-line">
+            <label for="plantImage">
+              File Upload <span class="required-star">*</span>
+            </label>
+            <input
+              type="file"
+              id="plantImage"
+              name="plantImage"
+              accept="image/*"
+              multiple
+              required
+            />
+
+            <div class="buttons-row" style="margin-top: 10px">
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="identifyButton"
+              >
+                Identifica Specie
+              </button>
+            </div>
+            <div class="help-text">
+              Carica fino a <strong>2 foto</strong> in formato <strong>JPG</strong> o <strong>PNG</strong> (no HEIC), con dettagli chiari della pianta.
+            </div>
+          </div>
+
+          <!-- DATI RILEVATORE -->
           <hr />
           <div class="section-title">Dati del rilevatore</div>
 
@@ -281,44 +321,6 @@
             </div>
             <div class="help-text">
               Nome, e-mail e ruolo vengono salvati <strong>solo su questo dispositivo</strong> per facilitare le segnalazioni future. Puoi cancellarli in qualsiasi momento.
-            </div>
-          </div>
-        <!-- L'invio a Jotform viene fatto via fetch nel JavaScript. -->
-        <form id="plant-form" action="#" method="post" enctype="multipart/form-data">
-          <!-- ISTRUZIONI -->
-          <div class="form-line">
-            <div class="text-block">
-              🌱 <strong>Come compilare:</strong><br /><br />
-              1. Carica <strong>una o due foto nitide</strong> della pianta (foglie, fiori o frutti ben visibili).<br />
-              2. Clicca su <strong>“Identifica specie”</strong> per il riconoscimento automatico.
-            </div>
-          </div>
-
-          <!-- UPLOAD + IDENTIFICA -->
-          <div class="form-line">
-            <label for="plantImage">
-              File Upload <span class="required-star">*</span>
-            </label>
-            <input
-              type="file"
-              id="plantImage"
-              name="plantImage"
-              accept="image/*"
-              multiple
-              required
-            />
-
-            <div class="buttons-row" style="margin-top: 10px">
-              <button
-                type="button"
-                class="btn btn-primary"
-                id="identifyButton"
-              >
-                Identifica Specie
-              </button>
-            </div>
-            <div class="help-text">
-              Carica fino a <strong>2 foto</strong> in formato <strong>JPG</strong> o <strong>PNG</strong> (no HEIC), con dettagli chiari della pianta.
             </div>
           </div>
 
