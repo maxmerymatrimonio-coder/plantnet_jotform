@@ -227,7 +227,188 @@
           font-size: 14px;
         }
       }
-    </style>
+    
+      /* --- ANTEPRIMA IMMAGINI + LIGHTBOX --- */
+      .image-preview-box {
+        margin-top: 8px;
+        padding: 12px 12px 10px;
+        border-radius: 8px;
+        border: 1px solid #9cb5dd;
+        background-color: #edf2ff;
+      }
+
+      .preview-title {
+        margin: 0 0 8px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      #previewContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .thumbnail-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .image-thumbnail {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 1px solid #9cb5dd;
+        cursor: pointer;
+        background-color: #ffffff;
+      }
+
+      .file-placeholder {
+        width: 90px;
+        height: 90px;
+        border-radius: 6px;
+        border: 1px dashed #9cb5dd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        padding: 4px;
+        text-align: center;
+        background-color: #f9fafb;
+      }
+
+      .thumbnail-delete {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: none;
+        background-color: rgba(220, 38, 38, 0.95);
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(15, 23, 42, 0.35);
+        transition: transform 0.15s ease, background-color 0.15s ease;
+      }
+
+      .thumbnail-delete:hover {
+        background-color: rgba(185, 28, 28, 1);
+        transform: scale(1.08);
+      }
+
+      #lightbox {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(15, 23, 42, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      #lightbox.lightbox-visible {
+        display: flex;
+      }
+
+      #lightbox img {
+        max-width: 90vw;
+        max-height: 80vh;
+        border-radius: 10px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+        background-color: #ffffff;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 16px;
+        right: 18px;
+        border: none;
+        background: transparent;
+        color: #ffffff;
+        font-size: 32px;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .lightbox-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        border: none;
+        width: 40px;
+        height: 40px;
+        font-size: 26px;
+        cursor: pointer;
+        background-color: rgba(15, 23, 42, 0.75);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lightbox-prev {
+        left: 16px;
+      }
+
+      .lightbox-next {
+        right: 16px;
+      }
+
+      /* --- BOX SPECIE --- */
+      .species-box {
+        margin-top: 10px;
+        margin-bottom: 16px;
+        padding: 16px 16px 12px;
+        border-radius: 10px;
+        border: 1px solid #9cb5dd;
+        background-color: #f2f6ff;
+      }
+
+      .species-box-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #d0ddf5;
+      }
+
+      .species-title {
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .btn-remove-species {
+        border: none;
+        background: transparent;
+        color: #d11a1a;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 2px 4px;
+        line-height: 1;
+        border-radius: 6px;
+        transition: background-color 0.15s ease, transform 0.15s ease;
+      }
+
+      .btn-remove-species:hover {
+        background-color: rgba(209, 26, 26, 0.1);
+        transform: scale(1.1);
+      }
+
+      .species-box[data-index="1"] .btn-remove-species {
+        visibility: hidden;
+      }
+
+</style>
   </head>
   <body>
     <div class="page-wrapper">
@@ -241,17 +422,27 @@
           <div class="section-title">Dati del rilevatore</div>
 
           <div class="form-line">
-            <label for="nomeRilevatore">Nome (facoltativo)</label>
+            <label for="nomeRilevatore">Nome Cognome</label>
             <input
               type="text"
               id="nomeRilevatore"
               name="nomeRilevatore"
-              placeholder="Es. Maria, Maria R., volontario..."
+              placeholder="Es. Mario Rossi"
             />
             <div class="help-text">
-              Se sei minorenne, non inserire nome e cognome completi. Campo facoltativo.
+       
             </div>
           </div>
+<div class="form-line">
+  <label for="enteAppartenenza">Ente appartenenza / Titolo</label>
+  <input
+    type="text"
+    id="enteAppartenenza"
+    name="enteAppartenenza"
+    placeholder="Es. Università XY, Museo Storia Naturale..."
+  />
+</div>
+
 
           <div class="form-line">
             <label for="email">
@@ -261,11 +452,11 @@
               type="email"
               id="email"
               name="email"
-              placeholder="esempio@scuola.it"
+              placeholder="esempio@.it"
               required
             />
             <div class="help-text">
-              Usa un’e-mail scolastica o di progetto. Verrà utilizzata solo per comunicazioni scientifiche.
+              L'indirizzo e-mail verrà utilizzato solo per comunicazioni scientifiche.
             </div>
           </div>
 <!-- NUOVA SEZIONE: gestione dati salvati su dispositivo -->
@@ -304,6 +495,7 @@
               id="plantImage"
               name="plantImage"
               accept="image/*"
+              onchange="handleImageSelection(event)"
               multiple
               required
             />
@@ -321,6 +513,14 @@
             </div>
           </div>
 
+
+          <!-- ANTEPRIMA FILE CARICATI -->
+          <div class="form-line" id="previewLine" style="display: none;">
+            <div class="image-preview-box">
+              <h3 class="preview-title">Anteprima file caricati</h3>
+              <div id="previewContainer"></div>
+            </div>
+          </div>
           <div class="form-line">
             <label for="dataAvvistamento">Data avvistamento</label>
             <input
@@ -332,6 +532,64 @@
               Se la foto contiene la data di scatto, questo campo può compilarsi automaticamente.
             </div>
           </div>
+          <!-- SPECIE OSSERVATE -->
+          <div class="section-title">Specie osservate</div>
+
+          <div id="speciesFieldsContainer">
+            <div class="species-box" data-index="1">
+              <div class="species-box-header">
+                <span class="species-title">Specie 1</span>
+                <button
+                  type="button"
+                  class="btn-remove-species"
+                  onclick="removeSpecies(this)"
+                >
+                  ❌
+                </button>
+              </div>
+
+              <div class="form-line">
+                <label for="nomeComuneSpecie1">Nome comune</label>
+                <input
+                  type="text"
+                  id="nomeComuneSpecie1"
+                  name="nomeComuneSpecie[]"
+                  placeholder="Es. Acero, Rovere..."
+                />
+              </div>
+
+              <div class="form-line">
+                <label for="nomeScientificoSpecie1">Nome scientifico</label>
+                <input
+                  type="text"
+                  id="nomeScientificoSpecie1"
+                  name="nomeScientificoSpecie[]"
+                  placeholder="Es. Acer campestre"
+                />
+              </div>
+
+              <div class="form-line">
+                <label for="noteSpecie1">Note sulla specie</label>
+                <textarea
+                  id="noteSpecie1"
+                  name="noteSpecie[]"
+                  rows="2"
+                  placeholder="Eventuali note, condizioni della pianta..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-line">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="addSpeciesRow"
+            >
+              + Aggiungi specie
+            </button>
+          </div>
+
 
           <!-- GEOLOCALIZZAZIONE -->
           <hr />
@@ -1012,6 +1270,300 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           );
         }
+      }
+    </script>
+
+
+    <!-- LIGHTBOX PER ANTEPRIMA IMMAGINI -->
+    <div id="lightbox" aria-hidden="true">
+      <button
+        type="button"
+        class="lightbox-close"
+        onclick="closeLightbox()"
+        aria-label="Chiudi anteprima"
+      >
+        ×
+      </button>
+      <button
+        type="button"
+        class="lightbox-arrow lightbox-prev"
+        onclick="prevImage()"
+        aria-label="Immagine precedente"
+      >
+        ‹
+      </button>
+      <img id="lightboxImage" alt="Immagine ingrandita" />
+      <button
+        type="button"
+        class="lightbox-arrow lightbox-next"
+        onclick="nextImage()"
+        aria-label="Immagine successiva"
+      >
+        ›
+      </button>
+    </div>
+
+
+    <script>
+      // --- ANTEPRIMA IMMAGINI + LIGHTBOX CON SUPPORTO HEIC ---
+      let originalFiles = [];    // File originali dall'input
+      let previewBlobs = [];     // Blob usati per anteprima/lightbox (JPG se HEIC convertito)
+      let currentLightboxIndex = 0;
+
+      // Helper: controlla se il file è HEIC
+      function isHeicFile(file) {
+        const type = (file.type || "").toLowerCase();
+        const name = (file.name || "").toLowerCase();
+        return type.includes("heic") || name.endsWith(".heic") || name.endsWith(".heif");
+      }
+
+      // Converte HEIC -> JPEG per la sola ANTEPRIMA
+      async function convertHeicForPreview(file) {
+        if (!isHeicFile(file) || !window.heic2any) {
+          // Non è HEIC o libreria non disponibile → uso il file così com'è
+          return file;
+        }
+
+        try {
+          const result = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.8,
+          });
+
+          // heic2any può restituire un Blob o un array di Blob
+          if (result instanceof Blob) return result;
+          if (Array.isArray(result) && result[0] instanceof Blob) return result[0];
+
+          console.warn("Risultato HEIC non previsto, uso file originale per anteprima.");
+          return file;
+        } catch (e) {
+          console.warn("Errore conversione HEIC per anteprima:", e);
+          return file; // in caso di errore, non blocchiamo tutto
+        }
+      }
+
+      // Viene chiamata dall'input file: onchange="handleImageSelection(event)"
+      async function handleImageSelection(event) {
+        const input = event.target;
+        if (!input || !input.files) return;
+
+        originalFiles = Array.from(input.files);
+
+        // Preparo i blob da usare per anteprima (con conversione HEIC se serve)
+        previewBlobs = [];
+        for (const file of originalFiles) {
+          const blob = await convertHeicForPreview(file);
+          previewBlobs.push(blob);
+        }
+
+        renderPreviews();
+      }
+
+      function renderPreviews() {
+        const previewLine = document.getElementById("previewLine");
+        const container = document.getElementById("previewContainer");
+        if (!previewLine || !container) return;
+
+        container.innerHTML = "";
+
+        if (!previewBlobs.length) {
+          previewLine.style.display = "none";
+          return;
+        }
+
+        previewLine.style.display = "block";
+
+        previewBlobs.forEach((blob, index) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "thumbnail-wrapper";
+
+          const isImage =
+            blob &&
+            blob.type &&
+            blob.type.toLowerCase().startsWith("image/");
+
+          if (isImage) {
+            const img = document.createElement("img");
+            img.className = "image-thumbnail";
+            img.src = URL.createObjectURL(blob);
+            img.alt =
+              (originalFiles[index] && originalFiles[index].name) ||
+              "Immagine " + (index + 1);
+            img.addEventListener("click", () => openLightbox(index));
+            wrapper.appendChild(img);
+          } else {
+            const placeholder = document.createElement("div");
+            placeholder.className = "file-placeholder";
+            placeholder.textContent =
+              (originalFiles[index] && originalFiles[index].name) ||
+              "File";
+            wrapper.appendChild(placeholder);
+          }
+
+          const del = document.createElement("button");
+          del.type = "button";
+          del.className = "thumbnail-delete";
+          del.textContent = "×";
+          del.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            deletePreviewFile(index);
+          });
+
+          wrapper.appendChild(del);
+          container.appendChild(wrapper);
+        });
+
+        syncFileInputFromPreviews();
+      }
+
+      function deletePreviewFile(index) {
+        if (index < 0 || index >= originalFiles.length) return;
+        originalFiles.splice(index, 1);
+        previewBlobs.splice(index, 1);
+        renderPreviews();
+      }
+
+      // Mantiene l'input file allineato ai file ancora in anteprima (ma sempre con gli originali, NON i convertiti)
+      function syncFileInputFromPreviews() {
+        const input = document.getElementById("plantImage");
+        if (!input) return;
+        const dt = new DataTransfer();
+        originalFiles.forEach((file) => dt.items.add(file));
+        input.files = dt.files;
+      }
+
+      function openLightbox(index) {
+        if (!previewBlobs.length) return;
+        currentLightboxIndex = index;
+        const lightbox = document.getElementById("lightbox");
+        const img = document.getElementById("lightboxImage");
+        if (!lightbox || !img) return;
+
+        const blob = previewBlobs[currentLightboxIndex];
+        if (!blob) return;
+
+        img.src = URL.createObjectURL(blob);
+        lightbox.classList.add("lightbox-visible");
+        lightbox.setAttribute("aria-hidden", "false");
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        const img = document.getElementById("lightboxImage");
+        if (!lightbox || !img) return;
+        lightbox.classList.remove("lightbox-visible");
+        lightbox.setAttribute("aria-hidden", "true");
+        img.removeAttribute("src");
+      }
+
+      function nextImage() {
+        if (!previewBlobs.length) return;
+        currentLightboxIndex =
+          (currentLightboxIndex + 1) % previewBlobs.length;
+        openLightbox(currentLightboxIndex);
+      }
+
+      function prevImage() {
+        if (!previewBlobs.length) return;
+        currentLightboxIndex =
+          (currentLightboxIndex - 1 + previewBlobs.length) %
+          previewBlobs.length;
+        openLightbox(currentLightboxIndex);
+      }
+
+      document.addEventListener("keydown", function (ev) {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox || !lightbox.classList.contains("lightbox-visible"))
+          return;
+        if (ev.key === "Escape") {
+          closeLightbox();
+        } else if (ev.key === "ArrowRight") {
+          nextImage();
+        } else if (ev.key === "ArrowLeft") {
+          prevImage();
+        }
+      });
+
+document.addEventListener("DOMContentLoaded", function () {
+        const lightbox = document.getElementById("lightbox");
+        if (lightbox) {
+          lightbox.addEventListener("click", function (ev) {
+            if (ev.target === lightbox) {
+              closeLightbox();
+            }
+          });
+        }
+
+        // --- BOX SPECIE DINAMICI ---
+        const container = document.getElementById(
+          "speciesFieldsContainer"
+        );
+        const addBtn = document.getElementById("addSpeciesRow");
+        if (!container || !addBtn) return;
+
+        const template = container.querySelector(".species-box");
+        if (!template) return;
+
+        addBtn.addEventListener("click", function () {
+          const clone = template.cloneNode(true);
+
+          const existingBoxes = container.querySelectorAll(".species-box");
+          const newIndex = existingBoxes.length + 1;
+
+          clone.dataset.index = String(newIndex);
+          const title = clone.querySelector(".species-title");
+          if (title) {
+            title.textContent = "Specie " + newIndex;
+          }
+
+          clone.querySelectorAll("input, textarea").forEach(function (el) {
+            if (el.type === "checkbox" || el.type === "radio") {
+              el.checked = false;
+            } else {
+              el.value = "";
+            }
+          });
+
+          clone.querySelectorAll("[id]").forEach(function (el) {
+            const oldId = el.id;
+            if (!oldId) return;
+            const base = oldId.replace(/\d+$/, "");
+            el.id = base + newIndex;
+          });
+
+          clone.querySelectorAll("label[for]").forEach(function (label) {
+            const oldFor = label.getAttribute("for");
+            if (!oldFor) return;
+            const base = oldFor.replace(/\d+$/, "");
+            label.setAttribute("for", base + newIndex);
+          });
+
+          container.appendChild(clone);
+        });
+      });
+
+      function removeSpecies(btn) {
+        const box = btn.closest(".species-box");
+        const container = document.getElementById("speciesFieldsContainer");
+        if (!box || !container) return;
+
+        const boxes = container.querySelectorAll(".species-box");
+        if (boxes.length <= 1) return;
+
+        box.remove();
+
+        Array.from(container.querySelectorAll(".species-box")).forEach(function (
+          b,
+          idx
+        ) {
+          const index = idx + 1;
+          b.dataset.index = String(index);
+          const title = b.querySelector(".species-title");
+          if (title) {
+            title.textContent = "Specie " + index;
+          }
+        });
       }
     </script>
 
