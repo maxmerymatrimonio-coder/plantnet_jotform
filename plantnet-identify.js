@@ -132,5 +132,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
-// TODO: Merge loadUserDataFromStorage, saveUserDataToStorage, clearUserDataFromStorageAndForm updates as provided in chat.
