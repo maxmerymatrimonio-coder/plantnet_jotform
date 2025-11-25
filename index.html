@@ -243,6 +243,7 @@
         font-weight: 600;
       }
 
+
       /* --- PREVIEW IMMAGINI + LIGHTBOX --- */
       .image-preview-grid {
         margin-top: 10px;
@@ -319,6 +320,32 @@
         font-size: 32px;
         cursor: pointer;
         line-height: 1;
+      }
+
+
+      .lightbox-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        border: none;
+        width: 40px;
+        height: 40px;
+        font-size: 26px;
+        cursor: pointer;
+        background-color: rgba(15, 23, 42, 0.75);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lightbox-prev {
+        left: 16px;
+      }
+
+      .lightbox-next {
+        right: 16px;
       }
 
     </style>
@@ -658,7 +685,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const form = document.getElementById("plant-form");
         const previewContainer = document.getElementById("imagePreview");
-        const previewLine = document.getElementById("previewLine");
         const lightboxEl = document.getElementById("lightbox");
         const lightboxImage = document.getElementById("lightboxImage");
 
@@ -758,8 +784,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const filesArray = Array.from(fileList || []);
           if (!filesArray.length) {
-            if (previewLine) previewLine.style.display = "none";
-
             if (imageInput) {
               imageInput.value = "";
             }
@@ -772,12 +796,10 @@ document.addEventListener("DOMContentLoaded", () => {
               imageInput.value = "";
             }
             previewContainer.innerHTML = "";
-            if (previewLine) previewLine.style.display = "none";
             return;
           }
 
           if (previewLine) previewLine.style.display = "block";
-
           for (let i = 0; i < filesArray.length; i++) {
             const file = filesArray[i];
             const fileName = (file.name || "").toLowerCase();
@@ -846,7 +868,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (!kept.length && previewContainer) {
             previewContainer.innerHTML = "";
-            if (previewLine) previewLine.style.display = "none";
             previewItems.forEach((item) => {
               if (item && item.url) {
                 URL.revokeObjectURL(item.url);
@@ -885,6 +906,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.closeLightbox = closeLightboxInner;
+
+        function nextImage() {
+          if (!previewItems.length) return;
+          currentLightboxIndex = (currentLightboxIndex + 1) % previewItems.length;
+          const item = previewItems[currentLightboxIndex];
+          if (!item || !lightboxImage) return;
+          lightboxImage.src = item.url;
+        }
+
+        function prevImage() {
+          if (!previewItems.length) return;
+          currentLightboxIndex =
+            (currentLightboxIndex - 1 + previewItems.length) % previewItems.length;
+          const item = previewItems[currentLightboxIndex];
+          if (!item || !lightboxImage) return;
+          lightboxImage.src = item.url;
+        }
+
+        window.nextImage = nextImage;
+        window.prevImage = prevImage;
+
+        document.addEventListener("keydown", function (ev) {
+          if (!lightboxEl || !lightboxEl.classList.contains("lightbox-visible")) return;
+
+          if (ev.key === "Escape") {
+            closeLightboxInner();
+          } else if (ev.key === "ArrowRight") {
+            nextImage();
+          } else if (ev.key === "ArrowLeft") {
+            prevImage();
+          }
+        });
 
         // 🔔 Popup immediato se viene caricato un HEIC + lettura EXIF JPG/PNG
         imageInput.addEventListener("change", async () => {
@@ -1279,7 +1332,23 @@ document.addEventListener("DOMContentLoaded", () => {
       >
         ×
       </button>
+      <button
+        type="button"
+        class="lightbox-arrow lightbox-prev"
+        onclick="prevImage()"
+        aria-label="Immagine precedente"
+      >
+        ‹
+      </button>
       <img id="lightboxImage" alt="Immagine ingrandita" />
+      <button
+        type="button"
+        class="lightbox-arrow lightbox-next"
+        onclick="nextImage()"
+        aria-label="Immagine successiva"
+      >
+        ›
+      </button>
     </div>
 
     <!-- GOOGLE MAPS -->
